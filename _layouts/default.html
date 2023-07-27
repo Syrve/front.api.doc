@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.svg?">
+    {% if page.description %}
+    <meta name="description" content="{{ page.description }}" />
+    {% endif %}
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        header
+        {
+            background-color: lightgray;
+            text-align: center;
+            padding: 5px;
+        }
+
+        aside
+        {
+            background-color: #eeeeee;
+            float: left;
+            padding: 5px;
+            margin: 0px 20px 10px 0px;
+            width: 250px;
+        }
+
+        article
+        {
+            margin: 5px 5px 50px 280px;
+        }
+
+        footer
+        {
+            background-color: lightgray;
+            text-align: center;
+            padding: 5px;
+        }
+
+        p, blockquote, ul, ol, dl, table, pre
+        {
+            margin: 15px 0;
+        }
+
+        blockquote
+        {
+            border-left: 4px solid lightgray;
+            padding: 0 15px;
+            color: gray;
+        }
+
+        blockquote > :first-child
+        {
+            margin-top: 0px;
+        }
+
+        blockquote > :last-child
+        {
+            margin-bottom: 0px;
+        }
+
+        body
+        {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .mbtablestyle {
+            border-collapse: collapse;
+            > table, td, th {
+                border: 1px solid black;
+                padding: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="flex-container">
+            <div>
+                <a href="https://github.com/syrve/front.api.sdk">Syrve POS API SDK</a>
+            </div>
+            <div>
+                <form action="https://google.com/search" method="get">
+                    <input type="hidden" name="sitesearch" value="https://syrve.github.io/front.api.doc/" />
+                    <input type="text" name="q" />
+                    <input type="submit" value="Search Google">
+                </form>
+            </div>
+        </div>
+    </header>
+    <aside>
+        {% assign pagesByTitle = site.pages | where_exp: "post", "post.title" | sort: 'title' %}
+
+        <!-- common topics -->
+        {% for p in pagesByTitle %}
+        {% assign apiVersionOfPage = p.path | split:"/" | first %}
+        {% unless site.apiVersions contains apiVersionOfPage %}
+        &nbsp;<a href="{{ site.baseurl }}{{ p.url }}">{{ p.title }}</a><br>
+        {% endunless %}
+        {% endfor %}
+
+        <!-- version-specific topics -->
+        {% for apiVersion in site.apiVersions reversed %}
+        {% assign hasVersionHeader = false %}
+        {% for p in pagesByTitle %}
+        {% assign apiVersionOfPage = p.path | split:"/" | first %}
+        {% if apiVersionOfPage == apiVersion %}
+        {% unless hasVersionHeader %}
+        {% assign hasVersionHeader = true %}
+        <br>
+        <b>{{ apiVersion }}</b><br>
+        {% endunless %}
+        &nbsp;<a href="{{ site.baseurl }}{{ p.url }}">{{ p.title }}</a><br>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+        <br>
+        <b>Code reference</b><br>
+        &nbsp;<a href="https://syrve.github.io/front.api.sdk/v6/">V6 (obsolete)</a><br>
+        &nbsp;<a href="https://syrve.github.io/front.api.sdk/v7/">V7 (current)</a><br>
+        &nbsp;<a href="https://syrve.github.io/front.api.sdk/v8/">V8 (preview)</a><br>
+    </aside>
+    <article>
+        <h1 style="text-align:center">{% if page.title %}{{ page.title }}{% endif %}</h1>
+        {{ content }}
+    </article>
+    <footer>
+        <div>
+            <div style="float: left">
+                Contacts: <a href="https://en.syrve.help/articles/#!api/getting-started-api">en.syrve.help</a> | <a href="github@syrve.com">github@syrve.com</a>
+            </div>
+            <div style="float: right">
+                Last change: {{ site.time | date_to_long_string }} | <a href="https://github.com/syrve/front.api.doc/">View source</a>
+            </div>
+            <div style="margin: 0 auto">
+                Syrve, 2023
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

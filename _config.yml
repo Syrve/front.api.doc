@@ -1,0 +1,6 @@
+title: Syrve POS API docs
+baseurl: /front.api.doc
+apiVersions: [v6, v7, v8]
+
+plugins:
+  - jekyll-redirect-from
