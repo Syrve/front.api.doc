@@ -47,7 +47,7 @@ When handling `INotificationService`, Syrve POS is the action initiator, whereas
 
 ## Examples ##
 
-Among other things, the SDK includes several source code [plugin examples](https://github.com/syrve/front.api.sdk/tree/master/sample/v6/). We recommend that you get familiar with them before you start developing your own plugins.
+Among other things, the SDK includes several source code [plugin examples](https://github.com/syrve/front.api.sdk/tree/main/sample/v7). We recommend that you get familiar with them before you start developing your own plugins.
 
 ### SamplePlugin ###
 

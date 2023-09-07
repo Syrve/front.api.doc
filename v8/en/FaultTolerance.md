@@ -1,30 +1,29 @@
 ---
-title: Отказоустойчивость
+title: Failover
 layout: default
 ---
 
-В версии V8Preview6 введена возможность контролирования состояния главного терминала(ГТ) группы и при необходимости передачи этой роли другому терминалу.
+The V8Preview6 version introduces the possibility to control the state of the Main Terminal (MT) of a group and, if needed, to transfer this role to another terminal.
 
-Нововведение состоит из следующих элементов:
+The innovation consists of the next elements:
 
-1.	Список резервных терминалов;
-2.	Отслеживание состояния главного терминала;
-3.	Возможность перенастраивать главный терминал через API.
+1.	A list of reserve terminals;
+2.	Tracking the status of the main terminal;
+3.	Possibility to recustomize the main terminal via API.
 
-Подробнее:
+More:
 
-1) В приложении iikoOffice в Настройках торгового предприятия => настройках группы можно задавать список резервных терминалов. Эти терминалы будут являться запасными терминалами, которые смогут принять на себя роль ГТ если это  будет необходимо. Форма для задания резервных терминалов выглядит следующим образом:
+1) In the Syrve Office application in Store Settings => Group Settings it is possible to set up a list of reserve terminals. These terminals will be the spare  terminals which can take over the role of the MT if needed. The form for set the reserve terminals is as follows:
 
 ![ext_number](../../img/faultTolerance/StandbyTerminalsWindow.png)
 
-В API в интерфейс [`ITerminalsGroup`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Organization_ITerminalsGroup.htm ) добавлен список [`StandbyTerminals`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Organization_ITerminalsGroup_StandbyTerminals.htm), который и содержит список резервных терминалов, заданных в iikoOffice. Чтобы получить информацию о текущей группе терминалов можно воспользоваться методом [`GetHostTerminalsGroup`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetHostTerminalsGroup.htm) или же подписаться на нотификацию [`TerminalsGroupChanged`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_INotificationService_TerminalsGroupChanged.htm).
+In API, in the [`ITerminalsGroup`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Organization_ITerminalsGroup.htm ) interface, the [`StandbyTerminals`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Organization_ITerminalsGroup_StandbyTerminals.htm) list has been added, which contains the list of reserve terminals set in Syrve Office. To get information about the current group of terminals, it is possible to use the [`GetHostTerminalsGroup`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetHostTerminalsGroup.htm) method or subscribe to the [`TerminalsGroupChanged`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_INotificationService_TerminalsGroupChanged.htm).
 
-2) Каждый ведомый терминал (ВТ) отслеживает состояние соединения с ГТ и если состояние изменится, то терминал сообщит об этом. Для этого была добавлена новая нотификация [`ConnectionToMainTerminalChanged`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_INotificationService_ConnectionToMainTerminalChanged.htm). В этой нотификации передается состояние связи: true - соединение с ГТ установлено, false - соединение с ГТ потеряно.
+2) Each a Slave Terminal (ST) tracks the state of the connection to the MT and if the state has changed, the terminal will report it. For this purpose a new notification [`ConnectionToMainTerminalChanged`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_INotificationService_ConnectionToMainTerminalChanged.htm) was added. In this notification the connection state is transmitted: `true` - connection with the MT is established, `false` - connection with the MT is lost.
 
-3) В API введена новая операция [`ChangeGroupMainTerminal`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_ChangeGroupMainTerminal.htm), позволяющая менять ГТ. Для выполнения данной операция необходимо иметь право на проведение опасных операций([`F_DOP`](https://ru.iiko.help/articles/#!iikooffice-8-3/topic-745/q/%25D0%25BE%25D0%25BF%25D0%25B0%25D1%2581%25D0%25BD%25D1%258B%25D0%25B5%2520%25D0%25BE%25D0%25BF%25D0%25B5%25D1%2580%25D0%25B0%25D1%2586%25D0%25B8%25D0%25B8/qid/1738593/qp/1)) и передавать в качестве аргумента терминал, который является резервным. После выполнения данной операции переданный терминал становится ГТ, а бывший ГТ переходит в список резервных терминалов.
+3) A new operation [`ChangeGroupMainTerminal`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_ChangeGroupMainTerminal.htm)was implemented in the API, which allows to change MT. To run this operation it is needed to have the permission to run dangerous operations ([`F_DOP`](https://en.syrve.help/articles/#!office-8-5/topic-745)) and to transfer as argument a terminal, which is a reserve terminal. After this operation, the transferred terminal will be as MT, and the previous MT will be moved to the list of reserve terminals.
 
-
-Пример:
+Example:
 ```cs
 private static void ChangeGroupMainTerminal(IOperationService os)
 {
@@ -33,4 +32,4 @@ private static void ChangeGroupMainTerminal(IOperationService os)
 }
 ```
 
-На данный момент для пользования этим нововведением необходимо иметь лицензию 21053302. Также данная лицензия убирает 30-секундную задержку при перезагрузке iikoFront.
+At the moment, it is necessary to have license 21053302 in order to use this new feature. Also this license removes the 30-second delay when Syrve POS is rebooting.

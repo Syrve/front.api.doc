@@ -1,24 +1,23 @@
 ---
-title: Диалоговые окна
+title: Dialog windows
 layout: default
 ---
-### Диалог ввода числовых строк
-Начиная с версии V8, изменена структура класса настроек - [`ExtendedInputDialogSettings`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_ExtendedInputDialogSettings.htm), который передается в качестве параметра в [`Диалоговое окно`](https://iiko.github.io/front.api.doc/v6/ru/ViewManager.html) - [`ShowExtendedInputDialog()`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_UI_IViewManager_ShowExtendedInputDialog.htm).
+### Numeric strings entry dialog
+Beginning with version V8, the structure of the settings class, [`ExtendedInputDialogSettings`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_ExtendedInputDialogSettings.htm), has been changed and is transferred as a parameter to the [`Dialog window`](https://syrve.github.io/front.api.doc/v6/ru/ViewManager.html) - [`ShowExtendedInputDialog()`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_UI_IViewManager_ShowExtendedInputDialog.htm).
 
-[`ExtendedInputDialogSettings.EnableNumericString`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_EnableNumericString.htm) заменен на [`NumericInputMode`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm) который является типом `enum` состоящий из:
-- [`Disabled`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm) - значение по умолчанию. Ввод числовых значений недоступен.
-- [`String`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm) - ввод целых чисел.
-- [`Decimal`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm) - ввод дробных чисел.
+[`ExtendedInputDialogSettings.EnableNumericString`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_EnableNumericString.htm) is replaced by [`NumericInputMode`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm), which is an `enum` type that consists of:
+- [`Disabled`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm) - default value. Entering numeric values is not available.
+- [`String`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm) - input integer numbers.
+- [`Decimal`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm) - input fractional numbers.
  
-Для типа ввода дробных чисел [`Decimal`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm) добавлены свойства:
-- [`MaxDecimalValue`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_MaxDecimalValue.htm) - максимальное значение.
-- [`MinDecimalValue`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_MinDecimalValue.htm) - минимальное значение.
-- [`DefaultDecimalValue`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_DefaultDecimalValue.htm) - значение по умолчанию.
+For the input type of fractional numbers [`Decimal`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm) properties have been added:
+- [`MaxDecimalValue`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_MaxDecimalValue.htm) - maximum value.
+- [`MinDecimalValue`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_MinDecimalValue.htm) - minimum value.
+- [`DefaultDecimalValue`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_DefaultDecimalValue.htm) - default value.
 
-С помощью новых свойств можно задавать соответствующие ограничения для дробных чисел. 
+With the new properties, it is possible to set appropriate limits for fractional numbers.
 
-При выборе `String` или `Decimal` пользователю будет предложено ввести целые числа или числа с дробью. 
-В качестве поясняющего текста по дробным числам используется [`ExtendedInputDialogSettings.TabTitleNumericString`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_TabTitleNumericString.htm).
+When selecting `String` or `Decimal`, the user will be offered to enter integers or fractions. [`ExtendedInputDialogSettings.TabTitleNumericString`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_TabTitleNumericString.htm) is used as explanatory text for fractional numbers.
 
 ![ext_number](../../img/viewmanager/ext_decimal.png)
 
@@ -33,8 +32,8 @@ var settings = new ExtendedInputDialogSettings
 }
 
 var dialogResult = viewManager.ShowExtendedInputDialog(
-                "Заголовок окна", 
-                "Подзаголовок, поясняющий что именно нужно ввести пользователю.",
+                "Window Title", 
+                "A subtitle explaining exactly what the user needs to enter.",
                 settings) 
     as NumericStringInputDialogResult;
 if (dialogResult == null)
