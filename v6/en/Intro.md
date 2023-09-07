@@ -10,7 +10,7 @@ Interaction with the API starts with the static class `PluginContext`, which acc
 
 - `PluginContext.Operations` — [operations service](#operationService),
 - `PluginContext.Notifications` — [notifications service](#notificationService),
-- `PluginContext.Licensing` — [licensing](#Licensing),
+- `PluginContext.Licensing` — [licensing](Licensing),
 - `PluginContext.Services` — all available services, including all listed above, as well as services of other API versions,
 - `PluginContext.Log` — logging,
 - `PluginContext.Shutdown()` — plugin shutdown.
@@ -41,7 +41,7 @@ Practically all actions are performed through `IOperationService`. Methods compr
 When `IOperationService` is in use, the plugin prevails.
 
 ### Notifications service {#notificationService}
-`INotificationService` makes it possible to subscribe to events of interest. Data change notifications are implemented using the [Reactive Extensions (Rx)](http://msdn.microsoft.com/en-us/data/gg577609.aspx)library, events are published as `IObservable<T>` sequences, where `T` is the event argument (changed object). Rx handles the flow of events as handy as LINQ handles `IEnumerable<T>`. To familiarize yourself with the reactive programming, check this useful resource: [Introduction to Rx](http://www.introtorx.com/). Here you can also subscribe to such operations as opening or closing a till shift, printing a service or cash register receipt, and so on. Along with notifications on running operations, there might be other additional features available, for instance, when closing a till shift, an additional report can be printed out, when printing a receipt, some marketing information can be added to it, when switching to the cash register screen, a gift item or loyalty account payment can be added to the order, whereas some other operations can be canceled at all by generating an `OperationCanceledException` exception.
+`INotificationService` makes it possible to subscribe to events of interest. Data change notifications are implemented using the [Reactive Extensions (Rx)](http://msdn.microsoft.com/en-us/data/gg577609.aspx) library, events are published as `IObservable<T>` sequences, where `T` is the event argument (changed object). Rx handles the flow of events as handy as LINQ handles `IEnumerable<T>`. To familiarize yourself with the reactive programming, check this useful resource: [Introduction to Rx](http://www.introtorx.com/). Here you can also subscribe to such operations as opening or closing a till shift, printing a service or cash register receipt, and so on. Along with notifications on running operations, there might be other additional features available, for instance, when closing a till shift, an additional report can be printed out, when printing a receipt, some marketing information can be added to it, when switching to the cash register screen, a gift item or loyalty account payment can be added to the order, whereas some other operations can be canceled at all by generating an `OperationCanceledException` exception.
 
 When handling `INotificationService`, Syrve POS is the action initiator, whereas the plugin is the observer.
 

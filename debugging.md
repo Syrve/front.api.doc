@@ -41,7 +41,7 @@ For the new project format, the debugging parameters have been transferred to a 
 ```
 
 #### Note for .NET Standard
-Currently, there is a [bug](https://github.com/dotnet/project-system/issues/5009)in Visual Studio that doesn't allow you to debug a plugin under .NET Standard by running it via the `Resto.Front.Api.Host.exe` process-container, which is run under the .NET Framework.
+Currently, there is a [bug](https://github.com/dotnet/project-system/issues/5009) in Visual Studio that doesn't allow you to debug a plugin under .NET Standard by running it via the `Resto.Front.Api.Host.exe` process-container, which is run under the .NET Framework.
 
 Solutions options:
 
