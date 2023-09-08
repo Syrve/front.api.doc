@@ -1,55 +1,55 @@
 ---
-title: Показ относительного количества модификаторов
+title: Displaying the relative amount of modifiers
 layout: default
 ---
 
-С учетом значения настройки `IRestaurant.DisplayRelativeNumberOfModifiers` в iikoFront рассчитывается количество порций модификатора в строковом виде, которое отображается на UI.
+# Displaying the relative amount of modifiers
 
-Например, у блюда есть модификатор _Сметана_, входящий в группу модификаторов. Для данного модификатора выполняется:
-- количество зависит от количества основного блюда
-- модификатор является бесплатным
-- количество модификатора по умолчанию равно 3
+Considering the value of the `IRestaurant.DisplayRelativeNumberOfModifiers` setting in Syrve POS calculates the number of modifier portions in string form, which is displayed on the UI.
 
-Тогда при `IRestaurant.DisplayRelativeNumberOfModifiers` равном `true` отобразится:
-- _+2 Сметана_, если увеличить количество модификатора на 2
-- _- Сметана_, если уменьшаем количество на 1
+For example, a dish has the Sour cream modifier, which is included in the group of modifiers. For this modifier is run:
+- the amount depends on the amount of the main dish
+- modifier is free
+- the default amount of modifier is 3
 
-При `IRestaurant.DisplayRelativeNumberOfModifiers` равном `false` отобразится абсолютное количество модификатора у блюда:
-- _х5 Сметана_, если увеличить количество модификатора на 2 
-- _х2 Сметана_, если уменьшить на 1
+Then if `IRestaurant.DisplayRelativeNumberOfModifiers` is `true` it will display:
+- _+2 Sour cream_, if increase the amount of the modifier by 2
+- _- Sour cream_, if reducing the amount by 1
 
-Для удобства разработчиков плагинов и возможности перенести логику к себе на UI, приведем пример получения строки количества модификаторов здесь.
+If `IRestaurant.DisplayRelativeNumberOfModifiers` is `false` the absolute amount of modifier in the dish will be displayed:
+- _х5 Sour cream_, if increase the amount of the modifier by 2
+- _х2 Sour cream_, if reducing the amount by 1
 
-Метод CalculateModifierAmountString принимает
+For the convenience of plugin developers and the possibilities to transfer the logic to their UI, here is an example of how to get a line of the number of modifiers.
 
-- `decimal modifierAmount` — количество порций модификатора,
-- `int defaultAmount` — количество порций модификатора по умолчанию,
-- `bool hideIfDefaultAmount` — настроено ли для данного группового модификатора "Скрывать, если количество по умолчанию",
-- `bool isPaid` — является ли модификатор платным,
-- `bool isAmountIndependentOfParentAmount` — настроено ли для данного модификатора "Количество не зависит от количества блюда".
+The `CalculateModifierAmountString` method takes
 
-И в результате возвращает строку вида `<знак><число>`, которую нужно отобразить на UI рядом с названием модификатора, чтобы пользователь увидел на экране `<знак><число> <имя модификатора>`.
+- `decimal modifierAmount` — the amount of portions of the modifier,
+- `int defaultAmount` — the amount of modifier portions by default,
+- `bool hideIfDefaultAmount` — the amount of modifier portions by default "Hide if default quantity",
+- `bool isPaid` — whether the modifier is a paid,
+- `bool isAmountIndependentOfParentAmount` — whether the "Quantity is independent of the amount of the dish" is set for this modifier.
+
+As a result it returns a line of the form `<sign><number>` which has to be displayed on the UI near the name of the modifier for the user can see on the screen `<sign><number> <modifier name>`.
 
 ```cs
 public static string CalculateModifierAmountString(decimal modifierAmount, int defaultAmount, bool hideIfDefaultAmount, bool isPaid, bool isAmountIndependentOfParentAmount)
 {
-    // Настройка способа отображения количества групповых модификаторов блюда.	
+    // Set the method of displaying the amount of group modifiers of a dish.
     var showDeltaAmount = PluginContext.Operations.GetHostRestaurant().DisplayRelativeNumberOfModifiers;
 
-    // Если включена опция "Количество не зависит от количества блюда", то всегда пишем "+N".
+    // If the option "Quantity is independent of the quantity of the dish" is enabled, we always write "+N".
     if (isAmountIndependentOfParentAmount)
         return $"+{modifierAmount}";
 
-    // Если модификатор платный или показываем абсолютное количество модификаторов, то пишем "×N".
-
+    // If the modifier is paid or we show the absolute number of modifiers, we write "×N".
     const string charX = "\u00D7";
     var multiplyAmountString = $"{charX}{modifierAmount}";
 
     if (isPaid || !showDeltaAmount)
         return multiplyAmountString;
 
-    // Показываем относительное количество модификаторов.
-
+    // Shows the relative amount of modifiers.
     var deltaAmount = modifierAmount - defaultAmount;
 
     switch (deltaAmount)

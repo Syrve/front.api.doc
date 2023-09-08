@@ -1,58 +1,39 @@
 ---
-title: Диалог ввода строк и штрихкодов
+title: Dialog for entering rows and barcodes
 layout: default
 ---
-# Диалог ввода строк и штрихкодов #
+# Dialog for entering rows and barcodes #
 
-Плагины могут запрашивать данные (строки, штрихкоды, карты) у пользователя с помощью диалоговых окон.
-Здесь мы будем рассматривать диалог [`IViewManager.ShowExtendedKeyboardDialog`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowExtendedKeyboardDialog.htm), но есть и другие диалоги, о которых можно прочитать в статье [Диалоговые окна]({{ site.baseurl }}/v6/ru/ViewManager.html).
+Plugins can request data (rows, barcodes, cards) from the user using dialog windows. Here we will be looking at [`IViewManager.ShowExtendedKeyboardDialog`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowExtendedKeyboardDialog.htm), but there are also other dialogs, which you can read more about in the article [Dialogs]({{ site.baseurl }}/v6/ru/ViewManager.html).
 
-## Как это выглядит в iikoFront?
+## How does it look in Syrve POS?
 
-Диалог ввода строк можно показать везде, где доступен [`IViewManager`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm).
-В плагине [`Resto.Front.Api.SamplePlugin`](https://github.com/iiko/front.api.sdk/tree/master/sample/v7preview7/Resto.Front.Api.SamplePlugin) в классе [`ButtonsTester`](https://github.com/iiko/front.api.sdk/blob/master/sample/v7preview7/Resto.Front.Api.SamplePlugin/ButtonsTester.cs) есть пример его показа по клику на кнопку `SamplePlugin: Show extended keyboard view`:
+The Row Entry Dialog can be shown everywhere the [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) is available. In [`Resto.Front.Api.SamplePlugin`](https://github.com/syrve/front.api.sdk/tree/master/sample/v7preview7/Resto.Front.Api.SamplePlugin) in the [`ButtonsTester`](https://github.com/syrve/front.api.sdk/blob/master/sample/v7preview7/Resto.Front.Api.SamplePlugin/ButtonsTester.cs) class there is an example of showing it by clicking the `SamplePlugin: Show extended keyboard view`:
 
 ![extendedKeyboardDialog](../../img/extendedKeyboardDialog/extendedKeyboardDialog.png)
 
-Далее в статье будем использовать именно этот подход — показ окна ввода строки при нажатии на кнопку.
+In this article we will use that way: displaying the row input window when the button is clicked.
 
-Диалог поддерживает следующие типы ввода:
-- произвольная строка.
-- скрытая строка.
-- считывание штрихкода.
-- считывание карты.
+The dialog supports the following entry types:
+- random row
+- hidden row
+- bar code reading
+- card reading
 
-Диалог принимает на вход 8 параметров:
-- `string title` - заголовок диалога.
-- `string initialText` - необязательный параметр.
-Строка, которая будет введена при показе диалога.
-По умолчанию `String.Empty`.
-- `bool isMultiline` - необязательный параметр.
-Позволяет вводить многострочный текст.
-Игнорируется при выставленном параметре `isPassword = true`.
-По умолчанию `true`.
-- `int maxLength` - необязательный параметр.
-Максимальная длина строки.
-По умолчанию `Int32.MaxValue`.
-- `bool capitalize` - необязательный параметр.
-Писать ли слова автоматически с заглавной буквы.
-Игнорируется, если параметр `isPassword` равен `true`.
-По умолчанию `false`.
-- `bool isPassword` - необязательный параметр.
-Скрывать ли строку при вводе.
-По умолчанию `false`.
-Игнорируется, если параметры `isMultiline` и `capitalize` равны `true`.
-- `bool enableCardSlider` - необязательный параметр.
-Возможно ли вводить данные с помощью прокатки карты.
-По умолчанию `false`.
-- `bool enableBarcode` - необязательный параметр.
-Возможно ли вводить данные с помощью считывания штрихкода.
-По умолчанию `false`.
+The dialog accepts 8 parameters as input:
+- `string title` - dialog title.
+- `string initialText` - optional parameter. The line which will be entered when the dialog box is displayed. Defaults to `String.Empty`.
+- `bool isMultiline` - optional parameter. Allows multi-line text to be entered. Ignored if the parameter `isPassword = true`. The default is `true`.
+- `int maxLength` - Maximum line length. By default `Int32.MaxValue`.
+- `bool capitalize` - optional parameter. Whether to write words automatically with a capital letter. Ignored if the `isPassword` parameter is true. The default is `false`.
+- `bool isPassword` - optional parameter. Whether to hide the line when entering it. The default is `false`. Ignored if the `isMultiline` and `capitalize` parameters are `true`.
+- `bool enableCardSlider` - optional parameter. Whether it is possible to enter data with a rolling card. Defaults to `false`.
+- `bool enableBarcode` - optional parameter. Whether it is possible to enter data by reading a barcode. The default is `false`.
 
-### Ввод произвольной строки
+### Entering an arbitrary row
 
-На ввод произвольной строки оказыают влияние параметры `initialText`, `isMultiline` и `capitalize`.
-Например, запретим многострочный ввод, введённая строка будет начинаться с заглавной буквы:
+The `initialText`, `isMultiline` and `capitalize`.
+parameters influence the input of an arbitrary string. For example, if we disallow multiline input, the entered line will start with a capital letter:
 
 ```cs
 PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: String input example", x =>
@@ -61,12 +42,9 @@ PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: String input exam
 });
 ```
 
-При таких параметрах диалог будет реагировать только на ввод с клавиатуры.
-Сканирование штрихкода и прокатка карты не будут учитываться. Все слова будут вводиться с заглавной буквы.
-Это может быть полезно при вводе имени, фамилии и отчества.
+With these parameters, the dialog will respond only to keyboard input. Barcode scanning and card rolling will not be taken into. All words will be entered with a capital letter. This may be helpful when entering the first name, last name and middle name.
 
-Полученный результат необходимо привести к типу [`StringInputDialogResult`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_View_StringInputDialogResult.htm).
-Дополним код:
+The result must be converted to [`StringInputDialogResult`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_View_StringInputDialogResult.htm)type. Let's append the code:
 
 ```cs
 PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: String input example", x =>
@@ -74,14 +52,14 @@ PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: String input exam
     var inputResult = x.vm.ShowExtendedKeyboardDialog("String input example", isMultiline: false, capitalize: true);
     var strResult = inputResult as StringInputDialogResult;
     if (strResult == null)
-        return; //Пользователь нажал "Отмена"
-    var result = strResult.Result; //Введённый пользователем текст
+        return; //The user clicked "Cancel"
+    var result = strResult.Result; //User-entered text
 });
 ```
 
-### Ввод скрытой строки
+### Entering a hidden row
 
-Можно скрыть введённую строку с помощью параметра `isPassword`:
+You can hide the entered line with the parameter `isPassword`:
 
 ```cs
 PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: Password input example", x =>
@@ -89,18 +67,16 @@ PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: Password input ex
     var inputResult = x.vm.ShowExtendedKeyboardDialog("Password input example", isPassword: true);
     var strResult = inputResult as StringInputDialogResult;
     if (strResult == null)
-        return; //Пользователь нажал "Отмена"
-    var result = strResult.Result; //Введённый пользователем скрытый текст
+        return; //The user clicked "Cancel"
+    var result = strResult.Result; //User-entered hidden text
 });
 ```
 
-Как было написано выше, параметры `isMultiline` и `capitalize` не будут учитываться.
-Однако, остается возможность передать `true` в параметры `enableCardSlider` и `enableBarcode`, что позволит прокатывать карту и сканировать штрих-код.
+As was written earlier, the `isMultiline` and `capitalize` parameters will not be considered. However, it remains possible to send `true` to the `enableCardSlider` and `enableBarcode`parameters, which will allow you to rolling the card and scanning the barcode.
 
-### Считывание карт
+### Card reading
 
-Можно отследить считывание карты с помощью параметра `enableCardSlider`.
-Результат необходимо привести к типу [`CardInputDialogResult`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_View_CardInputDialogResult.htm):
+The card reading can be tracked with the `enableCardSlider` parameter.The result will have to be of type [`CardInputDialogResult`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_View_CardInputDialogResult.htm):
 
 ```cs
 PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: Card input example", x =>
@@ -108,18 +84,16 @@ PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: Card input exampl
     var inputResult = x.vm.ShowExtendedKeyboardDialog("Card input example", enableCardSlider: true);
     var cardResult = inputResult as CardInputDialogResult;
     if (cardResult == null)
-        return; //Пользователь нажал "Отмена", либо был другой тип ввода
-    var result = cardResult.FullCardTrack; //Полная информация о карте
+        return; //The user clicked "Cancel" or it was another input type
+    var result = cardResult.FullCardTrack; //Full info on the card
 });
 ```
 
-Запретить ввод через клавиатуру при этом нельзя.
+It is impossible to disable keyboard input in that case.
 
-### Сканирование штрихкода
+### Barcode scanning
 
-Можно отследить сканирование штрихкода с помощью параметра `enableBarcode`.
-При этом сканирование сервисных штрихкодов не будет учитываться.
-Результат необходимо привести к типу [`BarcodeInputDialogResult`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_View_BarcodeInputDialogResult.htm):
+Barcode scanning can be tracked with the `enableBarcode` parameter. In this way, the scanning of service barcodes will not be considered. The result has to be converted to type [`BarcodeInputDialogResult`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_View_BarcodeInputDialogResult.htm):
 
 ```cs
 PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: Barcode input example", x =>
@@ -127,17 +101,14 @@ PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: Barcode input exa
     var inputResult = x.vm.ShowExtendedKeyboardDialog("Barcode input example", enableBarcode: true);
     var barcodeResult = inputResult as BarcodeInputDialogResult;
     if (barcodeResult == null)
-        return; //Пользователь нажал "Отмена", либо был другой тип ввода
-    var result = barcodeResult.Barcode; //Считанный штрихкод
+        return; //The user clicked "Cancel" or there was another input type
+    var result = barcodeResult.Barcode; //Readed barcode
 });
 ```
 
-### Смешанный ввод
+### Mixed input
 
-Пусть наш диалог будет работать и с вводом текста, и с штрихкодами, и с картами.
-Тогда нужно правильно обработать результат ввода.
-В `SamplePlugin` есть пример такого подхода.
-Модифицируем наш код для поддержки всех типов ввода:
+Let our dialog work with text input, barcodes, and cards. Then we need to correctly process the result of input. `SamplePlugin` еhas an example of this way. Let's modify our code to support all input types:
 
 ```cs
 PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: Mixed input example", x =>
@@ -146,16 +117,16 @@ PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: Mixed input examp
     switch (inputResult)
     {
         case StringInputDialogResult stringInputDialogResult:
-            var strResult = stringInputDialogResult.Result; //Введённый пользователем текст
+            var strResult = stringInputDialogResult.Result; //User-entered text
             return;
         case CardInputDialogResult cardInputDialogResult:
-            var cardResult = cardInputDialogResult.FullCardTrack; //Полная информация о карте
+            var cardResult = cardInputDialogResult.FullCardTrack; //Full info on the card
             return;
         case BarcodeInputDialogResult barcodeInputDialogResult:
-            var barcodeResult = barcodeInputDialogResult.Barcode; //Считанный штрихкод
+            var barcodeResult = barcodeInputDialogResult.Barcode; //Readed barcode
             return;
         default:
-            return; //Пользователь нажал "Отмена"
+            return; //The user clicked "Cancel"
     }
 });
 ```

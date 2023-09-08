@@ -21,6 +21,7 @@ You can find it under the name IExternalPaymentProcessor.PaymentSystemName in th
 
 ![frontPT](../../img/payment/frontPT.png)
 
+
 Пояснения к терминам:
 
 - *Платёжная система* – декларирует, как именно осуществляется проведение и возврат платежей. На весь iikoRMS платёжная система декларируется в единственном экземпляре. 

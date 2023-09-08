@@ -1,14 +1,14 @@
 ---
-title: Окна запроса даты и времени
+title: Date and time request windows
 layout: default
 ---
-# Окна запроса даты и времени #
+# Date and time request windows #
 
-В процессе работы плагина может потребоваться запросить у пользователя дату и время. Для этого можно показать диалоговые окна с помощью методов [`IViewManager.ShowDateNumpadPopup`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateNumpadPopup.htm), [`IViewManager.ShowDateTimePopup`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateTimePopup.htm) и [`IViewManager.ShowCalendarPopup`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCalendarPopup.htm).
+While the plugin is running, it may be needed to require the user to request the date and time. For this, the dialog windows can be shown using [`IViewManager.ShowDateNumpadPopup`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateNumpadPopup.htm), [`IViewManager.ShowDateTimePopup`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateTimePopup.htm) and [`IViewManager.ShowCalendarPopup`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCalendarPopup.htm).
 
-## Как это выглядит в iikoFront?
+## How does it look in Syrve POS?
 
-В ряде случаев в процессе работы плагина ему доступен экземпляр класса [`IViewManager`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm). Он доступен, например, при обработке нажатия на кнопку: 
+In some cases, an instance of the [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) class is available to the plugin. It is available, for example, during the processing of a button click:
 
 ```cs
 PluginContext.Operations.AddButtonToPluginsMenu("Sample Plugin", x =>
@@ -17,7 +17,7 @@ PluginContext.Operations.AddButtonToPluginsMenu("Sample Plugin", x =>
 });
 ```
 
-или срабатывании некоторых событий:
+or the triggering of some events:
 
 ```cs
 PluginContext.Notifications.BeforeOrderBill.Subscribe(x =>
@@ -26,35 +26,32 @@ PluginContext.Notifications.BeforeOrderBill.Subscribe(x =>
 });
 ```
 
-Более подробно об этом классе можно прочитать в статье «[Диалоговые окна]({{ site.baseurl }}/v6/ru/ViewManager.html)».
+For more details about this class, see the article «[Dialog windows]({{ site.baseurl }}/v6/ru/ViewManager.html)». In these cases, the [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) can be used to show dialog windows. Consider all methods for requesting the date and time from a user. As an example, create a button using the [`IOperationService.AddButtonToPluginsMenu`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToPluginsMenu.htm)method, as shown above, and show dialogs when it is clicked.
 
-В таких случаях, можно с помощью [`IViewManager`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) показывать диалоговые окна. Рассмотрим все методы для запроса у пользователя даты и времени. Для примера, создадим кнопку с помощью метода [`IOperationService.AddButtonToPluginsMenu`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToPluginsMenu.htm), как это показано выше, и при нажатии на неё будем показывать диалоговые окна.
+### Option 1: Date Numpad Popup
 
-### Вариант 1: Date Numpad Popup
-
-Можно запросить только дату с помощью простого диалога с цифровой клавиатурой:
+A simple dialog with the number keypad can be used to request a date only:
 
 ```cs
-PluginContext.Operations.AddButtonToPluginsMenu("Sample Plugin", x =>
 {
     var dateNumpadPopupResult = x.vm.ShowDateNumpadPopup(DateTime.Today, "Date Numpad");
 });
 ```
 
-Таким образом, при нажатии на кнопку будет показано окно выбора даты:
+This way, when you click on the button, the date selection window will be shown
 
 ![date-numpad-popup](../../img/showDateTimePopup/DateNumpadPopup.png)
 
-Метод [`IViewManager.ShowDateNumpadPopup(DateTime selectedDate, string title)`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateNumpadPopup.htm) принимает на вход 2 аргумента:
+Method [`IViewManager.ShowDateNumpadPopup(DateTime selectedDate, string title)`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateNumpadPopup.htm) accepts 2 arguments:
 
-- `DateTime selectedDate` — дата, которая будет выбрана при показе окна.
-- `string title` — заголовок окна.
+- `DateTime selectedDate` — date that will be selected when the window is displayed.
+- `string title` — window title
 
-Метод вернёт выбранную пользователем дату, если он нажмёт *«OK»*, либо `null`, если он нажмёт *«Отмена»*.
+The method will return the date selected by the user if he presses *«OK»*, or `null`,  if he presses *«Cancel»*.
 
-### Вариант 2: Date-Time Popup
+### Option 2: Date-Time Popup
 
-Можно запросить дату и время с помощью диалога:
+A date and time can be requested through a dialog:
 
 ```cs
 PluginContext.Operations.AddButtonToPluginsMenu("Sample Plugin", x =>
@@ -63,26 +60,26 @@ PluginContext.Operations.AddButtonToPluginsMenu("Sample Plugin", x =>
 });
 ```
 
-При нажатии на кнопку будет показано окно выбора даты и времени:
+ПриPressing the button will display the date and time selection window:
 
 ![date-numpad-popup](../../img/showDateTimePopup/DateTimePopup.png)
 
-Если нажать на текущую дату, то будет показан календарь, с помощью которого можно быстро переключиться на другой день:
+By clicking on the current date, the calendar is shown, with which a quick switch to another day can be made:
 
 ![date-numpad-popup](../../img/showDateTimePopup/DateTimePopupCalendar.png)
 
-Метод [`IViewManager.ShowDateTimePopup(DateTime selectedDate, [CanBeNull] string title, DateTime minDate, DateTime maxDate)`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateTimePopup.htm) принимает на вход 4 аргумента:
+The method [`IViewManager.ShowDateTimePopup(DateTime selectedDate, [CanBeNull] string title, DateTime minDate, DateTime maxDate)`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateTimePopup.htm) accepts 4 arguments:
 
-- `DateTime selectedDate` — дата и время, которые будут выбраны при показе окна.
-- `string title` — заголовок окна.
-- `DateTime minDate` — минимальные дата и время, которые могут быть выбраны. Свойство влияет и на календарь.
-- `DateTime maxDate` — максимальные дата и время, которые могут быть выбраны. Свойство влияет и на календарь.
+- `DateTime selectedDate` — date and time that will be selected when the window is displayed.
+- `string title` — window title.
+- `DateTime minDate` — the minimum date and time that can be selected. The value also affects the calendar.
+- `DateTime maxDate` — the maximum date and time that can be selected. The value also affects the calendar.
 
-Метод вернёт выбранные пользователем дату и время, если он нажмёт *«OK»*, либо `null`, если он нажмёт *«Отмена»*.
+The method will return the date and time selected by the user if he presses *«OK»*, or `null` if he presses *«Cancel»*.
 
-### Вариант 3: Calendar Popup
+### Option 3: Calendar Popup
 
-Для выбора даты можно использовать окно с календарём:
+For selecting a date, it is possible to use the window with the calendar:
 
 ```cs
 PluginContext.Operations.AddButtonToPluginsMenu("Sample Plugin", x =>
@@ -91,15 +88,15 @@ PluginContext.Operations.AddButtonToPluginsMenu("Sample Plugin", x =>
 });
 ```
 
-При нажатии на кнопку будет показано окно:
+By clicking on the button, the window will be shown:
 
 ![date-numpad-popup](../../img/showDateTimePopup/CalendarPopup.png)
 
-Метод [`IViewManager.ShowCalendarPopup(DateTime selectedDate, [CanBeNull] string title, DateTime minDate, DateTime maxDate)`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCalendarPopup.htm) принимает на вход 4 аргумента:
+The method [`IViewManager.ShowCalendarPopup(DateTime selectedDate, [CanBeNull] string title, DateTime minDate, DateTime maxDate)`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCalendarPopup.htm) accepts 4 arguments for input:
 
-- `DateTime selectedDate` — дата, которая будет выбрана при показе окна.
-- `string title` — заголовок окна.
-- `DateTime minDate` — минимальная дата, которая может быть выбрана.
-- `DateTime maxDate` — максимальная дата, которая может быть выбрана.
+- `DateTime selectedDate` — date that will be selected when the window is displayed.
+- `string title` — window title.
+- `DateTime minDate` — the minimum date that can be selected.
+- `DateTime maxDate` — the maximum date that can be selected.
 
-Метод вернёт выбранную пользователем дату, если он нажмёт *«OK»*, либо `null`, если он нажмёт *«Отмена»*.
+The method will return the date selected by the user if he presses *«OK»* or `null`,  if he presses *«Cancel»*.
