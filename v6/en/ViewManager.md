@@ -1,80 +1,82 @@
 ---
-title: Диалоговые окна
+title: Dialogs
 layout: default
 ---
-# Возможности ViewManager 
-## «Точки входа» 
-[`IViewManager`](http://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_UI_IViewManager.htm "IViewManager") позволяет показывать предопределённый набор встроенных в iikoFront диалоговых окон. Эта возможность доступна плагину, когда iikoFront в рамках модальной операции передаёт ему управление, вызывая соответствующий метод и передавая в него одним из аргументов экземпляр `IViewManager`. Данный объект актуален только в рамках метода, в который он приходит, и будет уничтожен, когда плагин вернёт управление из этого метода. 
+# ViewManager Functionality
 
-Примеры модальных операций:
+## «Access Points» 
+[`IViewManager`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_UI_IViewManager.htm) allows displaying preset Syrve POS dialogs. This is possible when Syrve POS transfers control to the plugin within a modal operation by calling a corresponding method and feeding an `IViewManager` instance to it as one of the arguments. This object is only relevant within the method it is fed to, and will be eliminated when the plugin returns control from the method. 
 
-- [Вызов](http://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_UI_Button_PerformAction.htm "Button_PerformAction") обработчика нажатия на кнопку, [добавленную](http://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IPluginIntegrationService_AddButton.htm "IPluginIntegrationService_AddButton") плагином в меню «Дополнения». 
-- Взаимодействие с реализованным в плагине типом оплаты: процесс сбора данных, проведения и возврата оплаты (см. [`IExternalPaymentProcessor`](http://iiko.github.io/front.api.sdk/v6/html/Methods_T_Resto_Front_Api_IExternalPaymentProcessor.htm "IExternalPaymentProcessor")) *(см. статью про [API внешних типов оплаты](PaymentProcessor.html "Внешние типы оплаты"))*
+Examples of modal operations:
 
-## Общий принцип
-Плагин вызывает метод  и обрабатывает результат: `var result = viewManager.ShowSomething(...)`. В зависимости от сигнатуры конкретного метода плагин получит либо переменную примитивного типа (`bool`, `int`, `string`), либо экземпляр одной из реализаций [`IInputDialogResult`](http://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_View_IInputDialogResult.htm "IInputDialogResult"), в зависимости от семантики.
+- [Invoking](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_UI_Button_PerformAction.htm) of the button pressing processor for a button [added](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IPluginIntegrationService_AddButton.htm) by the plugin in the Advanced menu. 
+- Interaction with the payment method made available within the plugin: data collection, posting, and refund processes (see [`IExternalPaymentProcessor`](https://syrve.github.io/front.api.sdk/v6/html/Methods_T_Resto_Front_Api_IExternalPaymentProcessor.htm)) (see the [External Payment Methods API](PaymentProcessor.html) article)*
 
-Если бизнес-логика требует валидации введенного значения *(например, при вводе номера гостиничной комнаты нужно проверить, что такой номер есть в гостинице)*, то правильный подход такой:
+## General Concept
+A plugin invokes a method and processes the result: `var result = viewManager.ShowSomething(...)`. Depending on the method signature, the plugin receives whether a primitive variable (`bool`, `int`, `string`) or an [`IInputDialogResult`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_View_IInputDialogResult.htm) instance based on the semantics.
 
-- пользователь закрывает диалоговое окно,
-- плагин валидирует результат, 
-- если валидация не проходит, диалоговое окно показывается вновь.
+If the business logic requires value validation (for instance, the hotel room number availability needs to be verified), the proper approach is the following:
+
+- a user closes the dialog
+- a plugin validates the result
+- if the validation does not succeed, the dialog pops up again
 
 ![check_number](../../img/viewmanager/check_number.gif)
 
-Для уведомлений, не требующих явной реакции пользователя, рекомендуется использовать немодальные всплывающие окна (см. [notification](http://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_AddNotificationMessage_1.htm "IOperationService_AddNotificationMessage"), [warning](http://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_AddWarningMessage_1.htm "IOperationService_AddWarningMessage"),  [error](http://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_AddErrorMessage_1.htm "IOperationService_AddErrornMessage")), они не требуют экземпляра `IViewManager`, поэтому их можно показать в любой момент.    
+In the case of notifications that do not require the user’s response, it is recommended to use non-modal pop-ups (see [notification](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_AddNotificationMessage_1.htm ), [warning](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_AddWarningMessage_1.htm), [error](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_AddErrorMessage_1.htm))as they do not require the `IViewManager` instance, therefore, they can be shown at any time.  
 
-## Описание доступных возможностей
-### Диалог с одной кнопкой
-`ShowOkPopup()` показывает диалоговое окно с заголовком, текстом и кнопкой «OK», закрывающей диалог.
+## Description of Functionality
+### Dialog with one button
+`ShowOkPopup()` shows a dialog box with a heading, text, and the «OK» button that closes the dialog.
 
 ![ok](../../img/viewmanager/ok.png)
 
-`ShowErrorPopup()` показывает диалоговое окно с заголовком «Ошибка», текстом и кнопкой «Закрыть».
+`ShowErrorPopup()` shows a dialog box with the «Error» heading, text, and the «Close» button.
 
 ![error](../../img/viewmanager/error.png)
 
-### Диалог с двумя кнопками «Да»/«Нет»
-`ShowYesNoPopup()` показывает диалоговое окно с заголовком, текстом и двумя кнопками и возвращает `true`, если нажали «Да».
+### Dialog with two buttons «Yes/No»
+`ShowYesNoPopup()` shows a dialog box with a heading, text, and two buttons, and returns `true` if «Yes» is pressed.
 
 ![yesno](../../img/viewmanager/yesno.png)
 
-### Диалог выбора элемента из списка
-`ShowChooserPopup()` в качестве параметров принимает список строк и опционально индекс выбранного по умолчанию элемента, а возвращает индекс выбранного пользователем элемента. Имеет обёртку, принимающую список объектов и функцию получения текстового представления объекта `Func<T, string> `, опционально выбранный по умолчанию элемент, а возвращает выбранный пользователем элемент. Если элемент не был выбран пользователем *(нажата «Отмена»)*, возвращается `-1` или `null`. Необязательным параметром можно задать ширину кнопок в списке. Чем у́же одна кнопка, тем больше колонок с кнопками влезет на одну страницу. По умолчанию, кнопки имеют ширину `ButtonWidth.Normal`.
+### Selection dialog
+`ShowChooserPopup()` receives a list of strings and, optionally, the default item index as parameters and returns the index of the item of choice. It has the wrapping that receives a list of objects and the function to receive text representation of the object `Func<T, string> `, optionally, the default item, and returns the user-selected item. If an item is not selected by the user *(«Cancel» is pressed)*, `-1` or `null` comes in return. The button width can be specified as an optional parameter. The narrower the button, the more columns with buttons fit one page. By default, the button width is `ButtonWidth.Normal`.
 
 ![chooser](../../img/viewmanager/chooser.png)
 
-### Диалог ввода произвольных строк
-`ShowKeyboard()` показывает диалоговое окно с экранной клавиатурой. Можно задать следующие параметры:
+### Custom lines input dialog
+`ShowKeyboard()` shows a dialog with the on-screen keyboard. Available parameters:
 
-- начальный текст
-- допускается ли многострочный ввод
-- ограничение по длине вводимой строки
-- нужно ли превращать первые буквы каждого вводимого слова в заглавные *(удобно для ввода имён собственных)*
-- маскировать ли ввод *(если подразумевается ввод пароля)*
+- opening text
+- multiline input allowed or not
+- line length limit
+- whether or not the first letter of each word should be capitalized *(it is convenient for proper names)*
+- whether to mask the input or not *(if a password is keyed in)*
  
 ![keyboard](../../img/viewmanager/keyboard.png)
 
-### Диалог ввода чисел 
-Для ввода числа можно использовать `ShowInputDialog()` с параметром `type = InputTypes.Number` и опциональным параметром `initialValue` – начальное значение. Чтобы интерпретировать результат ввода, нужно привести возвращаемый `IInputDialogResult` к `NumberInputDialogResult`.
+### Numbers input dialog 
+`ShowInputDialog()` with the `type = InputTypes.Number` parameter and the `initialValue` optional parameter – starting value can be used to enter the number. To interpret the input result, the returnable `IInputDialogResult` needs to be brought to `NumberInputDialogResult`.
 
 ![number](../../img/viewmanager/number.png)
 
-### Диалог ввода числовых строк
-Кроме упомянутого выше метода, есть `ShowExtendedInputDialog()`. Одним из его параметров является класс настроек `ExtendedInputDialogSettings`. Если в нём задать `ExtendedInputDialogSettings.EnableNumericString = true` то пользователю будет предложено ввести цифры. Совместно с данной настройкой можно задать и поясняющий текст `ExtendedInputDialogSettings.TabTitleNumericString`. В отличие от упомянутого выше способа ввода, тут введённые данные представляют собой строку, что позволяет вводить «ведущие нули», а также большие числа, превышающие `int`. Чтобы интерпретировать результат ввода, нужно привести возвращаемый `IInputDialogResult` к `NumericStringInputDialogResult`.
+### Enumerated string input dialog
+In addition to the one mentioned above, there is the `ShowExtendedInputDialog()` method. One of its parameters is the settings class `ExtendedInputDialogSettings`. If you set `ExtendedInputDialogSettings.EnableNumericString = true` there, users would be prompted to enter digits. Along with the setting, a descriptive text can be set `ExtendedInputDialogSettings.TabTitleNumericString`. Unlike the above-mentioned input method, the data entered within this method represent a string, which allows entering leading zeros, as well as large numbers, exceeding `int`. To interpret the input result, the returnable `IInputDialogResult` needs to be brought to`NumericStringInputDialogResult`.
 
 ![ext_number](../../img/viewmanager/ext_number.png)
 
-Пример:
+Example:
+
 ```cs
 var settings = new ExtendedInputDialogSettings
 {
     EnableNumericString = true,
-    TabTitleNumericString = "Заголовок вкладки для ввода числа"
+    TabTitleNumericString = “Number input tab title"
 }
 var dialogResult = viewManager.ShowExtendedInputDialog(
-                "Заголовок окна", 
-                "Подзаголовок, поясняющий что именно нужно ввести пользователю.",
+                “Window title”, 
+                “Subtitle that tells users what exactly should be entered”,
                 settings) 
     as NumericStringInputDialogResult;
 if (dialogResult == null)
@@ -82,52 +84,52 @@ if (dialogResult == null)
 // analyze result
 ```
 
-### Диалог ввода штрихкодов 
-Метод `ShowExtendedInputDialog()` может быть вызван с настройкой `ExtendedInputDialogSettings.EnableBarcode = true`, которая идёт совместно с `ExtendedInputDialogSettings.TabTitleBarcode`. Чтобы интерпретировать результат ввода, нужно привести возвращаемый `IInputDialogResult` к `BarcodeInputDialogResult`.
+### Barcode input dialog 
+The `ShowExtendedInputDialog()` method can be invoked with the `ExtendedInputDialogSettings.EnableBarcode = true` setting, which goes together with `ExtendedInputDialogSettings.TabTitleBarcode`. To interpret the input result, the returnable `IInputDialogResult` needs to be brought to `BarcodeInputDialogResult`.
 
-### Диалог ввода номеров телефонов
-Ещё одна настройка для `ShowExtendedInputDialog()` — это `ExtendedInputDialogSettings.EnablePhone = true`, которая идёт совместно с `ExtendedInputDialogSettings.TabTitlePhone`. В этом случае валидация вводимых пользователем данных будет происходить в соответствии с настройками в системе для телефонных номеров, в поле ввода будет маска с кодом страны. Пока введенные данные не будут валидными, нажать «OK» будет невозможно. Чтобы интерпретировать результат ввода, нужно привести возвращаемый `IInputDialogResult` к `PhoneInputDialogResult`.
+### Phone number input dialog
+Another setting of `ShowExtendedInputDialog()` is `ExtendedInputDialogSettings.EnablePhone = true`, which goes together with `ExtendedInputDialogSettings.TabTitlePhone`. In this case, user-specified data is validated according to the telephone number system settings; the input field includes the area code mask. Until the input data is not validated, «OK» will not be available. To interpret the input result, the returnable `IInputDialogResult` needs to be brought to `PhoneInputDialogResult`.
 
 ![ext_phone](../../img/viewmanager/ext_phone.png)
 
-### Диалоги с возможностью прокатки карт
-Прокатку карт можно включить и в `ShowInputDialog()`, и в `ShowExtendedInputDialog()`. В первом случае нужно указать 
-`type = InputTypes.Card`, во втором – `ExtendedInputDialogSettings.EnableCardSlider = true`. В обоих случаях, чтобы интерпретировать результат ввода, нужно привести возвращаемый `IInputDialogResult` к `CardInputDialogResult`.
+### Dialogs that allow card swiping
+Card swiping can be enabled in both `ShowInputDialog()` and `ShowExtendedInputDialog()`. In the first case, `type = InputTypes.Card` needs to be specified, in the second – `ExtendedInputDialogSettings.EnableCardSlider = true`.  In both cases, to interpret the input result, the returnable `IInputDialogResult` needs to be brought to `CardInputDialogResult`.
 
-### Дополнительно
-Способы ввода в `ShowInputDialog()` и `ShowExtendedInputDialog()` можно комбинировать путём сочетания доступных настроек. Например, можно просить пользователя ввести номер или прокатать карту. В этом случае возвращаемый результат нужно будет пытаться приводить к каждому из ожидаемых типов результатов. 
+### Miscellaneous
+Input methods in `ShowInputDialog()` and `ShowExtendedInputDialog()` can be combined by using available settings together. For instance, a user can be asked to enter the card number or swipe their card. In this case, the returnable result needs to be brought to each of the expected result types.
 
-Пример 1 (код):
+Example 1 (code):
+
 ```cs
 var result = viewManager.ShowInputDialog(
-    "Введите номер комнаты или прокатайте карту",
+    “Enter the room number or swipe the card”
     InputDialogTypes.Number | InputDialogTypes.Card);
 
 if (result is NumberInputDialogResult numeric)
-    Operations.AddNotificationMessage($"Ввели номер {numeric.Number}", "SamplePlugin");
+    Operations.AddNotificationMessage($”Number entered {numeric.Number}", "SamplePlugin");
 if (result is CardInputDialogResult card)
-    Operations.AddNotificationMessage($"Карта с треком {card.FullCardTrack}", "SamplePlugin");
+    Operations.AddNotificationMessage($”Card track {card.FullCardTrack}", "SamplePlugin");
 ```
-Пример 2 (возможный внешний вид и настройки):
+
+Example 2 (possible layout and settings):
 
 ![ext_input](../../img/viewmanager/ext_input.gif)
 ```cs
 var settings = new ExtendedInputDialogSettings
 {
     EnableBarcode = true,
-    TabTitleBarcode = "Заголовок вкладки штрихкодов",
+    TabTitleBarcode = “Numeric value tab title",
     EnableCardSlider = true,
     EnableNumericString = true,
-    TabTitleNumericString = "Заголовок вкладки для ввода числа", 
+    TabTitleNumericString = “Barcode tab title" 
     EnablePhone = true,
-    TabTitlePhone = "Ваш поясняющий текст телефону"
+    TabTitlePhone = “Phone tab title"
 };
 var dialogResult = viewManager.ShowExtendedInputDialog(
-    "Заголовок окна", 
-    "Подзаголовок, поясняющий что именно нужно ввести пользователю.",
+    “Window title”, 
+    “Subtitle that explains what exactly the user needs to enter.”,
     settings);
 ```
 
-## Ещё кое-что о UI
-Плагин может показывать свои собственные диалоговые окна, но это уже не является частью iikoFront API. На эту тему есть [отдельная статья](CustomWindows.html "Кое-что о UI и .Net").
- 
+## More about UI
+The plugin can show its own dialogs, but this is not included in the Syrve POS API. Please check [another article](CustomWindows.html).

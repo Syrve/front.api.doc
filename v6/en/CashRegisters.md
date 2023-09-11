@@ -74,14 +74,15 @@ When the FCR is connected, all the [`DeviceSettings.Settings`](https://syrve.git
 
 ![CustomCashRegisterSettings](../../img/cashRegister/customCashRegisterSettings.png)
 
-##### Обязательные настройки:
-Есть настройки, которые присутствуют в любой модели ФРа. К ним относятся:
-- [`CashRegisterSettings.Font0Width`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings_Font0Width.htm) — ширина чековой ленты (вкладка *«Основные настройки»*).
-- [`CashRegisterSettings.OfdProtocolVersion`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings_OfdProtocolVersion.htm) — версия протокола формата фискальных данных, далее ФФД (вкладка *«Основные настройки»*). Актуально только для РФ.
-- [`CashRegisterSettings.FiscalRegisterTaxItems`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings_FiscalRegisterTaxItems.htm) — список регистров ФРа, соответствующие налоговым категориям (вкладка *«Налоговые категории»*).
+##### Required Settings:
+Certain settings are shared by all FCR models. Those are:
+- [`CashRegisterSettings.Font0Width`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings_Font0Width.htm) — receipt tape width (*«Main Settings tab»*).
+- [`CashRegisterSettings.OfdProtocolVersion`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings_OfdProtocolVersion.htm) — fiscal data format (FFD) protocol version (*«Main Settings tab»*).
+- [`CashRegisterSettings.FiscalRegisterTaxItems`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings_FiscalRegisterTaxItems.htm) —  list of FCR registers that correspond to tax categories (*«Tax Categories»* tab).
 
 ![FiscalRegisterTaxItems](../../img/cashRegister/fiscalRegisterTaxItems.png)
-- [`CashRegisterSettings.FiscalRegisterTaxItems`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings_FiscalRegisterPaymentItem.htm) — список регистров ФРа, соответствующие типам оплат (вкладка *«Типы оплат и регистры»*).
+
+- [`CashRegisterSettings.FiscalRegisterTaxItems`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings_FiscalRegisterPaymentItem.htm) — list of FCR registers that correspond to payment types (*«Payment Types and Register»* tab).
 
 ![FiscalRegisterTaxItems](../../img/cashRegister/fiscalRegisterPaymentItem.png)
 
@@ -97,17 +98,12 @@ class CashRegisterSettings : DeviceSettings
 }
 ```
 
-# Взаимодействие iikoFront с внешним фискальным регистратором
-Взаимодействие iikoFront с внешним ФРом происходит через интерфейс [`ICashRegister`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Devices_ICashRegister.htm).
-Именно он отвечает за поведение внешнего ФРа.
-К примеру, если в iikoFront происходит оплата заказа, управление придет в команду [`ICashRegister.DoCheque()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoCheque.htm) с необходимыми данными [`ChequeTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeTask.htm) для проведения операции на ФР. iikoFront будет ждать выполнения команды и анализировать ответ ФРа [`CashRegisterResult`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterResult.htm).
+# Syrve POS to External Fiscal Registers Interaction
+Syrve POS communicates with External Fiscal Registers using the [`ICashRegister`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Devices_ICashRegister.htm) interface. This interface is used to control external FCR operations. For instance, if an order is being paid in Syrve POS, the control will come in the [`ICashRegister.DoCheque()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoCheque.htm) command with the [`ChequeTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeTask.htm) details required to perform the operation on the FCR. Syrve POS would standby until the command is executed and would analyze the FCR response ‒ [`CashRegisterResult`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterResult.htm).
 
-#### Операций ФРа
-**1.** [`Setup()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_Setup.htm) — установка настроек, конфигураций ФРа. 
-Это первая команда, выполняемая плагином. 
-Вызывается при добавлении нового ФРа или при редактировании настроек ФРа. 
-Основная задача плагина сохранить и применить новые настройки [`CashRegisterSettings`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings.htm), которые приходят аргументом.
-Чаще всего в этой команде происходит остановка драйвера ФР, применение новых настроек и запуск ФР, если ФР был запущен:
+#### FCR Operations
+**1.** [`Setup()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_Setup.htm) — FCR setup. This is the first command executed by the plugin. It is invoked when you add a new FCR or edit existing FCR settings. The primary plugin’s task is to save and apply new [`CashRegisterSettings`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings.htm) settings that arrive as an argument. More often than not, this command stops the FCR driver, applies new settings, and starts the FCR if it has been running:
+
 ```cs
 public void Setup([NotNull] DeviceSettings newSettings)
 {
@@ -121,20 +117,19 @@ public void Setup([NotNull] DeviceSettings newSettings)
 }
 ```
 
-**2.** [`Start()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_Start.htm) — запуск ФРа.
-Команда вызывается по нажатию «Запустить» в iikoOffice.
- Также ФР может быть запущен автоматически, если при добавлении устройства в настройках ФР установить флаг «Запускать автоматически».
+**2.** [`Start()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_Start.htm) — FCR startup. The command is invoked by clicking «Start» in Syrve Office. The FCR can also start automatically if the «Start automatically» option is enabled in the FCR settings at the time the device is added.
  
 ![StartExternalCashRegister](../../img/cashRegister/startExternalCashRegister.png)
 
-Обычно в этой команде происходит инициализация драйвера, открытие порта, соединение с устройством и тестирование соединения:
+Usually, this command initializes the driver, opens the port, connects to the device, and tests the connection:
+
 ```cs
 public void Start()
 {
     SetState(State.Starting);
     try
     {
-        driver = new Driver(); // инициализация драйвера устройства
+        driver = new Driver(); // device driver initialization
         driver.Start()
     }
     catch (Exception e)
@@ -146,9 +141,8 @@ public void Start()
     SetState(State.Running);
 }
 ```
-**3.** [`Stop()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_Stop.htm) — остановка ФРа.
-Команда вызывается по нажатию «Остановить» в iikoOffice.
-Команда предназначена для остановки устройства, освобождения ресурсов и закрытия портов, например:
+**3.** [`Stop()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_Stop.htm) — FCR stopping. The command is invoked by clicking Stop in Syrve Office. The command is used to stop the device, free up the resources, and close ports, for instance:
+
 ```cs
 public void  Stop()
 {
@@ -165,198 +159,173 @@ public void  Stop()
     SetState(State.Stopped);
 }
 ```
-**4.** [`RemoveDevice()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_RemoveDevice.htm) — удаление устройства. 
-Команда вызывается при выборе «Удалить» в контекстном меню позиции с внешним ФРом в iikoOffice.
-Объект ФР в RMS будет помечен удаленным, если выполнение команды не выбросит исключение.
+**4.** [`RemoveDevice()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_RemoveDevice.htm) — Deletion. The command is invoked if the Delete shortcut menu item is clicked on the external FCR device in Syrve Office. The FCR object will be marked as removed in the RMS if the command does not throw an exception.
 
-**5.** [`GetDeviceInfo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_GetDeviceInfo.htm) — запрос состояния ФРа.
-Команда вызывается каждый раз при открытии вкладки *«Администрирование» => «Настройки оборудования»* или по нажатию кнопки *«Обновить»* на той же вкладке.
+**5.** [`GetDeviceInfo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_GetDeviceInfo.htm) — FCR status request. The command is invoked each time the «Administration« > «Equipment Settings« menu item is selected or by clicking «Update« in the Equipment Settings window.
 
 ![GetDeviceInfo](../../img/cashRegister/getDeviceInfo.png)
 
-Исходя из полученного ответа [`DeviceInfo`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_DeviceInfo.htm), RMS понимает протокол общения с ФРом: можно ли с ним работать, какие команды можно отправлять ФРу.
-Состояние ФРа описывается типом [`DeviceInfo`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_DeviceInfo.htm), который содержит:
-- [`State`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_DeviceInfo_State.htm) — *состояние ФРа*.
-Это может быть *«Running» (запущен)*, *«Stopped» (остановлен)* и прочее.
-- [`Comment`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_DeviceInfo_Comment.htm) — *текстовое описание состояния ФРа*. 
-- [`Settings`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_DeviceInfo_Settings.htm) — *настройки ФРа* [`CashRegisterSettings`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings.htm).
+Depending on the [`DeviceInfo`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_DeviceInfo.htm)response, the RMS reads the FCR communication protocol as follows: is the FCR operational and what commands can be sent to it. The FCR status is described by the [`DeviceInfo`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_DeviceInfo.htm) type:
+- [`State`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_DeviceInfo_State.htm) — *FCR status*. It can be *«Running»*, *«Stopped»*, and so on.
+- [`Comment`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_DeviceInfo_Comment.htm) — *FCR status description*. 
+- [`Settings`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_DeviceInfo_Settings.htm) — *FCR settings* [`CashRegisterSettings`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings.htm).
 
-Пример реализации запроса состояния подключенного и запущенного устройства:
+Example of the started and running device status request:
+
 ```cs
 public DeviceInfo GetDeviceInfo()
 {
     return new DeviceInfo
     {
         State = State.Running,
-        Comment = "Работает",
+        Comment = “Running",
         Settings = currentCashRegisterSettings
     };
 }
 ```
-**6.** [`DoOpenSession()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoOpenSession.htm) — открыть кассовую смену (КС). 
-Актуально для тех ФРов, драйверы которых имеют команду *«Открыть смену»*.
-Например, ФРы ФЗ-54, т.к. нужно указывать имя кассира.
-Если ФР не имеет отдельной команды для открытия смены, то нужно вернуть успешный ответ [`CashRegisterResult.Success = true`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterResult.htm) без выполнения операции в ФР.
 
-**7.** [`DoXReport()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoXReport.htm) — печать X-отчета или его аналога (промежуточный суточный отчет без закрытия смены).
-Кассовая смена на iikoFront считается открытой если команда [`DoOpenSession()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoOpenSession.htm) выполнится без исключения, а [`DoXReport()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoXReport.htm) вернет успешный результат: [`CashRegisterResult.Success = true`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterResult.htm).
+**6.** [`DoOpenSession()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoOpenSession.htm) — open till shift (TS). Applicable to the FCRs, drivers of which have the *«Open Shift»* command. If the FCR has no separate command to open a shift, a successful response [`CashRegisterResult.Success = true`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterResult.htm) should be given without executing the operation in the FCR.
 
-**8.** [`DoBillCheque()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoBillCheque.htm) — пречек заказа или отмена пречека.
-Команда выполняется на тех ФРах, которые поддерживают печать пречека [`CashRegisterDriverParameters.IsBillTaskSupported = true`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Settings_CashRegisterDriverParameters.htm) 
-(см. чек типа [`«Счёт»`]({{ site.baseurl }}/2019/03/13/bill-chequetask-resolver.html)).
+**7.** [`DoXReport()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoXReport.htm) — print an X Report or similar (interim daily report without closing a shift). An Syrve POS till shift is considered open, if the [`DoOpenSession()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoOpenSession.htm) command is executed without any exceptions, and [`DoXReport()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoXReport.htm) returns a successful result: [`CashRegisterResult.Success = true`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterResult.htm).
 
-Информация по заказу приходит в аргументе [`BillTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_BillTask.htm):
-- [`Id`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CashRegisterTask_Id.htm) — уникальный номер выполняемой операции.
-- [`CashierName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CashRegisterTask_CashierName.htm) — имя кассира.
-- [`CashierId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CashRegisterTask_CashierId.htm) — GUID кассира, его идентификатор:
+**8.** [`DoBillCheque()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoBillCheque.htm) — guest bill or canceling guest bill. Executed if the FCR supports guest bill printing  [`CashRegisterDriverParameters.IsBillTaskSupported = true`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Settings_CashRegisterDriverParameters.htm) (see [`«Invoice»`]({{ site.baseurl }}/2019/03/13/bill-chequetask-resolver.html) type receipt).
+
+Order details arrive in the [`BillTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_BillTask.htm) argument:
+- [`Id`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CashRegisterTask_Id.htm) — operation unique number.
+- [`CashierName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CashRegisterTask_CashierName.htm) — cashier name.
+- [`CashierId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CashRegisterTask_CashierId.htm) — cashier GUID, their ID:
+
    ```cs
     IUser cashier = PluginContext.Operations.GetUserById(CashierId)
    ```
-- [`CashierTaxpayerId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CashRegisterTask_CashierTaxpayerId.htm) — ИНН кассира.
-- [`IsRefund`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_IsRefund.htm) — флаг, который сигнализирует об отмене операции. 
-Если на фронте выбрали команду «Возрат заказа», флаг  будет равен "true" и тогда ФР должен будет напечатать чек возврата.
-- [`IsCancellation`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_IsCancellation.htm) — аннулирование чека, актуально только для Республики Беларусь и Латвии. 
-Аннулирование - это отмена ошибочного чека продажи. 
-Если кассир делает возврат товара, ФР печатает чек возврата.
-Если кассир ошибочно пробил чек, должен напечататься чек аннулирования.
-- [`Sales`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_Sales.htm) — позиции заказа [`ChequeSale`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeSale.htm).
-Чаще всего это набор информации по блюдам заказа, иногда позиции группируются по НДС. 
-Это зависит в частности от ФР, поддерживает ли он ФФД выше 1.0.
-- [`СancellingSaleNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_СancellingSaleNumber.htm) — номер заказа (актуально только для Республики Беларусь). 
-Заполняется, когда идет отмена операции. 
-Операций может быть две: пречек заказа и оплата заказа. 
-Т.к. тип [`ChequeTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeTask.htm) (см. операцию закрытие заказа) включает в себя тип  [`BillTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_BillTask.htm), все текущие поля имеют также отношение и к закрытию заказа.
-- [`DiscountSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_DiscountSum.htm) — общая сумму скидок по всем элементам заказа.
-Сюда включены только некатегориальные скидки. 
-Это те скидки, которые действуют в целом на заказа, а не на какое-то отдельное блюдо или их категорию.
-- [`IncreaseSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_IncreaseSum.htm) — общуя сумма надбавок по всем элементам заказа. 
-Сюда также включены только надбавки, действующие на заказ в целом.
-- [`DiscountPercent`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_DiscountPercent.htm) — процент скидки на сумму заказа.
-Здесь процент скидки или надбавки приводится больше для информации, не стоит на основе их делать какие-либо расчеты, например, пересчитывать скидки. 
-```cs
-DiscountPercent = (Сумма блюд / DiscountSum) * 100
-```
-- [`IncreasePercent`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_IncreasePercent.htm) — процент надбавки на сумму заказа.
-```cs
-IncreasePercent = (Сумма блюд / IncreaseSum) * 100
-```
-- [`ResultSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_ResultSum.htm) — итоговая сумма заказа с учетом  всех скидок и надбавок. 
-Эта сумма получается путем сложения всех стоимостей позиций заказа с учетом НДС, скидок, надбавок, округления. 
-Можно представить в виде формулы:
-```cs
-ResultSum = Сумма блюд - все скидки - Округление(RoundSum) + все надбавки
-```
-- [`TableNumberLocalized`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_TableNumberLocalized.htm) — отформатированная строка с номером стола. Если в настройках ФРа стоит флаг *«Печатать номер заказа»*, то и с номером заказа (пример: «Стол: 10» или «Стол: 10 Заказ: 5»).
-- [`OrderNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_OrderNumber.htm) — номер заказа.
-- [`TableNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_TableNumber.htm) — номер стола.
-- [`PrintArticle`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_PrintArticle.htm) — содержит значение настройки группы торгового предприятия *«Печатать артикул на чеке»* (*«Администрирование» => «Настройки торгового предприятия» => «Группа» => «Настройка типов оплат»*).
-- [`TextBeforeCheque`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_TextBeforeCheque.htm) — текст добавляемый в начало чека.
-Функционал добавления такого текста становится доступным после поддержки интерфейса [`IChequeTaskProcessor`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Devices_ChequeTaskProcessor_IChequeTaskProcessor.htm) и его регистрации с помощью команды [`RegisterChequeTaskProcessor()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_RegisterChequeTaskProcessor.htm).
-- [`TextAfterCheque`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_TextAfterCheque.htm) — текст добавляемый в конец чека.
+   
+- [`CashierTaxpayerId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CashRegisterTask_CashierTaxpayerId.htm) — cashier Tax ID.
+- [`IsRefund`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_IsRefund.htm) — flag to signal that an operation is canceled. If «Refund» is selected in Syrve POS, the flag takes the `true` value, and the FCR must print a refund receipt.
+- [`IsCancellation`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_IsCancellation.htm) — receipt voiding is only applicable in Belarus and Latvia. Voiding is the invalidation of incorrect sales receipts. If a cashier makes a refund, the FCR prints a refund receipt. If a cashier makes a mistake when posting receipts, a voiding receipt must be printed out.
+- [`Sales`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_Sales.htm) — [`ChequeSale`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeSale.htm) order items. Usually, those are order items details, sometimes grouped by VAT. This particularly depends on the FCR ‒ whether or not it supports FFD later than v.1.0.
+- [`СancellingSaleNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_СancellingSaleNumber.htm) — order number (applicable only in Belarus). It is filled up when the operation is canceled. There might be two operations: order guest bill and order payment. As the [`ChequeTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeTask.htm) type (see order closing operation) includes the [`BillTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_BillTask.htm) type, all current fields are related to the closing of orders as well.
+- [`DiscountSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_DiscountSum.htm) — total discount amount. This includes only uncategorized discounts. Those are discounts that apply to the entire order rather than any individual item or category of items.
+- [`IncreaseSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_IncreaseSum.htm) — total surcharge amount. This includes only surcharges that apply to the entire order.
+- [`DiscountPercent`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_DiscountPercent.htm) — discount % on order amount. The discount or surcharge percentage here is given for reference only, so you don’t need to use them in your calculations, for instance, recalculate discounts.
 
-Позиции заказа описываются типом [`ChequeSale`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeSale.htm):
-- [`Name`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Name.htm) — наименование позиции (товар, блюдо и прочее).
-- [`Code`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Code.htm) — артикул позиции.
-В некоторых случаях артикул может отсутствовать (в этом случае передается ноль).
-Например, печатается чек со сгруппированными по НДС позициям или чек предоплаты.
-- [`Price`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Price.htm) — цена позиции, без учета скидок и надбавок.
-- [`Amount`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Amount.htm) — количество позиции.
-- [`GuestName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_GuestName.htm) — имя гостя, которому соответствует позиция в чеке.
-- [`Vat`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Vat.htm) — сумма НДС позиции.
-- [`Section`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Section.htm) — секция ФРа, которому принадлежит блюдо, согласно карте приготовления блюд (*«Администрирование» => «Настройки торгового предприятия» => «Группа» => «Общие настройки» => «Общая карта приготовления блюд»*).
-- [`DiscountSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_DiscountSum.htm) — сумма категориальных скидок, которые действуют на данную позицию.
-- [`IncreaseSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_IncreaseSum.htm) — сумма категориальных надбавок, которые действуют на данную позицию.
-- [`Discount`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Discount.htm) — процент скидки на позицию.
 ```cs
-Discount = (Стоимость позиции / DiscountSum) * 100
+DiscountPercent = (Order total / DiscountSum) * 100
 ```
-- [`Increase`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Increase.htm) — процент надбавки на позицию.
+
+- [`IncreasePercent`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_IncreasePercent.htm) — surcharge % order amount.
+
 ```cs
-Increase = (Стоимость позиции / IncreaseSum) * 100
+IncreasePercent = (Order total / IncreaseSum) * 100
 ```
-- [`Sum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Sum.htm) — итоговая стоимость позиции, с учетом всех скидок и надбавок, как на отдельную позицию, так и на весь чек (категориальные и некатегориальные скидки и надбавки).
+
+- [`ResultSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_ResultSum.htm) — total order amount with all discounts and surcharges applied. This amount is the sum of all item prices including tax, discounts, surcharges, and rounding. It can be given in the following formula:
+
 ```cs
-Sum = стоимость позиции - все скидки, действующие на позицию + все надбавки
+ResultSum = Order total - all discounts - rounding amount(RoundSum) + all surcharges
 ```
-- [`IsTaxable`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_IsTaxable.htm) — облагается ли позиция налогом (проверяется наличие принадлежности к налоговой категории).
-- [`TaxId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_TaxId.htm) — идентификатор налоговой ставки в ФР, соответствующая той налоговой категории, которой принадлежит позиция заказа (*«Администрирование» => «Настройки оборудования» => «Настройки ФРа» => «Налоговые категории»).
-Если настроено сопоставление налоговых категорий iiko и ФР, то передается идентификатор налоговой ставки, которую указал пользователь.
-Если сопоставление не настроено (стоит значение «По умолчанию»), то передается пустая строка.
-- [`TransferType`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_TransferType.htm) — признак способа расчета (аванс (*«Advance»*), оплата (*«FullPayment»*) и прочее).
-- [`ItemCategory`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_ItemCategory.htm) — код признака предмета расчета, который соотвествует позиции, согласно справочнику *«Товары и склады» => «Признаки расчета»*. 
-- [`Contractor`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Contractor.htm) — комитент/поставщик.
-Комитент указывается в настройках группы в таблице *«Общая карта приготовления блюд»* (*«Администрирование» => «Настройки торгового предприятия» => «Группа» => «Общие настройки» => «Общая карта приготовления блюд»*).
-- [`GtinCode`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_GtinCode.htm) — 14-тизначный «Global Trade Item Number» для позиции чека.
-- [`ProductId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_ProductId.htm) — идентификатор блюда, товара, улуги или другое.
-Чтобы получить блюдо:
+
+- [`TableNumberLocalized`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_TableNumberLocalized.htm) — formatted string with the table number. If FCR settings have the Print Order Number option enabled, then the string has the order number as well (for example, «Table: 10» or «Table: 10 Order: 5»).
+- [`OrderNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_OrderNumber.htm) — order number.
+- [`TableNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_TableNumber.htm) — table number.
+- [`PrintArticle`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_PrintArticle.htm) — includes *«Print SKU On Receipt»* as the outlet group setting value (*«Administration» > «Outlet Settings» > «Group» > «Payment type setup»*).
+- [`TextBeforeCheque`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_TextBeforeCheque.htm) — text at the top of the receipt. This functionality becomes available once the  [`IChequeTaskProcessor`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Devices_ChequeTaskProcessor_IChequeTaskProcessor.htm) interface is implemented and registered using the [`RegisterChequeTaskProcessor()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_RegisterChequeTaskProcessor.htm) command.
+- [`TextAfterCheque`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_TextAfterCheque.htm) — text at the bottom of the receipt.
+
+Order items are described through the [`ChequeSale`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeSale.htm) type:
+- [`Name`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Name.htm) — item name (product, menu item, and so on).
+- [`Code`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Code.htm) — item SKU.  In some cases, an SKU may be missing (zero is used instead). For instance, a receipt with items grouped by VAT or prepayment receipt is printed out.
+- [`Price`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Price.htm) — item price before discounts and surcharges.
+- [`Amount`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Amount.htm) — item quantity.
+- [`GuestName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_GuestName.htm) — name of quest who ordered an item.
+- [`Vat`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Vat.htm) — item VAT amount.
+- [`Section`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Section.htm) —  section of the fiscal register to which an item belongs according to the general preparation chart (*«Administration» > «Outlet Settings» > «Group» > «General Settings» > «General Preparation Chart»*).
+- [`DiscountSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_DiscountSum.htm) — amount of category discounts applicable to the item.
+- [`IncreaseSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_IncreaseSum.htm) — amount of category surcharges applicable to the item.
+- [`Discount`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Discount.htm) — item discount percentage.
+
+```cs
+Discount = (Item price / DiscountSum) * 100
+```
+
+- [`Increase`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Increase.htm) — item surcharge percentage.
+
+```cs
+Increase = (Item price / IncreaseSum) * 100
+```
+
+- [`Sum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Sum.htm) — both item and entire order total price after all discounts and surcharges (categorial and non-categorial).
+
+```cs
+Sum = item price ‒ all applicable discounts + all surcharges
+```
+
+- [`IsTaxable`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_IsTaxable.htm) — whether or not an item is subject to tax (tax category is verified).
+- [`TaxId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_TaxId.htm) — FCR tax rate ID according to the tax category an item falls into (*«Administration» > «Equipment Settings» > «FCR Settings» > «Tax Categories»*). If Syrve tax categories are matched against FCR tax categories, the tax rate ID specified by the user is transferred. If tax categories are not matched («Default» value is used), the null string is transferred.
+- [`TransferType`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_TransferType.htm) — payment method flag (advance payment (*«Advance»*), payment (*«FullPayment»*), and so on).
+- [`ItemCategory`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_ItemCategory.htm) — payment attribute flag code that matches an item according to the *«Inventory Management» > «Payment Attributes database»*.
+- [`Contractor`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Contractor.htm) — supplier. A supplier is specified in the *«General Preparation Chart»* table of the group settings (*«Administration» > «Outlet Settings» > «Group» > «General Settings» > «General Preparation Chart»*).
+- [`GtinCode`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_GtinCode.htm) — 14-character Global Trade Item Number of a receipt item.
+- [`ProductId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_ProductId.htm) — identifier of an item, product, service, or any other unit. To get a menu item:
+
 ```cs
 PluginContext.Operations.GetProductById(chequeTask.Sales[0].ProductId)
 ```
-После нажатия на «Пречек» на экране заказа, фронт отправляет команду ФРу и ожидает от него ответ [`CashRegisterResult`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterResult.htm), который состоит из следующего:
-- [`Success`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Success.htm) — true — операция прошла успешно, false — операция не выполнилась или прошла с ошибкой.
-- [`Message`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Message.htm) — текстовое сообщение выполнения команды ФРом. IikoFront выводит данный текст на экран, если операция прошла неуспешно.
-- [`CashSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_CashSum.htm) — сумма наличности в кассе на момент запроса.
-- [`TotalIncomeSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_TotalIncomeSum.htm) — сумма выручки (наличные + безналичные) в кассе за текущую кассовую смену.
+
+Once the Guest Bill button is tapped on the order screen, the terminal sends a command to the FCR and waits for the response [`CashRegisterResult`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterResult.htm) which includes:
+- [`Success`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Success.htm) — `true` — operation completed successfully, `false` — operation failed or an error occurred.
+- [`Message`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Message.htm) — text message on the FCR command execution. This text is displayed on the POS screen if the operation succeeds.
+- [`CashSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_CashSum.htm) — cash on hand as of the time of request.
+- [`TotalIncomeSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_TotalIncomeSum.htm) — total receipts (cash + non-cash) in the cash register for the current till shift.
+
 ```cs
-TotalIncomeSum = сумма продаж - сумма возвратов
+TotalIncomeSum = sales amount ‒ refund amount
 ```
-После закрытия КС или открытия КС [`TotalIncomeSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_TotalIncomeSum.htm) должна быть равна нулю.
-- [`Session`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_Session.htm) — номер смены ФРа.
-- [`SerialNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_SerialNumber.htm) — серийный номер ФРа.
-- [`DocumentNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_DocumentNumber.htm) — номер документа (для ФЗ-54: номер фискального документа) (документами являются открытие смены, внесение, изъятие и прочее).
-- [`SaleNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_SaleNumber.htm) — номер чека (чек: чек продажи, чек возврата).
-- [`BillNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_BillNumber.htm) — номер заказа/счета (актульно для Республики Беларусь).
-- [`RtcDateTime `](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_RtcDateTime.htm) — дата и время в ФР.
 
-Так выглядит ответ на большинство команд ФРа, будь то оплата, предоплата, пречек, возврат, печать Z-отчета, печать X-отчета, внесение, изъятие.
-В зависимости от содержимого ответа, iikoFront решает выполнилась ли команда на ФР и с каким результатом.
-В общем случае, для любой операции с таким ответом, если результат вернулся неуспешным [`Success`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Success.htm)=*false*, iikoFront выведет ошибку на экран с текстом сообщения [`Message`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Message.htm) и iikoFront будет считать, что на ФРом команда не была выполнена.
-Это не касается проверки на задвоение, которая выполняется при каждой денежной операции (оплата, возврат, внесение, изъятие, предоплата). 
-Задача этого механизма не дать выполнить денежную операцию повторно, на тот случай, если ФР вернул ошибку.
-iikoFront перед каждой такой операцией будет пытаться выявить несоответствие денежных сумм в ФРе со своими подсчетами. 
+Once the till shift is closed or opened, [`TotalIncomeSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_TotalIncomeSum.htm) must be zero.
+- [`Session`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_Session.htm) — FCR shift number.
+- [`SerialNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_SerialNumber.htm) — FCR serial number.
+- [`DocumentNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_DocumentNumber.htm) — document number (till shift opening, deposits, withdrawals, and others are documents).
+- [`SaleNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_SaleNumber.htm) — receipt number (receipt: sales receipt, refund receipt).
+- [`BillNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_BillNumber.htm) — order/bill number (applicable in Belarus).
+- [`RtcDateTime `](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_RtcDateTime.htm) — FCR date and time.
 
+This is how a response to the majority of FCR commands looks like, whether it is the payment, prepayment, guest bill, Z report printing, X report printing, deposit, or withdrawal. Depending on the response contents, Syrve POS tells whether an FCR command is executed or not and what is the result. In the general case, if an operation that receives such a response is unsuccessful ([`Success`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Success.htm)=*false*), Syrve POS would display an error message on the screen ([`Message`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Message.htm)) and consider the FCR command as failed. This does not apply to the doubling check carried out each time a monetary operation (payment, refund, deposit, withdrawal, prepayment) takes place. This procedure is aimed to prevent duplicate monetary transactions in case the FCR returns an error. Prior to each such operation, Syrve POS would match FCR amounts against internal calculations to identify any discrepancies. 
 
-Если отрицательный ответ iikoFront обрабатывает одинаково, то успешный результат для каждой операции анализируется по-разному.
-Так, в случае пречека, номер счета/заказа будет сохранен в базу iikoFront, при условии, что [`BillNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_BillNumber.htm) != *null*.
+Negative results are processed equally by Syrve POS, whereas positive results are analyzed case by case. Thus, in the case of a guest bill, an order/bill number will be saved in the Syrve POS database provided [`BillNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_BillNumber.htm) != *null*.
 
-**9.** [`DoCheque()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoCheque.htm) — закрытие заказа, предоплата, возврат.
-Команда вызывается при закрытии заказа (по нажатию «Оплатить» на экране кассы) в iikoFront. Вся необходимая информация по заказу, его оплатах, кассире приходит в аргементе [`ChequeTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeTask.htm), который включает в себя описание [`BillTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_BillTask.htm) и дополняет его следующими свойствами:
-- [`CashPayment`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_CashPayment.htm) — сумма оплаты наличными.
-- [`CardPayments`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_CardPayments.htm) — список оплат по безналу. 
-Оплата по безналу [`ChequeCardPayment`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeCardPayment.htm) внутри содержит:
-   — сумму оплаты [`ChequeCardPayment.Name`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeCardPayment_Name.htm). 
-   — регистр ФРа соответствующий типу оплаты [`ChequeCardPayment.PaymentRegisterId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeCardPayment_PaymentRegisterId.htm).
-   — признак по-умолчанию — если регистр ФРа не назначался [`ChequeCardPayment.IsDefaultNonCash`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeCardPayment_IsDefaultNonCash.htm).
-- [`CreditSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_CreditSum.htm) — сумма по чеку постоплатой (в кредит).
-- [`ConsiderationSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_ConsiderationSum.htm) — сумма по чеку встречным предоставлением.
-- [`PrepaymentSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_PrepaymentSum.htm) — сумма по чеку предоплатой (зачетом аванса и (или) предыдущих платежей).
+**9.** [`DoCheque()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoCheque.htm) — order closing, prepayment, refund. The command is invoked when an order is being closed (Pay tapped on the cash register screen) in Syrve POS. All the required order information, like payments and cashier details, arrives within the [`ChequeTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeTask.htm)argument which includes the [`BillTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_BillTask.htm) description and adds the following parameters:
+- [`CashPayment`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_CashPayment.htm) — cash sales amount.
+- [`CardPayments`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_CardPayments.htm) — cashless sales amount. The [`ChequeCardPayment`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeCardPayment.htm) cashless payment contains:
+   — payment amount [`ChequeCardPayment.Name`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeCardPayment_Name.htm), 
+   — FCR register corresponding to the payment type [`ChequeCardPayment.PaymentRegisterId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeCardPayment_PaymentRegisterId.htm),
+   — default flag if the FCR register is not assigned [`ChequeCardPayment.IsDefaultNonCash`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeCardPayment_IsDefaultNonCash.htm).
+- [`CreditSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_CreditSum.htm) — post-payment receipt amount (credit).
+- [`ConsiderationSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_ConsiderationSum.htm) — consideration receipt amount.
+- [`PrepaymentSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_PrepaymentSum.htm) — prepayment receipt amount (advance payment and/or previous payments).
 
-Все вышеперечисленные виды оплат в сумме покрывают стоимость заказа.
+All the above-mentioned payment types put together cover the order price.
 
-- [`RoundSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_RoundSum.htm) — остаток от округления стоимости заказа в пользу клиента.
-К примеру, если заказ стоил 100 руб и 20 коп., [`RoundSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_RoundSum.htm) будет равен 20 коп.
-Округление не включается в сумму скидок на заказ или на позицию, отображается только в текущем поле.
-- [`OrderId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_OrderId.htm) — идентификатор заказа. Чтобы получить заказ:
+- [`RoundSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_RoundSum.htm) — amount of round-off in the customer’s favor. If, for example, an order price is € 20.05, the  [`RoundSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_RoundSum.htm) amount is 5 cents. Rounding amounts are not included in order or item discounts; they are given only in the current field.
+- [`OrderId`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_OrderId.htm) — order identifier. To get the order:
+
     ```cs
     PluginContext.Operations.GetOrderById(chequeTask.OrderId.Value)
     ```
-- [`PrepaymentId`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_PrepaymentId.htm) — guid оплаты, который позволяет однозначно определить возвращаемый чек. Используется для всех операций предоплат, и нужен для связки предоплаты с возвратом предоплаты, в любой другой операции там будет null. Плагин может вести свою локальную базу операций, записывая туда операции предоплат с необходимыми данными. Таким образом, при выполнении возврата предоплаты он сможет определить конкретную операцию предоплаты и использовать, например, уникальные идентификаторы конкретной операции выполнения возврата по ней.
-- [`BillNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_BillNumber.htm) — фискальный номер чека.
-- [`OperationTime`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_OperationTime.htm) — время закрытия заказа.
-- [`IsOfdElectronicChequeOnly`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_ChequeTask_IsOfdElectronicChequeOnly.htm) — только печать чека, без отправок смс и прочего.
-- [`OfdPhoneNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_OfdPhoneNumber.htm) — номер телефона ОФД для получения копии чека.
-- [`OfdEmail`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_OfdEmail.htm) — email ОФД для получения копии чека.
-- [`TaxationSystem`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_TaxationSystem.htm) — система налогообложения чека.
-- [`SettlementAddress`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_SettlementAddress.htm) — адрес расчета.
-Заполняется согласно настройкам ФР *«Администрирование» => «Настройки оборудования» => «Настройки ФРа» => «Дополнительная информация»*.
-- [`SettlementPlace`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_SettlementPlace.htm) — место расчета.
-Заполняется согласно настройкам ФР *«Администрирование» => «Настройки оборудования» => «Настройки ФРа» => «Дополнительная информация»*.
+	
+- [`PrepaymentId`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_PrepaymentId.htm) — payment GUID which makes it possible to clearly identify the refunded receipt. Used for all prepayment operations and is required to link prepayments with refunds; any other operation returns null. The plugin may keep its own local operation database registering prepayment operations details. Therefore, when prepayments are refunded, the plugin would identify the prepayment operation and use, for example, unique refund IDs.
+- [`BillNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_BillNumber.htm) — receipt fiscal number.
+- [`OperationTime`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_OperationTime.htm) — order closing time.
+- [`IsOfdElectronicChequeOnly`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_ChequeTask_IsOfdElectronicChequeOnly.htm) — receipt printing only; no SMS or any other notifications.
+- [`OfdPhoneNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_OfdPhoneNumber.htm) — OFD phone number to receive a receipt copy.
+- [`OfdEmail`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_OfdEmail.htm) — OFD email to receive a receipt copy.
+- [`TaxationSystem`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_TaxationSystem.htm) — receipt taxation system.
+- [`SettlementAddress`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_SettlementAddress.htm) — payment address. It depends on the FCR settings made in *«Administration» > «Equipment Settings» > «FCR Settings» > «Additional Information»*.
+- [`SettlementPlace`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeTask_SettlementPlace.htm) — payment place. It depends on the FCR settings made in *«Administration» > «Equipment» Settings» > «FCR Settings» > «Additional Information»*.
 
-При проведении оплат, предоплат, возвратов, внесений, изъятий iikoFront может сверять свои подсчеты денежных сумм по кассовой смене с подсчетами ФРа, это зависит от конфигурации iikoFront, по-умолчанию сверка происходит. Делается это для того, чтобы  избежать возможного дублирования печати чека, который мог все-таки напечататься, даже если вернулся неуспешный результат [`Success`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Success.htm)=*false*.
-Для этого анализируются поля [`CashSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_CashSum.htm) и [`TotalIncomeSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_TotalIncomeSum.htm). 
-Также после оплаты iikoFront в БД сохраняет номер документа ФРа [`DocumentNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_DocumentNumber.htm), потом этот номер можно увидеть в закрытом заказе и номер продажи [`SaleNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_SaleNumber.htm).
+If so configured, Syrve POS matches till shift financial calculations with the FCR calculations when processing payments, prepayments, refunds, deposits, and withdrawals; by default, this verification is enabled. This helps avoid repeated receipt printing that may actually take place even if the result is unsuccessful ‒ [`Success`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Success.htm)=*false*. For this, the [`CashSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_CashSum.htm) and [`TotalIncomeSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_TotalIncomeSum.htm) fields are analyzed. Also, once the payment is made, Syrve POS saves the FCR [`DocumentNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_DocumentNumber.htm) in the database; you can then see this number and the [`SaleNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterResult_SaleNumber.htm) in the closed order detail
 
-Пример реализации [`DoCheque()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoCheque.htm): 
+[`DoCheque()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoCheque.htm) implementation example:
+
 ```cs
 public CashRegisterResult DoCheque([NotNull] ChequeTask chequeTask)
 {
@@ -364,56 +333,56 @@ public CashRegisterResult DoCheque([NotNull] ChequeTask chequeTask)
 		throw new ArgumentNullException(nameof(chequeTask));
 
 	if (chequeTask.IsCancellation)
-		throw new DeviceException("Чек аннулирования не поддерживается");
+		throw new DeviceException("Cancellation receipts are not supported");
 
 	driver.SetCashier(chequeTask.CashierName, chequeTask.CashierTaxpayerId);
 
-	//Отменяем открытие документы, если они есть
+	//Canceling open documents if any
 	driver.ResetDevice();
 	
-	//Открыть чек
+	//Opening receipt
 	if (chequeTask.isRefund)
 		driver.OpenRefundCheck();
 	else
 		driver.OpenSaleCheck()
 
-	//печатаем номер стола и заказа
+	//printing table and order number
 	driver.PrintText(string.IsNullOrWhiteSpace(chequeTask.TableNumberLocalized)
 		? string.Format("Стол: {0}, Заказ № {1}", chequeTask.TableNumber, chequeTask.OrderNumber)
 		: chequeTask.TableNumberLocalized);
 
-	//Печатаем дополнительные строки в начале чека
+	//Printing additional strings at the top of receipt
 	if (!string.IsNullOrWhiteSpace(chequeTask.TextBeforeCheque))
 		driver.PrintText(chequeTask.TextBeforeCheque);
 
 	foreach (var sale in chequeTask.Sales)
 	{
-		var taxId = GetTaxId(sale); //получаем налоговую ставку
+		var taxId = GetTaxId(sale); //retrieving tax rate
 		driver.RegisterItem(sale.Name, sale.Price, sale.Amount, taxId);
 
-		//Регистрируем скидку на позицию
+		//Registering item discount
 		if (sale.DiscountSum > 0.0m)
 			driver.RegisterDiscount(sale.DiscountSum)
 		
-		//Регистрируем надбавку на позицию
+		//Registering item surcharge
 		if (sale.IncreaseSum > 0.0m)
 			driver.RegisterIncrease(sale.IncreaseSum);
 	}
 	
-	//Печатает подытог чека
+	//Printing receipt subtotal
 	driver.PrintSubtotal();
 	
-	//Регистрируем скидку на подытог чека
+	//Registering receipt subtotal discount
 	if (chequeTask.DiscountSum > 0.0m)
 		driver.RegisterSubtotalDiscount(chequeTask.DiscountSum)
 
-	//Регистрируем надбавку на подытог чека
+	//Registering receipt subtotal surcharge
 	if (chequeTask.IncreaseSum > 0.0m)
 		driver.RegisterSubtotalIncrease(chequeTask.IncreaseSum);
 
 	foreach (var cardPayment in chequeTask.CardPayments)
 	{
-		var paymentRegisterId = GetPaymentRegisterId(cardPayment); //получить номер типа оплаты
+		var paymentRegisterId = GetPaymentRegisterId(cardPayment); //get payment type number
 		driver.AddPayment(GetCardPaymentId(cardPayment), cardPayment.Sum);
 	}
 
@@ -421,24 +390,24 @@ public CashRegisterResult DoCheque([NotNull] ChequeTask chequeTask)
 	
 	if (chequeTask.CashPayment > 0.0m || cardPayments == 0.0m)
 	{
-		//cashPaymentId - номер типа оплаты для наличных
+		//cashPaymentId – cash payment type number
 		driver.AddPayment(cashPaymentId, cardPayment.Sum);
 	}
 
-	//Печатаем дополнительные строки в конце чека
+	//Printing additional strings at the bottom of receipt
 	if (!string.IsNullOrWhiteSpace(chequeTask.TextAfterCheque))
 		driver.PrintText(chequeTask.TextAfterCheque);
 
-	//Закрываем чек
+	//Closing receipt
 	driver.CloseCheck();
 	return GetCashRegisterData();
 }
 ```
 
+**10.** [`GetCashRegisterData()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetCashRegisterData.htm) —  FCR data request command. It is invoked each time a fiscal operation takes place to retrieve money amounts details, FCR serial number (if it changed within one TS, Syrve POS would ask to close it and open a new one), or the FCR date and time at the shift opening to reconcile the data.
 
-**10.** [`GetCashRegisterData()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetCashRegisterData.htm) — команда запроса данных ФРа. 
-Вызывается всегда при фискальных операциях для получения данных по денежным суммам, для получения серийного номера ФРа (если серийный номер менялся в пределах одной КС, iikoFront попросит закрыть КС и открыть новую), или даты и времени на ФРе при открытии смены для их сверки.
-Пример реализации [`GetCashRegisterData()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetCashRegisterData.htm):
+[`GetCashRegisterData()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetCashRegisterData.htm) implementation example:
+
 ```cs
 public CashRegisterResult GetCashRegisterData()
 {
@@ -456,73 +425,70 @@ public CashRegisterResult GetCashRegisterData()
 }
 ```
 
-**11.** [`GetCashRegisterStatus()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetCashRegisterStatus.htm) — команда запроса состояния ФРа. 
-Это состояние отображается в трее iikoFront.
-Например, если ФР возвращает режим обслуживания  [`RestaurantMode`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_RestaurantMode.htm) и он не совпадает c режимом обслуживания iikoFront, выведется сообщение «Неверный режим ФР». 
-Также по [`SessionStatus`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SessionStatus.htm) проверяется просроченность смены. Кроме прочего ФР может выводить сообщение в трей, если:
+**11.** [`GetCashRegisterStatus()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetCashRegisterStatus.htm) — FCR status request command. This status is given in the Syrve POS status bar. If, for example, the FCR returns the [`RestaurantMode`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_RestaurantMode.htm) service mode and it does not correspond to the Syrve POS service mode, a warning will be given: «Invalid FCR mode». 
+[`SessionStatus`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SessionStatus.htm) is used to check if the shift is overdue or not. Besides, an FCR may display a message in the status bar if:
+
 ```cs
     status.Success = false && status.Message != null
 ```
-iikoFront опрашивает состояние ФР каждый раз после выполнения любой фискальной операции.
 
-**12.** [`OpenDrawer()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_OpenDrawer.htm) — открыть денежный ящик (ДЯ). 
-В зависимости от настройки типа оплаты «Открывать денежный ящик», на ФР будет отправлена команда открыть денежный ящик. 
+Syrve POS interrogates the FCR status each time a fiscal operation takes place.
 
-**13.** [`IsDrawerOpened()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_IsDrawerOpened.htm) — открыт ли денежный ящик.
-Если ФР не поддерживает команду получения статуса денежного ящика, то нужно вернуть true.
+**12.** [`OpenDrawer()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_OpenDrawer.htm) — open cash drawer. Depending on the «Open Cash Drawer» payment type settings, an FCR will be sent a command to open the drawer.
 
-**14.** [`PrintText()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_PrintText.htm) — печать нефикального документа. 
-Например, печать отчетов, печать штрихкодов для позиций. 
-Текст документа будет прислан в команду [`PrintText()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_PrintText.htm) для печати его на бумаге.
+**13.** [`IsDrawerOpened()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_IsDrawerOpened.htm) — whether or not a cash drawer is open. If an FCR does not support a cash drawer status retrieval command, `true` needs to be returned
 
-**15.** [`DoPayIn()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoPayIn.htm) — внесение денежной суммы в кассу. 
-Информацию по кассиру можно получить так:
+**14.** [`PrintText()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_PrintText.htm) —  printing of non-fiscal documents. For instance, reports or item barcodes. The document text will be sent to the [`PrintText()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_PrintText.htm) command to print it out on paper.
+
+**15.** [`DoPayIn()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoPayIn.htm) — depositing money to the cash register. Cashier details can be retrieved the following way:
+
 ```cs
 IUser cashier = PluginContext.Operations.GetUserById(cashierId)
 ```
-**16.** [`DoPayOut()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoPayOut.htm) — изъятие денежной суммы из кассы.
 
-**17.** [`DoCorrection()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoCorrection.htm) — печать чека коррекции (*iikoFront => «Доп» => «Чек коррекции»*).
+**16.** [`DoPayOut()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoPayOut.htm) — withdrawing money from the cash register.
+
+**17.** [`DoCorrection()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoCorrection.htm) — adjustment bill printing.
  
 ![Сorrection](../../img/cashRegister/correction.png)
-По передаваемому объекту [`CorrectionTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_CorrectionTask.htm), ФР понимает какой чек корреции нужно провести:
-- [`DocumentType`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_DocumentType.htm) — признак расчета: 
-    — [`CorrectionDocumentType.Sale`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_CorrectionDocumentType.htm) — коррекция прихода,
-    — [`CorrectionDocumentType.Buy`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_CorrectionDocumentType.htm) — коррекция расхода.
-- [`CorrectionReason`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_CorrectionReason.htm) — тип коррекции:
-    — [`CorrectionReasonEnum.OwnInitiative`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_CorrectionReasonEnum.htm) — самостоятельная,
-    — [`CorrectionReasonEnum.Determination`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_CorrectionReasonEnum.htm) — по предписанию.
-- [`CashSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_CashSum.htm) — сумма по чеку наличными.
-- [`NonCashSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_NonCashSum.htm) — электронные средства.
-- [`PrepaymentSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_PrepaymentSum.htm) — предоплата.
-- [`CreditSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_CreditSum.htm) — оплата в кредит.
-- [`ConsiderationSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_ConsiderationSum.htm) — оплата встречным предложением.
-- [`DocumentDateTime`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_DocumentDateTime.htm) — дата документа основания для коррекции в формате ГГГГ-ММ-ДД.
-- [`DocumentNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_DocumentNumber.htm) -номер документа основания для коррекции.
-- [`DocumentName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_DocumentName.htm) — наименование документа-основания для коррекции.
-- [`TaxationSystem`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_TaxationSystem.htm) — применяемая система налогообложения.
-- [`VatSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_VatSum.htm) — корректируемые суммы НДС (сумма НДС чека по ставке 18%, 10%, 18/118, 10/110, 0%, без НДС). [`CashRegisterVatData`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterVatData.htm): [`TaxAmount`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterVatData_TaxAmount.htm) — рассчитанная сумма НДС и [`TaxableSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterVatData_TaxableSum.htm) — сумма расчета (для НДС 0 и без НДС).
 
-**18.** [`DoZReport()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoZReport.htm) — закрыть кассовую смену на ФРе. 
-Кассовая смена на iikoFront считается закрытой если команда DoZReport() вернет успешный результат: CashRegisterResult.Success = true.
+Based on the [`CorrectionTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_CorrectionTask.htm) object, an FCR can tell which adjustment bill should be posted:
+- [`DocumentType`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_DocumentType.htm) — payment indicator: 
+    — [`CorrectionDocumentType.Sale`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_CorrectionDocumentType.htm) — receipts adjustment,
+    — [`CorrectionDocumentType.Buy`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_CorrectionDocumentType.htm) — expenses adjustment.
+- [`CorrectionReason`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_CorrectionReason.htm) — adjustment type:
+    — [`CorrectionReasonEnum.OwnInitiative`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_CorrectionReasonEnum.htm) — self-initiated,
+    — [`CorrectionReasonEnum.Determination`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_CorrectionReasonEnum.htm) — by instruction.
+- [`CashSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_CashSum.htm) — receipt amount in cash.
+- [`NonCashSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_NonCashSum.htm) — electronic money.
+- [`PrepaymentSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_PrepaymentSum.htm) — prepayment.
+- [`CreditSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_CreditSum.htm) — payment on credit.
+- [`ConsiderationSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_ConsiderationSum.htm) — consideration payment.
+- [`DocumentDateTime`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_DocumentDateTime.htm) — adjustment supporting document date in the YYYY-MM-DD format.
+- [`DocumentNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_DocumentNumber.htm) — adjustment supporting document No.
+- [`DocumentName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_DocumentName.htm) — adjustment supporting document name.
+- [`TaxationSystem`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_TaxationSystem.htm) — applicable taxation system.
+- [`VatSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_VatSum.htm) — VAT amounts to be adjusted (receipt VAT amounts at the rate of 18%, 10%, 18/118, 10/110, 0%, w/o VAT) [`CashRegisterVatData`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterVatData.htm): [`TaxAmount`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterVatData_TaxAmount.htm) — estimated VAT amount and [`TaxableSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterVatData_TaxableSum.htm) — payment amount (for VAT 0 and w/o VAT).
 
-**19.** [`GetQueryInfo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetQueryInfo.htm) — запрос на расширенные команды ФРа. 
-С помощью команд [`GetQueryInfo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetQueryInfo.htm) и [`DirectIo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DirectIo.htm) ФР может на свое усмотрение добавлять свои команды, которые можно будет вызывать из iikoFront «Доп» => «Команды фискальному регистратору»*.
-Метод [`GetQueryInfo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetQueryInfo.htm) возвращает описание произвольных команд ФР, а [`DirectIo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DirectIo.htm) выполняет их.
-Пример — приветствие пользователя:
+**18.** [`DoZReport()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoZReport.htm) — close till shift on the FCR. An Syrve POS till shift is considered closed if the [`DoZReport()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoZReport.htm) command returns a successful result: [`CashRegisterResult.Success = true`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterResult.htm).
+
+**19.** [`GetQueryInfo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetQueryInfo.htm) — request for FCR extended commands. Using the [`GetQueryInfo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetQueryInfo.htm) and [`DirectIo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DirectIo.htm) commands, the FCR can add custom commands to be invoked from the Plugins section of Syrve POS. The [`GetQueryInfo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetQueryInfo.htm)  method returns the description of custom FR commands, whereas [`DirectIo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DirectIo.htm) executes them. 
+
+Customer greeting example:
+
 ```cs
 public QueryInfoResult GetQueryInfo()
 {
     var supportedCommands = new List<SupportedCommand>
     {
-        // команда приветствия пользователя с кодовым именем "HelloWorld"
-        new SupportedCommand("HelloWorld", "Приветствие")
+        // user greeting command with the "HelloWorld" codename
+        new SupportedCommand("HelloWorld", "Greeting")
         {
-            // параметры ввода
+            // input parameters
             Parameters = new List<RequiredParameter>
             {
-                // поле для ввода имени пользователя
-                new RequiredParameter("UserName", "Имя пользователя", "Введите имя пользователя", "string")
+                // username input field
+                new RequiredParameter("UserName", "Username", "Enter username", "string")
             }
         }
     };
@@ -535,6 +501,7 @@ public QueryInfoResult GetQueryInfo()
     return result;
 }
 ```
+
 ```cs
 public DirectIoResult DirectIo(CommandExecute command)
 {
@@ -543,93 +510,89 @@ public DirectIoResult DirectIo(CommandExecute command)
 
     var result = new DirectIoResult { Document = new Document { Lines = new List<string>() } };
 
-    // находим команду приветствия пользователя по кодовому имени "HelloWorld" 
+    // retrieve user greeting command by the "HelloWorld" codename 
     if (command.Name == "HelloWorld")
     {
-        // считываем данные из параметра ввода имени пользователя
+        // reading data from the username input parameter
         const string paramName = "UserName";
         var userName = command.Parameters.FirstOrDefault(item => item.Name == paramName)?.Value;
         
-        // записываем приветственное сообщение
-        result.Message = userName != null ? $"Привет, {userName}!" : "Привет всем!";
+        // writing greeting message
+        result.Message = userName != null ? $"Hi, {userName}!" : "Hello everybody!";
     }
 
     return result;
 }
 ```
-Выбор команды ФРа:
+
+Selecting FCR commands:
 
 ![SelectCashRegisterCommand](../../img/cashRegister/selectCashRegisterCommand.png)
 
-Ввод имени пользователя:
+Entering user name:
 
 ![InputCommandParameters](../../img/cashRegister/inputCommandParameters.png)
 
-Приветствие пользователя:
+Customer greeting:
 
 ![CommandResult](../../img/cashRegister/commandResult.png)
 
-Таким образом, плагин может запрашивать какие-то данные у пользователя, выводить сообщения, отображать на UI документы. 
-[`QueryInfoResult`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_QueryInfoResult.htm):
-- [`SupportedCommands`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_QueryInfoResult_SupportedCommands.htm) — список поддерживаемых команды ФРа сверх протокола. [`SupportedCommand`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_SupportedCommand.htm) содержит:
-    —  [`Name`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_SupportedCommand_Name.htm) — кодовое имя команды.
-    —  [`ResourceName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_SupportedCommand_ResourceName.htm) — отображаемое имя команды.
-    —  [`Parameters`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_SupportedCommand_Parameters.htm) — поля ввода информации, где [`RequiredParameter.Type`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_RequiredParameter_Type.htm) может быть: *"bool", "string", "int", "datetime", "double"*. 
-	От этого зависит тип ввода поля: текст, ввод целого числа, ввод дробного числа, флаг, ввод даты.
+Therefore, the plugin may request certain customer details, show messages, display documents in the UI. [`QueryInfoResult`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_QueryInfoResult.htm):
+- [`SupportedCommands`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_QueryInfoResult_SupportedCommands.htm) — list of supported extended FCR commands. [`SupportedCommand`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_SupportedCommand.htm) includes:
+    —  [`Name`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_SupportedCommand_Name.htm) — command codename;
+    —  [`ResourceName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_SupportedCommand_ResourceName.htm) — command display name;
+    —  [`Parameters`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_SupportedCommand_Parameters.htm) — data input field, where [`RequiredParameter.Type`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_RequiredParameter_Type.htm) may be: `bool`, `string`, `int`, `datetime`, `double`. This determines the field input type: text, integer number input, fractional number input, flag, date input.
+	
+**20.** [`DirectIo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DirectIo.htm) — FR custom command execution. If the command returns [`DirectIoResult.Document`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_DirectIoResult_Document.htm) filled up, this document will be displayed on the Syrve POS screen.
 
-**20.** [`DirectIo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DirectIo.htm) — выполнение произвольной команды ФРа.
-Если команда возвращает заполненный [`DirectIoResult.Document`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_DirectIoResult_Document.htm), этот документ будет отображен на экране iikoFront.
+**21.** [`GetCashRegisterDriverParameters()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetCashRegisterDriverParameters.htm) — FCR driver settings.
 
-**21.** [`GetCashRegisterDriverParameters()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_GetCashRegisterDriverParameters.htm) — настройки драйвера ФРа.
-Пример:
+Example:
+
 ```cs
 public CashRegisterDriverParameters GetCashRegisterDriverParameters()
 {
     return new CashRegisterDriverParameters
     {
-        CanPrintText = true, \\ Поддерживает ли ККМ печать текста
-        SupportsPayInAfterSessionClose = true, \\ Поддерживает ли ККМ внесение при закрытой кассовой смене
-        CanPrintBarcode = true, \\ Поддерживает ли ККМ печать простых штрихкодов
-        CanPrintQRCode = true, \\ Поддерживает ли ККМ печать QR-кодов
-        CanUseFontSizes = true, \\ Поддерживает ли ККМ использование шрифтов для печати текста
-        Font0Width = 44, \\ Ширина строки шрифтом F0
-        Font1Width = 42,\\ Ширина строки шрифтом F1
-        Font2Width = 22,\\ Ширина строки шрифтом F2
-        IsCancellationSupported = true, \\ Поддерживает ли ФР операцию Аннулирования
-        ZeroCashOnClose = false, \\ Обнуляет ли ККМ сумму наличных в кассе при закрытии смены
-        IsBillTaskSupported = false, \\ Поддерживается ли ФР печать пречека через команду «Счет»
+        CanPrintText = true, \\ Whether or not FCR supports text printing
+        SupportsPayInAfterSessionClose = true, \\ Whether or not FCR supports deposits in closed till shift
+        CanPrintBarcode = true, \\ Whether or not FCR supports printing of simple barcodes
+        CanPrintQRCode = true, \\ Whether or not FCR supports printing of QR codes
+        CanUseFontSizes = true, \\ Whether or not FCR supports barcodes-to-text printing
+        Font0Width = 44, \\ F0 font row width
+        Font1Width = 42,\\ F1 font row width
+        Font2Width = 22,\\ F2 font row width
+        IsCancellationSupported = true, \\ Whether or not FCR supports Canceling operation        
+		ZeroCashOnClose = false, \\ whether or not the FCR zeroes cash register balance out at the till shift closing
+        IsBillTaskSupported = false, \\ Whether or not FCR supports printing guest bills via the Bill command
     };
 }
 ```
-Как правило, эти настройки считываются с драйвера устройства после его запуска, т.к. до запуска они еще не известны. 
-От этих настроек iikoFront понимает умеет ли ФР печатать текст, может ли вносить деньги в закрытую КС, поддерживает ли печать QR-кодов и т.д.
-
+Usually, such settings are received from the device driver once it is started as they are unknown before. These settings let Syrve POS know if the FCR can print text or not, deposit money in the closed till shift or not, supports printing of QR codes or not, and so on.
 
 # FAQ
-**1. Почему не появляется в списке моделей внешний ФР?**
+**1. Why an external FCR is not available on the list of devices?**
 
-*Вариант 1*: Скорее всего регистрация внешнего ФР прошла неуспешно. Это можно проверить по логам *api.log* в папке с данными фронта. 
-Наличие следующих записей говорит об успехе регистрации внешнего ФРа:
+*Option 1*: It is likely that the external FCR is not registered properly. You can check this in *api.log* logs in the Syrve POS data folder. Availability of the following entries means that the external FCR has been successfully registered:
+
 ```cs
 [2019-04-05 14:58:52,546] DEBUG [48] — Plugin “CashRegisterPluginFolderName” connected.
 [2019-04-05 14:58:52,731] DEBUG [48] — Plugin “CashRegisterPluginFolderName” is calling RegisterCashRegisterFactory operation
 [2019-04-05 14:58:52,791]  INFO [48] — Device factory: "CodeName" added.
 ```
-*CashRegisterPluginFolderName* — имя папки c плагином `iikoFront/Plugins/CashRegisterPluginFolderName`
-*CodeName* — [`DeviceSettings.CodeName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Devices_IDeviceFactory_CodeName.htm)
-Иначе, в логах будет зафиксировано исключение.
 
-*Вариант 2*: Обновить вкладку с настройками оборудования в iikoOffice: *«Администрирование»* => *«Настройка оборудования»* => кнопка *«Обновить»*. 
-Если вкладка была уже открыта до запуска iikoFront, то список доступных моделей оборудования не был обновлен автоматически, его нужно обновлять вручную или переоткрыть вкладку.
+*CashRegisterPluginFolderName* — folder name with the `.../Plugins/CashRegisterPluginFolderName` plugin, 
+*CodeName* — [`DeviceSettings.CodeName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Devices_IDeviceFactory_CodeName.htm). Otherwise, logs would register an exception.
 
-**2. Как по идентификатору кассира Guid cashierId получить имя кассира?**
+*Option 2*: Update the equipment settings page in Syrve Office: *«Administration»* > *«Equipment Settings»* > *«Update»*. If you open this tab before starting Syrve POS, the list of available models is not complete. Update the list or close it and open it again.
+
+**2. How can I get a cashier name by Guid cashierId?**
+
 ```cs
 IUser user = PluginContext.Operations.GetUserById(cashierId);
 var name = user.Name;
 ```
-**3. Как сконфигурировать типы внесений и изъятий в iikoOffice, чтобы вызывались методы ФРа DoPayIn() и DoPayOut() ?**
 
-Скорее всего настроены нефискальные внесения и изъятия. 
-Это просто бухгалтерские перемещения, которые не вызывают команды ФРа на их печать.
-Фискальные внесения и изъятия должны иметь пустой Шеф-счёт. 
-См. [`документацию`](https://ru.iiko.help/smart/project-iikooffice/topic-102) iiko про «Типы внесений и изъятий п.4».
+**3. КHow to configure deposit and withdrawal types in Syrve Office to call FCR methods DoPayIn() and DoPayOut()?**
+
+Most likely you have non-fiscal deposits and withdrawals configured. Those are just accounting movements that do not invoke FCR commands. Fiscal deposits and withdrawals must have an empty Chief Account. See Syrve[`user guides`](https://ru.iiko.help/smart/project-iikooffice/topic-102) on the types of deposits and withdrawals.

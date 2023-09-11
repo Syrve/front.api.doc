@@ -1,26 +1,25 @@
 ---
-title: Группы и точки продаж
+title: Groups & Points Of Sale
 layout: default
 ---
-## Основные понятия ##
+## Basic Definitions ##
 
-Группа в понятиях системы iiko может соответствовать структурному или логическому участку учета в торговом предприятии. Например, для заведения, у которого есть залы на двух этажах, может быть зарегистрировано две группы, каждая из которых будет соответствовать отдельному этажу. Необходимость выделения групп и отделений определяется в первую очередь настройками, которые должны быть выполнены для максимально эффективного функционирования системы на предприятии.
+In Syrve, a group may correspond to a structural or logical accounting unit in the store. For example, if a venue has two floors of dining rooms, you can register two groups — one per floor. Groups and sections are defined by the settings. Such settings should be made to allow the system to function properly.
 
-К группе должны быть привязаны один или несколько терминалов, на которых будут регистрироваться заказы или выполняться расчет гостей. Для того чтобы на всех терминалах была актуальная информация, между ними должна происходить синхронизация данных по заказам, резервам, персональным и кассовым сменам, учетному дню. Для этого в группе выделяется так называемая «главная касса» — центральное звено в синхронизации общих данных между терминалами. В режиме «Ресторан» назначение главной кассы обязательно, в «Фастфуд» — опционально. Если главная касса не назначена, то синхронизация осуществляться не будет и каждый терминал будет иметь свою уникальную копию данных.
+A group must have one or more terminals to register orders and process payments. To ensure that the real-time information is available on all the terminals, such data as orders, reservations, personal and till shifts, and a transaction day must be synced. For this, you need to add the so-called «main cash register» to a group. This cash register is the central element in syncing the data between terminals. In the «Restaurant» mode, the main cash register is required, but it is optional in the «Fast Food» mode. If the main cash register is not specified, the syncing will not take place, and each terminal will have its own copy of data
 
-Точка продаж — логическая единица, обозначающая одну кассу.
+Point of Sale is a logical unit that stands for one cash register.
 
-Терминалу может соответствовать единственная точка продаж, несколько точек продаж или же вообще не соответствовать ни одной точки продаж.
-Заказ при оплате может делиться по точкам продаж в соответствии с настройками.
+A terminal can be linked to one POS, several POS, or none. At the time of payment, orders can be split between POS according to the settings.
 
-## Ключевые типы и методы API ##
-- `ITerminalsGroup` — группа; основные настройки: название (`Name`), признак спрашивать ли кассира о разделении заказа на несколько мест печати (`AskCashierForMultiCashRegisterPayment`).
-- Метод `IOperationService.GetHostTerminalsGroup` позволяет получить группу терминала, на котором запущен плагин.
-- `IPointOfSale` — точка продаж; основные настройки: название (`Name`), признак «Главная касса» (`IsMain`).
-- Метод `IOperationService.GetHostTerminalPointsOfSale` позволяет получить список точек продаж терминала, на котором запущен плагин.
-- Свойство `PointOfSale` позиции оплаты в заказе (`IPaymentItem`) позволяет узнать точку продаж, на которой оплата была совершена (если позиция оплаты является проведенной).
-- Информация о точке продаж доступна в событии перехода на экран кассы `INotificationService.SubscribeOnNavigatingToPaymentScreen`.
-- Метод `IOperationService.NeedToSplitOrderBeforePayment` теперь возвращает объект `CheckSplitResultDto` с информацией о том, как бы произошло разделение заказов по точкам продаж, если бы это происходило в данный момент на данном терминале. Свойство `CheckSplitRequiredResult` указывает, является ли разбиение заказа по местам печати допустимым/необходимым. Свойство `PointOfSale` указывает на предполагаемую точку продаж, если её можно определить однозначно.
+## Key API Types & Methods ##
+- `ITerminalsGroup` — is a group. Basic settings: name (`Name`), an attribute indicating whether or not cashiers should be asked to perform split printing (`AskCashierForMultiCashRegisterPayment`).
+- The `IOperationService.GetHostTerminalsGroup` method allows to get the terminal group where the plugin is running.
+- `IPointOfSale` — point of sale; basic settings: name (`Name`), «Main Cash Register» attribute (`IsMain`).
+- The `IOperationService.GetHostTerminalPointsOfSale` method allows to get a list of points of sale linked to the terminal where the plugin is running.
+- The `PointOfSale` property of the order payment item (`IPaymentItem`) allows to identify the POS where the payment was made (if the payment is posted).
+- POS details can be found in the event of transition to the checkout screen `INotificationService.SubscribeOnNavigatingToPaymentScreen`.
+- Now the `IOperationService.NeedToSplitOrderBeforePayment` method returns the `CheckSplitResultDto` object with the information on distribution of orders among points of sale as if it happened at the moment on this terminal. The `CheckSplitRequiredResult` property indicates whether the split printing is permissible/required. The `PointOfSale` property indicates the designated POS if it can be clearly determined.
 
-## Примеры ##
-Пример работы с разделением заказа можно посмотреть во входящем в состав SDK плагине Resto.Front.Api.SamplePlugin (`EditorTester.SplitOrder`).
+## Examples ##
+A split order example can be found in the Resto.Front.Api.SamplePlugin (`EditorTester.SplitOrder`) plugin as part of the SDK.
