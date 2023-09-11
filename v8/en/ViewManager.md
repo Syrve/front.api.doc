@@ -3,7 +3,7 @@ title: Dialog windows
 layout: default
 ---
 ### Numeric strings entry dialog
-Beginning with version V8, the structure of the settings class, [`ExtendedInputDialogSettings`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_ExtendedInputDialogSettings.htm), has been changed and is transferred as a parameter to the [`Dialog window`](https://syrve.github.io/front.api.doc/v6/ru/ViewManager.html) - [`ShowExtendedInputDialog()`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_UI_IViewManager_ShowExtendedInputDialog.htm).
+Beginning with version V8, the structure of the settings class, [`ExtendedInputDialogSettings`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_ExtendedInputDialogSettings.htm), has been changed and is transferred as a parameter to the [`Dialog window`](https://syrve.github.io/front.api.doc/v6/en/ViewManager.html) - [`ShowExtendedInputDialog()`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_UI_IViewManager_ShowExtendedInputDialog.htm).
 
 [`ExtendedInputDialogSettings.EnableNumericString`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_EnableNumericString.htm) is replaced by [`NumericInputMode`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm), which is an `enum` type that consists of:
 - [`Disabled`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_NumericInputMode.htm) - default value. Entering numeric values is not available.

@@ -2,7 +2,7 @@
 title: External Fiscal Registers
 layout: default
 ---
-f you can’t find the right model on the list of Syrve supported fiscal registers (FCR), you can write your own plugin. This plugin will be connected to Syrve POS and considered as an external FCR. See the [Introduction]({{ site.baseurl }}/v6/ru/Devices.html) article. External FCR plugins must be [licensed]({{ site.baseurl }}/v6/ru/Licensing.html).
+f you can’t find the right model on the list of Syrve supported fiscal registers (FCR), you can write your own plugin. This plugin will be connected to Syrve POS and considered as an external FCR. See the [Introduction]({{ site.baseurl }}/v6/en/Devices.html) article. External FCR plugins must be [licensed]({{ site.baseurl }}/v6/en/Licensing.html).
 
 ## Setting Up
 You can set up an external FCR in 2 steps.

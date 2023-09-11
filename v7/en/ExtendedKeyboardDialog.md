@@ -4,7 +4,7 @@ layout: default
 ---
 # Dialog for entering rows and barcodes #
 
-Plugins can request data (rows, barcodes, cards) from the user using dialog windows. Here we will be looking at [`IViewManager.ShowExtendedKeyboardDialog`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowExtendedKeyboardDialog.htm), but there are also other dialogs, which you can read more about in the article [Dialogs]({{ site.baseurl }}/v6/ru/ViewManager.html).
+Plugins can request data (rows, barcodes, cards) from the user using dialog windows. Here we will be looking at [`IViewManager.ShowExtendedKeyboardDialog`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowExtendedKeyboardDialog.htm), but there are also other dialogs, which you can read more about in the article [Dialogs]({{ site.baseurl }}/v6/en/ViewManager.html).
 
 ## How does it look in Syrve POS?
 

@@ -12,7 +12,7 @@ For example, the *«SamplePlugin: Show OK popup»* button that is added by the S
 
 ![ButtonOnPaymentScreenView](../../img/actionOnPaymentScreenView/buttonOnPaymentScreen.png) 
 
-Suppose a plugin displays a window with a message (see the article [*API dialogs*](../../v6/ru/ViewManager.html)).
+Suppose a plugin displays a window with a message (see the article [*API dialogs*](../../v6/en/ViewManager.html)).
 
 ![ButtonOnPaymentScreenView_Click](../../img/actionOnPaymentScreenView/buttonOnPaymentScreenClick.png) 
 

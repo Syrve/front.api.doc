@@ -26,7 +26,7 @@ PluginContext.Notifications.BeforeOrderBill.Subscribe(x =>
 });
 ```
 
-For more details about this class, see the article «[Dialog windows]({{ site.baseurl }}/v6/ru/ViewManager.html)». In these cases, the [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) can be used to show dialog windows. Consider all methods for requesting the date and time from a user. As an example, create a button using the [`IOperationService.AddButtonToPluginsMenu`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToPluginsMenu.htm)method, as shown above, and show dialogs when it is clicked.
+For more details about this class, see the article «[Dialog windows]({{ site.baseurl }}/v6/en/ViewManager.html)». In these cases, the [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) can be used to show dialog windows. Consider all methods for requesting the date and time from a user. As an example, create a button using the [`IOperationService.AddButtonToPluginsMenu`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToPluginsMenu.htm)method, as shown above, and show dialogs when it is clicked.
 
 ### Option 1: Date Numpad Popup
 
