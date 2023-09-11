@@ -1,16 +1,17 @@
 ---
-title: Выпуск версии V8Preview6 и небольшие изменения в графике выпуска
+title: Version release  V8Preview6 and minor changes to the release schedule
 layout: default
 ---
 
 
-Вышел промежуточный релиз [V8Preview6](https://www.nuget.org/packages/Resto.Front.Api.V8Preview6/8.5.5017-alpha).
 
-Теперь промежуточные релизы будут публиковаться перед выпуском очередной версии iikoRMS (в данном случае перед выпуском версии 8.5), а удаление устаревшей Preview-версии будет происходить позднее на одну версию.
-Таким образом, срок жизни одной Preview-версии увеличивается на 3 месяца.
+Interim release released [V8Preview6](https://www.nuget.org/packages/Resto.Front.Api.V8Preview6/8.5.5017-alpha).
+
+Now intermediate releases will be published before the release of the next version of SyrveRMS (in this case, before the release of version 8.5), and the removal of the outdated Preview version will occur one version later.
+Thus, the lifespan of one Preview version increases by 3 months.
  
-Версия V8Preview6 будет поддерживаться в 8.5, 8.6 и 8.7.
-Срок поддержки версиий V8Preview4 и V8Preview5 также увеличен.
-Время поддержки LTS-версий API не изменится и составит около 4 лет.
-Версия V7Preview7 перестанет поддерживаться начиная с 8.6.
-Подробнее о версиях API [тут]({{ site.baseurl }}/versioning.html).
+V8Preview6 version will be supported into 8.5, 8.6 and 8.7.
+The support period for V8Preview4 and V8Preview5 has also been extended.
+The support time for LTS versions of the API will not change and will be approximately 4 years.
+Version V7Preview7 will no longer be supported starting from 8.6.
+Learn more about API versions [here]({{ site.baseurl }}/versioning.html).
