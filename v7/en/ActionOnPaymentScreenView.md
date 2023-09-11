@@ -1,85 +1,82 @@
 ---
-title: Экран кассы
+title: Cashbox screen
 layout: default
 ---
-# Расширение функционала экрана кассы #
+# Extending the functional of the cashbox screen #
 
-На экран кассы можно добавить кнопки, которые могут выполнять операции, используя объект текущего заказа, а также менять своё состояние.
+On the cash screen, it is possible to add buttons that can do operations using the object of the current order, and also change their state.
 
-## Как это выглядит в iikoFront?
+## How does it look in Syrve POS?
 
-Например, вот так выглядит кнопка *«SamplePlugin: Show OK popup»*, добавляемая плагином SamplePlugin из SDK.
+For example, the *«SamplePlugin: Show OK popup»* button that is added by the SamplePlugin plugin from the SDK looks like this.
 
 ![ButtonOnPaymentScreenView](../../img/actionOnPaymentScreenView/buttonOnPaymentScreen.png) 
 
-
-Допустим, плагин показывает окно с сообщением (см. статью [*API диалоговые окна*](../../v6/ru/ViewManager.html "Диалоговые окна")).
+Suppose a plugin displays a window with a message (see the article [*API dialogs*](../../v6/ru/ViewManager.html)).
 
 ![ButtonOnPaymentScreenView_Click](../../img/actionOnPaymentScreenView/buttonOnPaymentScreenClick.png) 
 
-Плагин может добавить сразу несколько кнопок на экран кассы.
+Plugin can add a few buttons to the cash screen at once.
 
-
-Например, с помощью SDK SamplePlugin были добавлены 2 кнопки: *«SamplePlugin: Show OK popup»* и *«SamplePlugin: Show input dialog»*.
+For example, two buttons were added by using the SamplePlugin SDK: *«SamplePlugin: Show OK popup»* and *«SamplePlugin: Show input dialog»*.
 
 ![ButtonsOnPaymentScreenView](../../img/actionOnPaymentScreenView/buttonsOnPaymentScreen.png)
 
-
-Может возникнуть ситуация, когда места под кнопки не хватает. Тогда вместо тех кнопок, которые не поместились, повится кнопка *«ДОПОЛНИТЕЛЬНО»*.
+It may happen that there is not enough space for the buttons. Then in place of the buttons that don't fit, the *«ADDITIONAL»* button will be placed.
 
 ![AdditionalButtonOnPaymentScreen](../../img/actionOnPaymentScreenView/additionalButtonOnPaymentScreen.png) 
 
-Если кнопка всего одна, то кнопка *«ДОПОЛНИТЕЛЬНО»* не появится в любом случае.
+If there is only one button, the *«ADDITIONAL»* button will not be displayed in any case.
 
-Разные плагины могут добавить свои кнопки.
+Different plugins can add their buttons.
 
-По нажатию на кнопку *«ДОПОЛНИТЕЛЬНО»* будет выведен список всех непоместившихся кнопок.
+Pressing the *«ADDITIONAL»* button displays a list of all the buttons that did not fit.
 
 ![ButtonsOnPaymentScreenViewPopup](../../img/actionOnPaymentScreenView/buttonsOnPaymentScreenPopup.png) 
 
 
-## Как добавить свои расширения?
+## How to add my extensions?
 
-##### Шаг 1: Зарегистрировать обработчик для экрана кассы:
+##### Step 1: Registration of the handler for the cash screen:
  
 ```cs
-// Регистрация действия на экране кассы
+// Registering an action on the cash screen
 subscription = PluginContext.Operations.AddButtonToPaymentScreen("SamplePlugin: Show ok popup", false, true, ShowOkPopupOnPaymentScreen);
 ``` 
 
-Функция регистрации операции на экран кассы [`AddButtonToPaymentScreen()`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToPaymentScreen.htm) принимает на вход 5 аргументов:
+The [`AddButtonToPaymentScreen()`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToPaymentScreen.htm) function takes 5 arguments to input:
 
-- `string caption` — название кнопки, отображается на UI.
-- `bool isChecked` — выделена ли кнопка.
-- `bool isEnabled` — доступна ли кнопка для нажатия.
-- `Action<(IOrder order, IOperationService os, IViewManager vm, (Guid buttonId, string caption, bool isChecked, string iconGeometry) state)> callback` - функция, которая будет вызвана при нажатии на кнопку.
-- `string iconGeometry` — картинка кнопки (см. [`синтаксис`](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/graphics-multimedia/path-markup-syntax?view=netframeworkdesktop-4.8)).
+- `string caption` — button name, displayed on the UI.
+- `bool isChecked` — whether the button is highlighted.
+- `bool isEnabled` — is the button available to be pressed.
+- `Action<(IOrder order, IOperationService os, IViewManager vm, (Guid buttonId, string caption, bool isChecked, string iconGeometry) state)> callback` — the function that will be called when the button is pressed.
+- `string iconGeometry` — button icon (see the [`syntax`](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/graphics-multimedia/path-markup-syntax?view=netframeworkdesktop-4.8)).
 
-Функция нажатия на кнопку принимает объект заказа [`IOrder`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Orders_IOrder.htm), экземпляр [`IViewManager`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) для показа окон, а также текущее состояние кнопки - `(Guid buttonId, string caption, bool isChecked, string iconGeometry) state`.
+The button press function takes an [`IOrder`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Orders_IOrder.htm) order object, an [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) instance to show windows, and the current state of the button - `(Guid buttonId, string caption, bool isChecked, string iconGeometry) state`.
 
-##### Шаг 2. Описать обработчик добавляемой кнопки:
+##### Step 2: Description of the handler for the button to be added:
 
 ```cs
 private void ShowOkPopupOnPaymentScreen((IOrder order, IOperationService os, IViewManager vm, (Guid buttonId, string caption, bool isChecked, string iconGeometry) state) info)
 { 
-    info.vm.ShowOkPopup("Тестовое окно", "Сообщение показано с помощью SamplePlugin.");
+    info.vm.ShowOkPopup("Test window", "Message shown using SamplePlugin.");
 }
 ```
 
-Примеры реализации можно посмотреть в проекте SDK SamplePlugin в классе `ButtonsTester`.
+Examples of realization can be found in the SDK SamplePlugin project in the `ButtonsTester` class.
 
 
-## Как обновить состояние кнопки?
+## How to update the button state?
 
-Можно в любой момент обновить состояние ранее добавленной кнопки с помощью функции [`UpdatePaymentScreenButtonState()`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_UpdatePaymentScreenButtonState.htm), которая принимает на вход 5 аргументов:
+It is possible to update the state of a previously added button at any time using the [`UpdatePaymentScreenButtonState()`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_UpdatePaymentScreenButtonState.htm) function, which takes 5 arguments as input:
 
-- `Guid buttonId` — идентификатор кнопки, который можно получить из вовращаемого значения функции [`AddButtonToPaymentScreen()`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToPaymentScreen.htm).
-- `string caption` — необязательный аргумент. Если он задан, то обновится название кнопки.
-- `bool? isChecked` — необязательный аргумент. Если он задан, то обновится состояние кнопки - выделена ли она или нет.
-- `bool? isEnabled` — необязательный аргумент. Если он задан, то обновится состояние кнопки - доступна ли она для нажатия или нет.
-- `string iconGeometry` — необязательный аргумент. Если он задан, то обновится картинка на кнопке.
+- `Guid buttonId` — the identifier of the button, which can be received from the return value of the [`AddButtonToPaymentScreen()`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToPaymentScreen.htm) function.
+- `string caption` — optional argument. If it is set, a button name will be updated.
+- `bool? isChecked` — optional argument. If it is set, it will update the state of the button - whether it is highlighted or not.
+- `bool? isEnabled` — optional argument. If it is set, it will update the state of the button - whether it is available for pressing or not.
+- `string iconGeometry` — optional argument. If it is set, it will update the icon of the button.
 
-Для отслеживания изменений на экране кассы, можно подписаться на событие [`PaymentScreenUpdated`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_PaymentScreenUpdated.htm). Событие вызывается при добавлении, изменении, удалении типа оплаты, при изменении суммы оплаты, а также при добавлении или удалении EInvoice. Это событие имеет 2 аргумента:
+To track changes on the cash screen, it is possible a subscribe to the [`PaymentScreenUpdated`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_PaymentScreenUpdated.htm) event. Event is called when adding, changing, deleting payment type, when changing payment sum, as well as when adding or deleting EInvoice. This event has 2 arguments:
 
-- `PaymentScreenUpdatedContext context` - текущее состояние экрана оплаты заказа.
-- `IViewManager vm` - экземпляр [`IViewManager`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) для показа окон.
+- `PaymentScreenUpdatedContext context` - the current state of the order payment screen.
+- `IViewManager vm` - [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) instance to display windows.

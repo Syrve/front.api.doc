@@ -4,8 +4,7 @@ layout: default
 ---
 # Integration With External Payment Types
 ## Overview 
-If you implement the [`IExternalPaymentProcessor`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IExternalPaymentProcessor.htm) interface and register it properly, a new payment system will be available in Syrve RMS.
-For simplicity, we call it the external payment type. 
+it the external payment type. 
 Plugins used for external payment types must be [licensed](Licensing.html).
 
 
@@ -17,79 +16,73 @@ You can find it under the name IExternalPaymentProcessor.PaymentSystemName in th
 
 ![backPT](../../img/payment/backPT.png)
 
-Если создать [тип оплаты](https://ru.iiko.help/smart/project-iikooffice/topic-103) этой платёжной системы, на iikoFront на экранах кассы и предоплаты появится возможность выбрать этот внешний тип оплаты.
+If you add a [payment type](https://en.syrve.help/articles/#!office-8-5/topic-103) within this payment system, this external payment type will be available on Syrve POS terminals.
 
 ![frontPT](../../img/payment/frontPT.png)
 
+Explanation of terms:
 
-Пояснения к терминам:
+- *Payment System * – defines the way payments are posted and returned. The payment system is used as a single instance in the entire Syrve RMS.
+- *Payment Type* - refers to any payment system. It has customizable properties as fiscality, transfer accounts, and so on. If you make the external payment type fiscal, it will be classified as the *«Bank Cards»* type, if you leave it non-fiscal, it will fall within the *«Non-Cash Payment»* type. Within one payment system, you can add any number of payment types.
+относится к какой-либо платёжной системе.
+- *Payment Item* – refers to orders in Syrve POS. When a user while on the [payment screen](https://en.syrve.help/articles/#!syrve-pos-8-5/checkout) or [prepayment screen](https://en.syrve.help/articles/#!syrve-pos-8-5/checkout/a/h2_2092503229) selects any payment method, a payment item of a corresponding payment method is added to the order. Payment items can be added via the API ([Adding Payments](Payments.html)).
 
-- *Платёжная система* – декларирует, как именно осуществляется проведение и возврат платежей. На весь iikoRMS платёжная система декларируется в единственном экземпляре. 
-- *Тип оплаты* - относится к какой-либо платёжной системе.
-Имеет настраиваемые свойства вроде фискальности, счетов перемещения и т.д.
-Если сделать внешний тип оплаты фискальным, он попадёт в раздел *«Банковские карты»*, если оставить нефискальным, он будет в разделе *«Безналичный расчёт»*.
-Можно заводить сколько угодно типов оплаты каждой платёжной системы.   
-- *Элемент оплаты* – относится к заказам в iikoFront. Когда пользователь [на экране кассы](https://ru.iiko.help/smart/project-iikofront/topic-72) или в [окне предоплат и платежей](https://ru.iiko.help/smart/project-iikofront/topic-72/a/h2_10) выбирает какой-либо тип оплаты, в заказ добавляется элемент оплаты соответствующего типа оплаты.
-Также элементы оплаты могут быть добавлены средствами API ([Добавление оплат](Payments.html)).
-
-## Интерфейс IExternalPaymentProcessor
-Чтобы реализовать необходимую бизнес-логику по проведению и возврату платежа внешним типом оплаты, нужно реализовать интерфейс [`IExternalPaymentProcessor`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IExternalPaymentProcessor.htm):
+## IExternalPaymentProcessor Interface
+To carry out the required business procedures of posting and refunding payments made using external payment types, the [`IExternalPaymentProcessor`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IExternalPaymentProcessor.htm) interface needs to be implemented
 ```cs
 public interface IExternalPaymentProcessor
 {
     string PaymentSystemKey { get; }
     string PaymentSystemName { get; }
-    
     void CollectData(Guid orderId, Guid paymentTypeId, [NotNull] IUser cashier, IReceiptPrinter printer, UI.IViewManager viewManager, IPaymentDataContext context, UI.IProgressBar progressBar);
     void OnPaymentAdded([NotNull] IOrder order, [NotNull] IPaymentItem paymentItem, [NotNull] IUser cashier, [NotNull] IOperationService operationService, IReceiptPrinter printer, UI.IViewManager viewManager, IPaymentDataContext context, UI.IProgressBar progressBar);
     bool OnPreliminaryPaymentEditing([NotNull] IOrder order, [NotNull] IPaymentItem paymentItem, [NotNull] IUser cashier, [NotNull] IOperationService operationService, IReceiptPrinter printer, UI.IViewManager viewManager, IPaymentDataContext context, UI.IProgressBar progressBar);
-
     void Pay(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transactionId, [NotNull] IPointOfSale pointOfSale, [NotNull] IUser cashier, IReceiptPrinter printer, IViewManager viewManager, IPaymentDataContext context, IProgressBar progressBar);
     void EmergencyCancelPayment(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transactionId, [NotNull] IPointOfSale pointOfSale, [NotNull] IUser cashier, IReceiptPrinter printer, IViewManager viewManager, IPaymentDataContext context, IProgressBar progressBar);
     void ReturnPayment(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transactionId, [NotNull] IPointOfSale pointOfSale, [NotNull] IUser cashier, IReceiptPrinter printer, IViewManager viewManager, IPaymentDataContext context, IProgressBar progressBar);
     void ReturnPaymentWithoutOrder(decimal sum, Guid paymentTypeId, [NotNull] IPointOfSale pointOfSale, [NotNull] IUser cashier, IReceiptPrinter printer, IViewManager viewManager, IProgressBar progressBar);
-
     void PaySilently(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transactionId, [NotNull] IPointOfSale pointOfSale, [NotNull] IUser cashier, IReceiptPrinter printer, IPaymentDataContext context);
     void EmergencyCancelPaymentSilently(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transactionId, [NotNull] IPointOfSale pointOfSale, [NotNull] IUser cashier, IReceiptPrinter printer, IPaymentDataContext context);
     bool CanPaySilently(decimal sum, Guid? orderId, Guid paymentTypeId, IPaymentDataContext context);
 }
 ```
 
-Здесь:
+Where:
 
-- `PaymentSystemKey` – это уникальный ключ, с которым регистрируется новая внешняя платёжная система.
-- `PaymentSystemName` – имя, которое будет показываться на UI в iikoOffice.
+- `PaymentSystemKey` – is a unique key the new external payment system takes at the registration.
+- `PaymentSystemName` – is a name to be displayed in the Syrve Office UI.
 
 
-## Метод проведения оплаты
-Когда пользователь iikoFront выберет на экране кассы тип оплаты, задаст сумму и нажмёт кнопку *«Оплатить»*, или когда пользователь внесёт предоплату определенным типом оплаты, управление придёт в метод [`Pay()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_Pay.htm):
+## Payment Processing Methods
+When a user selects a payment type on the Syrve POS payment screen, specifies the amount, and presses the *«Pay»* button or when a user deposits a prepayment using a certain payment type, the control will use the [`Pay()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_Pay.htm) method:
 ```cs
 void Pay(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transactionId, [NotNull] IPointOfSale pointOfSale, [NotNull] IUser cashier, IReceiptPrinter printer, IViewManager viewManager, IPaymentDataContext context, IProgressBar progressBar);
 ```
 
-Здесь:
+Where:
 
-- `sum` – сумма платежа;
-- `orderId` – id заказа в iikoFront;
-- `paymentTypeId` – id типа оплаты. Список всех типов оплаты можно получить методом [`IOperationService.GetPaymentTypes()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_GetPaymentTypes.htm), конкретный тип оплаты можно получить методом [`OperationService_TryGetPaymentTypeById(...)`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_TryGetPaymentTypeById.htm);
-- `transactionId` – id транзакции;
-- `pointOfSale` – [Точка продаж](GroupsAndPointsOfSale.html), на которой проводится данный элемент оплаты;
-- `cashier` – кассир;
-- `printer` – экземпляр [`IReceiptPrinter`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IReceiptPrinter.htm), который дает возможность печатать на принтере квитанций iikoFront;
-- `viewManager` – экземпляр [`IViewManager`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_UI_IViewManager.htm) для [показа окон](ViewManager.html) в процессе проведения оплаты;
-- `context` – экземпляр [`IPaymentDataContext`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IPaymentDataContext.htm) для сохранения данных в элемент оплаты;
-- `progressBar` – экземпляр [`IProgressBar`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_UI_IProgressBar.htm) для изменения текста на прогрессбаре в процессе проведения оплаты.
+- `sum` – payment amount;
+- `orderId` – Syrve POS order ID;
+- `paymentTypeId` – payment type ID The list of all payment types can be obtained using the [`IOperationService.GetPaymentTypes()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_GetPaymentTypes.htm) method; a specific payment type can be obtained using the [`OperationService_TryGetPaymentTypeById(...)`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_TryGetPaymentTypeById.htm) method;
+- `transactionId` – transaction ID;
+- `pointOfSale` – [Point of sale](GroupsAndPointsOfSale.html) where this payment item is processed;
+- `cashier` – cashier;
+- `printer` – instance of [`IReceiptPrinter`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IReceiptPrinter.htm) that enables printing on the Syrve POS receipt printer;
+- `viewManager` – instance of [`IViewManager`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_UI_IViewManager.htm) used to [view windows](ViewManager.html) while processing payments;
+- `context` – instance of [`IPaymentDataContext`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IPaymentDataContext.htm) used to save data in the payment item;
+- `progressBar` – instance of [`IProgressBar`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_UI_IProgressBar.htm) used to change the text in the progress bar while processing payments.
 
-Подробнее сигнатуру объектов можно найти [в документации](https://syrve.github.io/front.api.sdk/v6).
+For details on the object signature, please refer to the [в документации](https://syrve.github.io/front.api.sdk/v6).
 
-Например, если требуется реализовать интеграцию с гостиничной системой:
+If you, for example, need to integrate with a hotel system:
 
-- В процессе оплаты нужно спросить у пользователя номер комнаты или карту от комнаты.
-- Затем обратиться к гостиничному сервису.
-- В случае успеха напечатать квитанцию с суммой и именем гостя, которое нам вернет гостиничная система.
-- В iikoRMS сохранить введенный номер или прокатанную карту для просмотра этих данных в OLAP.
-- Для последующей отмены понадобится знать, карта ли была прокатана или введен номер.
-- В случае неуспеха прервать оплату.
+
+- When taking payments, you need to ask users to provide a room number or produce a room key.
+- Then refer to the hotel service.
+- If successful, print a receipt with the amount and guest name received from the hotel system.
+- Go to Syrve RMS and save the entered number or swiped card to see the details in OLAP reports.
+- Shall a refund be required, you will need to know whether a card or a number is used.
+- If not successful, abort the payment.
 
 ```cs
 [Serializable]
@@ -99,35 +92,35 @@ internal class IsCardClass
 }
 public void Pay(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transactionId, IPointOfSale pointOfSale,  IUser cashier, IReceiptPrinter printer, IViewManager viewManager, IPaymentDataContext context, IProgressBar progressBar)
 {
-    // Показать в iikoFront окно ввода номера и прокатки карты
-    var input = viewManager.ShowInputDialog("Введите номер или прокатайте карту", InputDialogTypes.Card | InputDialogTypes.Number);
+    // Show number input and card swiping dialog in Syrve POS
+    var input = viewManager.ShowInputDialog("Enter the number or swipe the card", InputDialogTypes.Card | InputDialogTypes.Number);
     string room = null;
     string cardTrack = null;
     
-    // Если был введен номер, то результат типа NumberInputDialogResult
+    // If number is entered, result is NumberInputDialogResult
     var roomNum = input as NumberInputDialogResult;
     if (roomNum != null)
         room = roomNum.Number.ToString();
     
-    // Если была прокатана карта, то результат типа CardInputDialogResult
+    // If card is swiped, result is CardInputDialogResult
     var card = input as CardInputDialogResult;
     if (card != null)
         cardTrack = card.FullCardTrack;
     
     if (room == null && cardTrack == null)
-        // Ничего не было введено, прекращаем операцию.
-        throw new PaymentActionFailedException("Не было введено данных.");
+        // Nothing entered, operation is aborted.
+        throw new PaymentActionFailedException("No data entered.");
     
-    // Получаем заказ средствами API по id через IOperationService.
+    // Get order using API by ID via IOperationService.
     var order = PluginContext.Operations.TryGetOrderById(orderId.Value);
     
-    // Выполняем произвольные методы. Например, проводим платёж в некой hotelSystem, которая вернет имя гостя, если платёж «принят» и null, если платёж отклонён.
+    // Running random methods. For instance, effecting payment in some hotelSystem which would return the guest name if the payment is accepted and null, if the payment is declined.
     var guestName = hotelSystem.ProcessPaymentOnGuest(cardTrack, room, order?.Number, transactionId, sum);
     if (guestName == null)
-        // Платёж не прошёл, прекращаем операцию.
-        throw new PaymentActionFailedException("Платеж не прошёл.");
+        // Payment not processed, operation is aborted.
+        throw new PaymentActionFailedException("Payment not processed.");
     
-    // Формирование квитанции для печати. Квитанция состоит из XElement
+    // Preparing receipt for printing. Receipt includes XElement
     var slip = new ReceiptSlip
     {
         Doc =  new XElement(Tags.Doc,
@@ -135,35 +128,30 @@ public void Pay(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transaction
             new XElement(Tags.Pair, "Сумма", sum))
     };
     
-    // Печать.
+    // Printing.
     printer.Print(slip);
     var cardInfoData = new IsCardClass { IsCard = card != null };
     var cardType = cardInfoData.IsCard
         ? "My Hotel System Card"
         : "My Hotel System Room";
-    // Сохранение данных, которые будут показаны в отчётах.
+    // Saving the data to be given in reports.
     context.SetInfoForReports(room ?? cardTrack, cardType);
-    // Сохранение данных, которые будут использованы для возврата оплаты.
+    // Saving the data to be used for refund.
     context.SetRollbackData(cardInfoData);
 }
 ```
  
-Исключение типа [`PaymentActionFailedException`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_PaymentActionFailedException.htm) служит для прерывания операции оплаты.
-Пользователю iikoFront будет показан `message` этого исключения. Это имеет смысл, если возникли какие-либо проблемы при общении с внешним сервисом, оплата не может быть проведена и нужно проинформировать пользователя о причинах. 
+The [`PaymentActionFailedException`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_PaymentActionFailedException.htm) payment exclusion serves to abort the payment operation. An Syrve POS user will be shown the exception `message`. This makes sense if any issues occurred during the communication with the external service, the payment cannot be processed, and a user must be informed of the reasons. 
 
-Для «тихого» прерывания операции можно воспользоваться исключением типа [`PaymentActionCancelledException`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_PaymentActionCancelledException.htm).
-Это имеет смысл, если в процессе оплаты было показано диалоговое окно и пользователь нажал кнопку *«Отмена»*. 
+To abort the operation silently, you can use the [`PaymentActionCancelledException`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_PaymentActionCancelledException.htm)exception. It makes sense if in the process of payment, a dialog box is displayed and a user selects *«Cancel»*.
 
-Аргументы [`IReceiptPrinter`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IReceiptPrinter.htm), [`IViewManager`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_UI_IViewManager.htm) и  [`IPaymentDataContext`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IPaymentDataContext.htm) «живут» только в процессе выполнения метода, после завершения метода экземпляры уничтожаются.
-Так что сохранять их в переменные не имеет смысла, т.к. вне метода их нельзя будет использовать.
+Arguments [`IReceiptPrinter`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IReceiptPrinter.htm), [`IViewManager`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_UI_IViewManager.htm) and  [`IPaymentDataContext`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IPaymentDataContext.htm) exist only while the method is running; once the method is complete, the instances are removed. So there is no point to save them as variables for they cannot be used outside the method.
 
-### Тихое проведение оплаты (Silent-оплата)
-Иногда бизнесу нужны решения по оплате плагинными типами оплаты из самих плагинов, без входа на экран кассы iikoFront.
-Для этого плагин должен реализовать метод [CanPaySilently](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) процессора оплаты плагина.
-Результатом метода является ответ на вопрос _«Имеет ли плагин возможность проводить оплату тихо?»_.
-Для того чтобы появилась такая возможность, необходимо чтобы в заказ предварительно был добавлен плагинный элемент оплаты.
-Для тихого проведения оплаты можно вызвать метод [ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm) c флагом `isProcessed` равным `false`.
-В `SDK` приводится пример с использованием пользовательского класса со свойством _SilentPay_:
+### Silent Payment
+Sometimes, businesses need solutions to effect plugin payments within the very plugins but without the Syrve POS cash register screen. For this, the plugin should implement the [CanPaySilently](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) method of the plugin payment processor. The method result is the answer to this question: *«Whether or not the plugin can process silent payments?»*.
+To make this possible, an order should have a plugin payment item added. Silent payments may require the [ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm) method with the `isProcessed` flag set to `false` to be called.
+The `SDK` shows a use case of the user-written class with the *SilentPay* property:
+
 ```cs
 [Serializable]
 public class PaymentAdditionalData
@@ -195,7 +183,9 @@ private void AddAndProcessExternalPrepay()
     PluginContext.Operations.ProcessPrepay(credentials, order, paymentItem);
 }
 ```
-В свою очередь iikoFront передает указанный для оплаты сериализованный класс в контекст оплаты([IPaymentContext](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IPaymentDataContext.htm)), далее в методе [CanPaySilently](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) класс извлекается и десериализуется:
+
+In turn, Syrve POS sends the specified serialized class to the payment context ([IPaymentContext](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IPaymentDataContext.htm)) and then this class is extracted and deserialized in the [CanPaySilently](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) method.
+
 ```
 public bool CanPaySilently(decimal sum, Guid? orderId, Guid paymentTypeId, IPaymentDataContext context)
 {
@@ -203,10 +193,10 @@ public bool CanPaySilently(decimal sum, Guid? orderId, Guid paymentTypeId, IPaym
     return customData?.SilentPay ?? false;
 }
 ```
-В зависимости от ответа возвращаемого значения метода [CanPaySilently](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) iikoFront вызовет `Pay` или `PaySilently` метод процессора плагина.
-Таким образом плагин сам решает как должен проводиться вновь добавляемый платеж.
 
-## Методы возврата оплаты
+Depending on the [CanPaySilently](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) response, Syrve POS would call `Pay` or `PaySilently` plugin processor method. Therefore, the plugin defines the way a new payment should be processed.
+
+## Refund Methods
 
 ```cs
 void EmergencyCancelPayment(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transactionId, [NotNull] IPointOfSale pointOfSale, [NotNull] IUser cashier, IReceiptPrinter printer, IViewManager viewManager, IPaymentDataContext context, IProgressBar progressBar);
@@ -215,20 +205,15 @@ void ReturnPaymentWithoutOrder(decimal sum, Guid paymentTypeId, [NotNull] IPoint
 void EmergencyCancelPaymentSilently(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transactionId, [NotNull] IPointOfSale pointOfSale, [NotNull] IUser cashier, IReceiptPrinter printer, IPaymentDataContext context);
 ```
 
-Методы `EmergencyCancelPayment()` и `ReturnPayment()` вызываются, когда пользователь на iikoFront инициирует возврат проведённого ранее платежа.
+The `EmergencyCancelPayment()` and `ReturnPayment()` methods are called when a user makes a refund on Syrve POS.
 
-В метод `ReturnPayment()` управление передаётся, когда на экране закрытого заказа нажимают кнопку *«Частичный возврат чека»* или *«Удаление заказа»*.
-Или если пользователь удаляет проведённую предоплату.
-В метод `EmergencyCancelPayment()` управление передаётся, когда для ещё не закрытого заказа отменяют уже проведённую оплату.
-Например, если оплата фискальная и возникли трудности с печатью фискального чека и оплату прерывают.
-Если для второго случая не требуется специфической логики, то можно просто вызвать из метода `EmergencyCancelPayment()` метод `ReturnPayment()`. 
+The  `ReturnPayment()` method takes over when the *«Refund»* or *«Delete order»* button is tapped on the closed order screen. Or if a user deletes a posted payment. The `EmergencyCancelPayment()` takes over when a posted payment is canceled in the open order. For instance, if the fiscal payment is canceled due to the fiscal receipt printing error. If the last case does not require any specific logic, the `ReturnPayment()` method can be called from the `EmergencyCancelPayment()`. 
 
-Методы принимают те же параметры, что и метод оплаты. `transactionId` тот же, что передавался в исполненную ранее операцию `Pay()`.
+The methods take the same parameters as the payment methods. `transactionId` is the same as the one sent to the operation earlier performed `Pay()`.
 
-Методы считаются успешно завершёнными, если в процессе выполнения не возникло исключений типа `PaymentActionFailedException` или `PaymentActionCancelledException`. Если эти исключения возникли, так же, как и для оплаты, операция возврата прерывается.
+Methods are considered completed if no exceptions, like `PaymentActionFailedException` or `PaymentActionCancelledException`, occurred in the process. If such exceptions took place, the refund operation is aborted as is the case with the payment.
 
-Пример кода интеграции с гостиничной системой.
-Метод возврата отменяет транзакцию и печатает чек с отменяемой суммой и сохранёнными данными: была ли прокатана карта, или был введён номер.
+Hotel integration code sample. The refund method cancels the transaction and prints a receipt with the refund amount and saved details: card swiped or number entered.
 
 ```cs
 [Serializable]
@@ -239,19 +224,19 @@ public class IsCardClass
 
 public void ReturnPayment(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transactionId, [NotNull] IPointOfSale pointOfSale, [NotNull] IUser cashier, IReceiptPrinter printer, IViewManager viewManager, IPaymentDataContext context, IProgressBar progressBar)
 {
-    // Выполняктся произвольные методы. Например, по id транзакции платёж   озвращаетется в некой hotelSystem, которая вернет true, если платёж  успешно ткатился и false, если возврат не удался.
+    // Running random methods. For example, payment is refunded by the transaction ID in some hotelSystem which would return true if the payment is refunded successfully and false if the refund failed.
     var success = hotelSystem.ProcessReturnPayment(transactionId);
     if (!success)
-        throw new PaymentActionFailedException("Не получилось вернуть плату.");
+        throw new PaymentActionFailedException("Failed to refund.");
     
-    // Получаем данные, сохранённые в элементе оплаты.
+    // Obtaining data saved in the payment item.
     var isCard = context.GetRollbackData<IsCardClass>();
     
     var slip = new ReceiptSlip
     {
         Doc =  new XElement(Tags.Doc, 
-            new XElement(Tags.Pair, "Возврат суммы", sum),
-            new XElement(Tags.Pair, "Была ли карта", isCard.IsCard ? "ДА" :    "НЕТ" ))
+            new XElement(Tags.Pair, "Payment refund", sum),
+            new XElement(Tags.Pair, "Was the card used", isCard.IsCard ? "YES" :    "NO" ))
     };
     printer.Print(slip);
 }
@@ -262,19 +247,16 @@ public void EmergencyCancelPayment(decimal sum, Guid? orderId, Guid paymentTypeI
 }
 ```
 
-Метод [`ReturnPaymentWithoutOrder()`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_ReturnPaymentWithoutOrder.htm) вызывается, когда происходит [возврат товаров](https://ru.iiko.help/smart/project-iikofront/topic-38) внешним типом оплаты.
-Возможность возвращать оплату за товары без оплаченных ранее заказов внешними типами появилась начиная с версии iiko 6.2.2. 
-Чтобы на UI возврата товаров появилась возможность выбрать внешний тип оплаты, нужно регистрировать платёжную систему с опциональным параметром `canProcessPaymentReturnWithoutOrder = true`. Т.е.
+The [`ReturnPaymentWithoutOrder()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_ReturnPaymentWithoutOrder.htm) method is called when the [external payment refund](https://en.syrve.help/articles/#!pos-8-4/product-return) takes place. You can refund items using external types even if orders are not prepaid. To be able to select the external type in the refund UI, you need to register the payment system with the optional `canProcessPaymentReturnWithoutOrder = true` parameter. That is
 
 ```cs
 var disposable = PluginContext.Operations.RegisterPaymentSystem(paymentSystem, true);
 ```
 
-В отличие от всех упомянутых выше методов, метод `ReturnPaymentWithoutOrder()` не имеет контекста заказа и проведённой ранее оплаты.
-Предполагается, что суммы и типа оплаты достаточно для выполнения возврата.
-В процессе данной операции доступна возможность показывать пользователю диалоговые окна и печатать квитанции, так же, как и для всех упомянутых выше методов. 
+Unlike other methods mentioned above, the `ReturnPaymentWithoutOrder()` method has neither order nor prepayment context. We assume that such details as the amount and payment method are enough to make a refund. In the process, you can show dialogs to users and print receipts as is the case with other methods mentioned above.
 
-## Методы сбора данных
+
+## Data Collection Methods
 
 ```cs
 void CollectData(Guid orderId, Guid paymentTypeId, [NotNull] IUser cashier, IReceiptPrinter printer, UI.IViewManager viewManager, IPaymentDataContext context, UI.IProgressBar progressBar);
@@ -282,22 +264,17 @@ void OnPaymentAdded([NotNull] IOrder order, [NotNull] IPaymentItem paymentItem, 
 bool OnPreliminaryPaymentEditing([NotNull] IOrder order, [NotNull] IPaymentItem paymentItem, [NotNull] IUser cashier, [NotNull] IOperationService operationService, IReceiptPrinter printer, UI.IViewManager viewManager, IPaymentDataContext context, UI.IProgressBar progressBar);
 ```
 
-Если требуется собрать какие-либо данные не в момент нажатия на кнопку *«Оплатить»* на экране кассы, а в момент добавления элемента внешнего типа оплаты в заказ, то можно реализовать это в методе `CollectData()`. 
+If you need to collect any data at the time an external payment item is added to the order rather than the moment when the *«Pay»* button is hit, you can change the `CollectData()` method accordingly. 
 
-Метод `OnPaymentAdded()` вызывается после добавления элемента оплаты в заказ. Особенность этого метода в том, что одним из его аргументов является `IOperationService operationService`.
-В отличие от [`PluginContext.Operations`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_PluginContext_Operations.htm), у данного экземпляра есть полномочия вносить изменения в текущий заказ. Это нужно, например, чтобы задать сумму для добавляемого элемента оплаты или вообще добавить какое-либо блюдо в заказ.
+The `OnPaymentAdded()` method is called out once the payment item is added to the order. This method is special for having `IOperationService operationService` as one of its arguments. Unlike  [`PluginContext.Operations`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_PluginContext_Operations.htm), this instance is privileged to change the current order. This may be required, for example, to set the payment item amount or even add any menu item to the order.
  
-Метод [`OnPreliminaryPaymentEditing()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_OnPreliminaryPaymentEditing.htm) вызывается при редактировании предварительных платежей.
-Для данного метода также доступна возможность вносить изменения в текущий заказ через аргумент `IOperationService operationService`.
-Метод возвращает `bool`, смысл возвращаемого значения следующий: доступно ли изменение суммы элемента предварительной оплаты с UI после завершения данного метода. 
+The  [`OnPreliminaryPaymentEditing()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_OnPreliminaryPaymentEditing.htm) is called out when editing prepayments. This method may also change the current order using the `IOperationService operationService` argument. The method returns `bool`, the meaning of which is the following: whether or not the prepayment item amount can be changed in the UI once the method is complete.
 
-## Открытие и закрытие кассовой смены в iikoFront
-Некоторым внешним платёжным системам нужно выполнять на своей стороне определённые действия при открытии и закрытии кассовой смены на iikoFront.
-Например, для банковских систем при закрытии смены нужно проводить сверку.
-Для этого нужно подписаться на [`INotificationService.SubscribeOnCafeSessionOpening`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_INotificationService_SubscribeOnCafeSessionOpening.htm) и [`INotificationService.SubscribeOnCafeSessionClosing`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_INotificationService_SubscribeOnCafeSessionClosing.htm).
 
-При открытии и закрытии кассовой смены в соответствующий observer приходит новое событие.
-Пример кода, который при открытии и закрытии смены печатает на принтере ключ платежной системы и открыта или закрыта смена:
+## Closing & Opening Till Shifts in Syrve POS
+Some external payment systems need to perform certain actions on their side at the time a till shift is opened or closed in Syrve POS. For instance, banking systems need to carry out the verification at the till shift closing. For this, you need to subscribe to  [`INotificationService.SubscribeOnCafeSessionOpening`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_INotificationService_SubscribeOnCafeSessionOpening.htm) and [`INotificationService.SubscribeOnCafeSessionClosing`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_INotificationService_SubscribeOnCafeSessionClosing.htm).
+
+When you open or close a till shift, a corresponding observer receives a new event. Code sample which, at the time of opening or closing a shift, prints the payment system key and whether the shift is closed or opened:
 
 ```cs
 ctor
@@ -311,7 +288,7 @@ private void CafeSessionOpening([NotNull] IReceiptPrinter printer, [NotNull] IPr
 {
     PluginContext.Log.Info("Cafe session opening.");
     var message =
-        "Я не могу подключиться к своему серверу и открыть смену.";
+        "I cannot connect to my server and open a shift.";
     PluginContext.Operations.AddNotificationMessage(message, "SamplePaymentPlugin");
 }
 
@@ -326,9 +303,7 @@ private void CafeSessionClosing([NotNull] IReceiptPrinter printer, [NotNull] IPr
     };
     printer.Print(slip);
 }
-
 ```
-Если необходимо показать пользователю какое-либо предупреждение, можно сделать это с помощью уведомлений.
-Исключения, возникшие в процессе выполнения `CafeSessionOpening()` и `CafeSessionClosing()`, не прерывают операций открытия и закрытия кассовой смены на iikoFront.
-Более того, при возникновении исключения в обработчике, он считается сломанным и не вызывается до перезапуска плагина.
+
+If you need to give a user any warning, you can use notifications. Exceptions that occur while running `CafeSessionOpening()` and `CafeSessionClosing()`do not interrupt till shift opening or closing operations in Syrve POS. Moreover, if the processor encounters some exceptions, it is considered broken and is not called out until the plugin is restarted.
  

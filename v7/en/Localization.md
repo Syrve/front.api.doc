@@ -1,79 +1,69 @@
 ---
-title: Локализация
+title: Localization
 layout: default
 ---
-# Локализация #
+# Localization #
 
-Пользователь может установить язык приложения.
-Начиная с API V7, плагины, логика которых зависит от языка терминала, имеют возможность отработать изменение языка. 
+The user can set the language of the application. Starting with API V7, plugins whose logic depends on the terminal language have the possibility to work out the language change.
 
-## Как это выглядит в iikoFront?
+## How does it look in Syrve POS?
 
-Изменение языка делается через экран настроек:
+The language is changed in the settings screen:
 
 ![changeLanguage](../../img/localization/changeLanguage.png)
 
-Через плагин сменить язык терминала нельзя.
+Through the plugin, change the language of the terminal is impossible.
 
-### Как узнать текущий язык
+### How to know the current language
 
-Текущий язык приложения можно узнать с помощью метода [`IOperationService.GetHostTerminalSettings()`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetHostTerminalSettings.htm):
+The current application language can be read using the [`IOperationService.GetHostTerminalSettings()`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetHostTerminalSettings.htm):
+
 ```cs
 var settings = PluginContext.Operations.GetHostTerminalSettings();
 ```
-Метод возвращает объект, реализующий интерфейс [`IHostTerminalSettings`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Organization_IHostTerminalSettings.htm).
-Он содержит два свойства локализации:
-- `CultureInfo Culture` - язык, который выбран на терминале.
-- `CultureInfo UICulture` - добавлено в API V7.
-Сейчас свойство содержит то же самое значение, что и свойство `Culture`.
-Позже планируется поддержка различных культрур для данных и интерфейса пользователя.
 
-### Стартовые настройки плагина
+The method returns an object that implements the [`IHostTerminalSettings`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Organization_IHostTerminalSettings.htm)interface. It includes two localization properties:
+- `CultureInfo Culture` - language that is selected on the terminal.
+- `CultureInfo UICulture` - has been added to the V7 API. The property now includes the same value as the `Culture` value. Later support for different cultures for data and the user interface is planned.
 
-Начиная с API V7, во время старта приложения плагин автоматически получает настройки локализации из терминала.
-До вызова кода плагина выставляются свойства:
+### Plugin startup settings
+
+Starting with API V7, the plugin automatically gets the localization settings from the terminal when the application starts. Before the call of the plugin code, the properties are set:
 
 - [`CultureInfo.CurrentCulture`](https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo.currentculture?view=net-6.0)
 - [`CultureInfo.CurrentUICulture`](https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo.currentuiculture?view=net-6.0)
 - [`CultureInfo.DefaultThreadCurrentCulture`](https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo.defaultthreadcurrentculture?view=net-6.0)
 - [`CultureInfo.DefaultThreadCurrentUICulture`](https://docs.microsoft.com/en-us/dotnet/api/system.globalization.cultureinfo.defaultthreadcurrentuiculture?view=net-6.0)
 
-Они получают те же значения, что и на терминале.
-На текущий момент, свойство `CurrentUICulture` будет иметь то же значение, что и `CurrentCulture`, а `DefaultThreadCurrentUICulture` - то же, что и `DefaultThreadCurrentCulture`.
+They get the same values as the terminal. Currently, the `CurrentUICulture` property will have the same value as `CurrentCulture`, and `DefaultThreadCurrentUICulture` will have the same value as`DefaultThreadCurrentCulture`.
 
-### Отслеживание изменения языка плагином
+### Tracking language changes by the plugin
 
-Пользователь может поменять язык приложения iikoFront в процессе его работы.
-Это приведёт к тому, что свойства культуры, описанные выше, будут изменены.
-Однако, автоматичесткое изменение значений этих свойств для кода плагина является рискованной операцией.
-Например, в момент смены языка терминала плагин может выполнять операцию, результат которой зависит от культуры.
-Поэтому, для случая изменения языка терминала в процессе его работы, было решено не выставлять эти свойства для плагинов автоматически.
-В API V7 добавлено событие [`INotificationService.CurrentCultureChanged`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_CurrentCultureChanged.htm), позволяющее отследить смену языка терминала и выставить культуру плагина в удобный момент.
-Это событие имеет 2 аргумента:
+The user can change the language of the Syrve POS while it is running. This will cause the culture properties described above to be changed. However, automatically changing the values of these properties for the plugin code is a risky operation. For example, when the terminal language changes, the plugin may implement an operation, the result of which depends on the culture. So, for the situation when changing the language of the terminal while it is running, it was decided not to set these properties for plugins automatically. In API V7 added event [`INotificationService.CurrentCultureChanged`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_CurrentCultureChanged.htm), which allows to track the change of terminal language and set the plugin's culture at a convenient time. This event has 2 arguments:
 
-- `CultureInfo culture` - новая культура.
-- `CultureInfo uiCulture` - то же самое, что и `culture`.
+- `CultureInfo culture` - the new culture.
+- `CultureInfo uiCulture` - the same as `culture`.
 
-Например, если код плагина допускает немедленное применение новых настроек, можно задать свойства сразу:
+For example, if the plugin code allows you to apply new settings instantly, the properties can be set right away:
 
 ```cs
 PluginContext.Notifications.CurrentCultureChanged.Subscribe(x =>
 {
     CultureInfo.CurrentCulture = x.culture;
-    CultureInfo.CurrentUICulture = x.uiCulture; //Пока то же самое, что и x.culture
+    CultureInfo.CurrentUICulture = x.uiCulture; //Same as x.culture for now
     CultureInfo.DefaultThreadCurrentCulture = x.culture;
-    CultureInfo.DefaultThreadCurrentUICulture = x.uiCulture; //Пока то же самое, что и x.culture
+    CultureInfo.DefaultThreadCurrentUICulture = x.uiCulture; //Same as x.culture for now
 });
 ```
 
-### Возвращение старого поведения
+### Returning to the start state
 
-В случае, если плагин не должен менять культуру при старте терминала, можно написать в его конструкторе код, возвращающий культуру в первоначальное состояние:
+If the plugin shouldn't change the culture when the terminal starts, the code can be written in its constructor to return the culture to its original state:
 
 ```cs
 public MyPlugin()
 {
-    //Задаём культуру из настроек операционной системы
+    //Sets the culture from the operating system settings
     CultureInfo.CurrentCulture = CultureInfo.InstalledUICulture;
     CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InstalledUICulture;
     CultureInfo.CurrentUICulture = CultureInfo.InstalledUICulture;

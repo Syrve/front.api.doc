@@ -1,156 +1,139 @@
 ---
-title: Проверка и запрос прав
+title: Verification and request of permissions
 layout: default
 ---
-# Проверка и запрос прав #
+# Verification and request of permissions #
 
-Действия, которые выполняются с помощью плагина, могут требовать проверки или запроса прав. 
-Для проверки прав пользователя есть методы [`CheckPermission`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_CheckPermission.htm) и [`CheckPermissions`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_CheckPermissions.htm). 
-Для запроса прав можно показать диалоговые окна с помощью методов [`ShowCheckPermissionPopup`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCheckPermissionPopup.htm) и [`ShowCheckPermissionsPopup`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCheckPermissionsPopup.htm). 
-Текущего пользователя можно узнать с помощью метода [`GetCurrentUser`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetCurrentUser.htm). 
-Если терминал работает в режиме "Строгое соответствие расписанию", то текущую роль можно узнать с помощью [`GetStrictAccordanceToScheduleUserRole`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetStrictAccordanceToScheduleUserRole.htm).
+Actions that are run by the plugin may require checking or requesting permissions. To check user permissions, there are [`CheckPermission`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_CheckPermission.htm) and [`CheckPermissions`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_CheckPermissions.htm) methods. To request permissions, it is possible to show dialogs using  [`ShowCheckPermissionPopup`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCheckPermissionPopup.htm) and [`ShowCheckPermissionsPopup`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCheckPermissionsPopup.htm)methods  methods. The current user could be known using the [`GetCurrentUser`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetCurrentUser.htm)method. If the terminal is running in "Strict compliance with the schedule" mode, the current role can be found out using the [`GetStrictAccordanceToScheduleUserRole`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetStrictAccordanceToScheduleUserRole.htm) method.
 
-## Как это выглядит в iikoFront?
+## How does it look in Syrve POS?
 
-Например, плагин добавляет кнопку *«SamplePlugin: Show OK popup»* на «[экран кассы](ActionOnPaymentScreenView.html)». 
-Пример реализации можно посмотреть в проекте SDK SamplePlugin в классе `ButtonsTester`.
+For example, the plugin adds the *«SamplePlugin: Show OK popup»* button to the. Example realization could be seen in the SamplePlugin SDK project in the `ButtonsTester` class.
 
 ![ButtonOnPaymentScreenView](../../img/actionOnPaymentScreenView/buttonOnPaymentScreen.png)
 
-Пусть кнопка будет доступна для нажатия только пользователям с определёнными правами. 
-Это можно сделать несколькими способами. 
-Для начала зарегистрируем кнопку:
+Let the button be clickable only by users with specific permissions. There are several ways to do this. To begin with, let's register the button:
 
 ```cs
-// Регистрация действия на экране кассы
-subscription = PluginContext.Operations.AddButtonToPaymentScreen("SamplePlugin: Show ok popup", false, true, ShowOkPopupOnPaymentScreen);
+// Registering the action on the cash screen
+subscription = PluginContext.Operations.AddButtonToPaymentScreen(
 ``` 
 
-В результате выполнения метода регистрации можно получить идентификатор кнопки - `subscription.buttonId`. 
-В дальнейшем будет использоваться этот идентификатор.
+As a result of running the registration method, it is possible to get the identifier of the button - `subscription.buttonId`. This identifier will be used in the following.
 
-### Вариант 1: Отключение кнопки для всех пользователей, у кого нет права на её нажатие.
+### Option 1: Disabling the button for all users who do not have the permission to press it.
 
-Можно включать и выключать ранее добавленную кнопку на экран кассы с помощью метода [`UpdatePaymentScreenButtonState`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_UpdatePaymentScreenButtonState.htm), передавая параметр *isEnabled*. 
-Здесь удобнее всего будет воспользоваться событием [`CurrentUserChanged`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_CurrentUserChanged.htm), чтобы узнать, какой пользователь сейчас работает.
-Подпишемся на событие и проверим, обладает ли пользователь нужным правом (например, право печати Х-отчёта "F_XR"):
+It is possible to turn on and off a previously added button on the cash screen using the [`UpdatePaymentScreenButtonState`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_UpdatePaymentScreenButtonState.htm) method by passing the *isEnabled* parameter. Most convenient here would be to use the [`CurrentUserChanged`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_CurrentUserChanged.htm) event to know which user is working at the moment. Subscribe to the event and check whether the user has the permission (e.g., the right to print X report "F_XR"):
 
 ```cs
-// Подписка на событие изменения текущего пользователя
+// Subscribing to a change event for the current user
 PluginContext.Notifications.CurrentUserChanged.Where(user => user != null).DistinctUntilChanged().Subscribe(user =>
 {
     var isButtonEnabled = PluginContext.Operations.CheckPermission(user, "F_XR");
     PluginContext.Operations.UpdatePaymentScreenButtonState(subscription.buttonId, isEnabled: isButtonEnabled);
 });
+
 ``` 
 
-Таким образом, при изменении текущего пользователя, в зависимости от наличия права "F_XR", кнопка будет выключаться или включаться.
-Метод [`CheckPermission`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_CheckPermission.htm) принимает на вход 3 аргумента:
+This way, if the current user changes, the button will be turned off or on, depending on whether the right "F_XR" is present. [`CheckPermission`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_CheckPermission.htm) method takes 3 arguments as input:
 
-- [`IUser`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IUser.htm) `user` — пользователь, для которого проверяется право.
-- `string permissionCode` — право, которое должно быть у пользователя. 
-- [`IRole`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IRole.htm) `role` — необязательный параметр. Роль пользователя. Используется, если терминал работает в режиме "Строгое соответствие расписанию", можно получить с помощью метода [`GetStrictAccordanceToScheduleUserRole`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetStrictAccordanceToScheduleUserRole.htm).
+- [`IUser`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IUser.htm) `user` — the user for which the right is checked.
+- `string permissionCode` — permission that the user must have. 
+- [`IRole`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IRole.htm) `role` — optional parameter. User permission. Used if the terminal works in "Strict adherence to schedule" mode, it can be obtained using the [`GetStrictAccordanceToScheduleUserRole`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetStrictAccordanceToScheduleUserRole.htm) method.
 
-Точно так же можно проверить несколько прав, воспользовавшись методом [`CheckPermissions`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_CheckPermissions.htm). Он принимает на вход 4 аргумента:
+Similarly, it is possible to check several permissions using the [`CheckPermissions`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_CheckPermissions.htm)method. It takes 4 arguments as input:
 
-- [`IUser`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IUser.htm) `user` — пользователь, для которого проверяются права.
-- `string[] permissionCodes` — права, которые проверяются у пользователя.
-- [`PermissionsCheckMode`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_PermissionsCheckMode.htm) `checkMode` — проверять наличие всех прав (`PermissionsCheckMode.All`), или хотя бы одного (`PermissionsCheckMode.Any`).
-- [`IRole`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IRole.htm) `role` — необязательный параметр. Роль пользователя. Используется, если терминал работает в режиме "Строгое соответствие расписанию".
+- [`IUser`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IUser.htm) `user` — the user for which the right is checked.
+- `string[] permissionCodes` — permissions, which are checked in the user.
+- [`PermissionsCheckMode`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_PermissionsCheckMode.htm) `checkMode` — check for all permissions (`PermissionsCheckMode.All`), or at least one (`PermissionsCheckMode.Any`).
+- [`IRole`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IRole.htm) `role` — optional parameter. User permission. Used if the terminal works in "Strict adherence to schedule" mode.
 
-Список прав, которыми обладает пользователь, может поменяться. 
-Для отслеживания этого, можно подписаться на событие [`UserChanged`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_UserChanged.htm).
+The list of permissions a user has may be changed. To keep track of that, it is possible to subscribe to the [`UserChanged`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_UserChanged.htm) event.
 
-### Вариант 2: Скрытие кнопки для всех пользователей, у кого нет права на её нажатие.
+### Option 2: Hiding the button for all users who don't have the permission to click it.
 
-Можно перенести регистрацию кнопки в подписку [`CurrentUserChanged`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_CurrentUserChanged.htm):
+It is possible to move the button registration to the [`CurrentUserChanged`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_CurrentUserChanged.htm) subscription:
 
 ```cs
 (Guid buttonId, IDisposable buttonRegistration)? subscription = null;
-// Подписка на событие изменения текущего пользователя
+// Subscribing to a change event for the current user
 PluginContext.Notifications.CurrentUserChanged.Where(user => user != null).DistinctUntilChanged().Subscribe(user =>
 {
-    if (PluginContext.Operations.CheckPermission(user, "F_XR")) //Пользователь обладает правом
+    if (PluginContext.Operations.CheckPermission(user, "F_XR")) //The user has the permission
     {
-        if (subscription == null) //Была ли ранее создана кнопка
+        if (subscription == null) //Was the button previously created
             subscription = PluginContext.Operations.AddButtonToPaymentScreen("SamplePlugin: Show ok popup", false, true, ShowOkPopupOnPaymentScreen);
     }
-    else //Пользователь не обладает правом
+    else //The user does not have the permission
     {
-        subscription?.buttonRegistration.Dispose(); //Удаляем кнопку, если она была создана
+        subscription?.buttonRegistration.Dispose(); //Remove the button if it was created
         subscription = null;
     }
 });
 ``` 
 
-В этом случае, если у пользователя нет права, то кнопка не покажется.
+In this case, if the user does not have the permission, the button will not display.
 
-### Вариант 3: Проверка возможности выполнения операции в момент нажатия на кнопку.
+### Option 3: To check if an operation can be run at the moment the button is pressed.
 
-Если есть возможность воспользоваться экземпляром [`IViewManager`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm), то можно показать окно запроса прав. 
-Например, доступ к нему есть в подписке на событие нажатия на кнопку. 
-Здесь может быть несколько вариантов реализации.
+If it is possible to use an [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) object, it is possible to show the permissions request window. For example, it can be accessed in subscription to a button click event. There can be a few variants of realization here.
 
-#### Вариант 3.1: Если право у пользователя есть, то окно запроса права не покажется. Если у пользователя его нет, то показываем окно запроса права. 
+#### Option 3.1: If the user has the permission, the request window will not be displayed. If the user does not have it, the right request window will be shown.
 
 ```cs
 private void ShowOkPopupOnPaymentScreen((IOrder order, IOperationService os, IViewManager vm, (Guid buttonId, string caption, bool isChecked, string iconGeometry) state) info)
 {
-    if (info.vm.ShowCheckPermissionPopup("F_XR", false) == null) //Право не было подтверждено
+    if (info.vm.ShowCheckPermissionPopup("F_XR", false) == null) //The permission was not confirmed
         return;
-    info.vm.ShowOkPopup("Тестовое окно", "Сообщение показано с помощью SamplePlugin.");
+    info.vm.ShowOkPopup("Test window", "Message shown using SamplePlugin.");
 }
 ```
 
-Метод [`ShowCheckPermissionPopup`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCheckPermissionPopup.htm) принимает на вход 2 аргумента:
+The [`ShowCheckPermissionPopup`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCheckPermissionPopup.htm) method takes 2 arguments:
 
-- `string permissionCode` — право, которое должно быть у текущего пользователя.
-- `bool showConfirmPopupAnyway` — если false, то окно покажется только в случае отсутствия права у текущего пользователя. Если true, то окно покажется, даже если пользователь обладает нужным правом.
+- `string permissionCode` —  the permission that the current user must have.
+- `bool showConfirmPopupAnyway` — if `false`he window will be displayed only if the current user has no permission. If `true`, the window will be displayed even if the user has the permission.
 
-Метод возвращает экземпляр [`IUser`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IUser.htm) — пользователь, который подтвердил право, либо *null*, если право не было подтверждено. 
-Следует учитывать, что подтвердить право может любой пользователь, а не только тот, кто в данный момент выполнил вход в терминал.
+The method returns an instance of [`IUser`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IUser.htm) — the user who confirmed the permission, or `null` if the permission was not confirmed. Notice that any user, not only the one who is currently logged in to the terminal, can confirm the permission. 
 
-В нашем случае, если текущий пользователь обладает правом, то окно запроса прав не покажется, произойдёт выполнение операции. 
-Если же права у него нет, то покажется окно запроса прав:
+In that case, if the current user has the permission, the permissions request window will not be displayed, and the operation will be run. If he does not have permission, then the window of permission request will be displayed:
 
 ![CheckPermission](../../img/checkingPermissions/checkPermission.png)
 
-Если право было подтверждено, то метод [`ShowCheckPermissionPopup`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCheckPermissionPopup.htm) вернёт экземпляр [`IUser`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IUser.htm) - пользователя, который подтвердил права.
+If the permission has been confirmed, the [`ShowCheckPermissionPopup`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCheckPermissionPopup.htm) method will return an instance  of [`IUser`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IUser.htm) — the user who confirmed the permissions.
 
-#### Вариант 3.2: Запрашивать право в любом случае, даже если у пользователя оно есть.
+#### Option 3.2: Request the permission in any case, even if the user has it.
 
-Иногда непреднамеренное выполнение операции может привести к нежелательным последствиям.
-Для этого можно требовать подтверждения права, даже если текущий пользователь им уже обладает.
-Переделаем подписку нажатия на кнопку, передав в `showConfirmPopupAnyway` `true`:
+Sometimes unintentional execution of an operation can produce undesirable results. For that, it is possible to require confirmation of the permission, even if the current user already has it. Change the button-click subscriptions by sending `true` to `showConfirmPopupAnyway`:
 
 ```cs
 private void ShowOkPopupOnPaymentScreen((IOrder order, IOperationService os, IViewManager vm, (Guid buttonId, string caption, bool isChecked, string iconGeometry) state) info)
 {
-    if (info.vm.ShowCheckPermissionPopup("F_XR", true) == null) //Право не было подтверждено
+    if (info.vm.ShowCheckPermissionPopup("F_XR", true) == null) //The permission was not confirmed
         return;
-    info.vm.ShowOkPopup("Тестовое окно", "Сообщение показано с помощью SamplePlugin.");
+    info.vm.ShowOkPopup("Test window", "Message shown using SamplePlugin.");
 }
 ```
 
-В этом случае окно запроса прав будет показываться всегда.
+In that case, the permissions request window will always be displayed.
 
-### Вариант 4: Проверка нескольких прав.
+### Option 4: Checking several rights.
 
-Можно показать окно проверки нескольких прав, например:
+It is possible to show the window for checking a few permissions, for example:
 
 ```cs
 private void ShowOkPopupOnPaymentScreen((IOrder order, IOperationService os, IViewManager vm, (Guid buttonId, string caption, bool isChecked, string iconGeometry) state) info)
 {
-    if (info.vm.ShowCheckPermissionsPopup(new string[] { "F_XR", "F_ZREP" }, false, PermissionsCheckMode.Any) == null) //Права не были подтверждены
+    if (info.vm.ShowCheckPermissionsPopup(new string[] { "F_XR", "F_ZREP" }, false, PermissionsCheckMode.Any) == null) //The permission was not confirmed
         return;
-    info.vm.ShowOkPopup("Тестовое окно", "Сообщение показано с помощью SamplePlugin.");
+    info.vm.ShowOkPopup("Test window", "Message shown using SamplePlugin.");
 }
 ```
 
-Метод [`ShowCheckPermissionsPopup`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCheckPermissionsPopup.htm) принимает на вход 3 аргумента:
+The [`ShowCheckPermissionsPopup`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCheckPermissionsPopup.htm) method takes 3 arguments:
 
-- `string[] permissionCodes` — права, которые будут проверяться у текущего пользователя.
-- `bool showConfirmPopupAnyway` — если false, то окно покажется только в случае отсутствия права у текущего пользователя. Если true, то окно покажется, даже если пользователь обладает нужным правом.
-- [`PermissionsCheckMode`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_PermissionsCheckMode.htm) `checkMode` — проверять наличие всех прав (`PermissionsCheckMode.All`), или хотя бы одного (`PermissionsCheckMode.Any`).
+- `string[] permissionCodes` — permissions, which are checked in the user.
+- `bool showConfirmPopupAnyway` —  if `false`, the window will be displayed only if the current user has no permission. If `true`, the window will be displayed even if the user has the permission.
+- [`PermissionsCheckMode`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_PermissionsCheckMode.htm) `checkMode` — check for all permissions (`PermissionsCheckMode.All`), or at least one  (`PermissionsCheckMode.Any`).
 
-Метод возвращает экземпляр [`IUser`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IUser.htm) — пользователь, который подтвердил права, либо `null`, если права не были подтверждены.
+The method returns an object of [`IUser`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IUser.htm) —  the user who confirmed the permission, or null if the permission was not confirmed.
