@@ -21,7 +21,7 @@ When selecting `String` or `Decimal`, the user will be offered to enter integers
 
 ![ext_number](../../img/viewmanager/ext_decimal.png)
 
-Пример:
+Example:
 ```cs
 var settings = new ExtendedInputDialogSettings
 {
