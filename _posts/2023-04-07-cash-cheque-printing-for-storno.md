@@ -1,13 +1,13 @@
 ---
-title: CashChequePrinting при сторнировании
+title: CashChequePrinting on reversal
 layout: default
 ---
 
-Уведомление о печати чека при оплате
-[`CashChequePrinting`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_INotificationService_CashChequePrinting.htm),
-позволяющее расширить разметку чека в шапке и подвале, начиная с версии iikoFront 8.5.1 будет генерироваться также и при сторнировании (возврате) заказа.
+Notification about printing a receipt upon payment
+[`CashChequePrinting`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_INotificationService_CashChequePrinting.htm),
+allowing you to expand the markup of the receipt in the header and footer, starting from version SyrvePOS 8.5.1 it will also be generated when canceling (returning) an order.
 
-Пример:
+Example:
 ```
 public sealed class CashChequePrintingHandler : IDisposable
 {
