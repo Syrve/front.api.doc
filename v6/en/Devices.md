@@ -1,55 +1,46 @@
 ---
-title: Оборудование
+title: Equipment
 layout: default
 ---
-Для работы в iikoFront часто используется оборудование, начиная редактированием заказа и заканчивая его оплатой.
-Используемые виды оборудования могут быть самыми разными: фискальные регистраторы, принтеры, весы, денежные ящики, экран покупателя и т.д.  
+To perform many operations on Syrve POS-powered POS—from order editing to payment—you may often need certain units of equipment. Among those may be fiscal registers, printers, scales, cash drawers, customer screens, and others.
 
-В версиях до 6.2 система могла работать только с определёнными моделями оборудования. Как правило, это были самые распространенные модели оборудования.
-С помощью API можно реализовать поддержку фискальных регистраторов и весов любой модели.
+Earlier versions (before 6.2) could only handle a limited number of equipment models. Usually, those were the most popular ones. Using the API, we can now support any model of fiscal registers and scales.
 
-## Фискальный регистратор ##
+## Fiscal Register ##
 
-В API фискальные регистраторы представлены типом `ICashRegister`, который в себе содержит только идентификатор устройства и его имя.
-По большей части, `ICashRegister` представляет собой набор команд, таких как открытие/закрытие кассовой смены, оплата/возврат заказа, внесение/изъятие денежных средств и др.
-Набор команд предопределен, а внутренняя реализация будет зависеть от конкретного устройства.
-Чаще всего команды фискального регистратора возвращают текущее состояние в виде объекта `CashRegisterResult`, который содержит информацию о счётчиках денежных сумм, номерах документов, налоговых суммах и т. д. 
+In the API, fiscal registers are given as the `ICashRegister` type which contains only the device identifier and name. For the most part, `ICashRegister`  is a list of commands, such as till shift opening/closing, order payment/refund, money deposit/withdrawal, and others. Commands are preconfigured, whereas the implementation depends on the device. More often than not, fiscal register commands return the current status as the `CashRegisterResult`object containing the information about money counting devices, document numbers, tax amounts, and so on. 
 
-Каждый фискальный регистратор имеет свои настройки, которые представлены типом `CashRegisterSettings`.
-В интерфейсе BackOffice при добавлении или повторном настраивании устройства их можно будет увидеть и задать им значения.
-`CashRegisterSettings` включает в себя следующую информацию:
+Each fiscal register has its settings represented by the `CashRegisterSettings` type.When you add or edit a device in Syrve Office, you can view the settings and specify the values accordingly. `CashRegisterSettings` includes the following details:
 
-- Наименование модели фискального регистратора, например «MStar-TK. Протокол AFP» (`Code`).
-- Версия формата фискальных данных (`OfdProtocolVersion`).
-- Таблица налоговых ставок (`FiscalRegisterTaxItems`).
-- Таблица типов оплаты — определяется типом (`FiscalRegisterPaymentTypes`).
-- Количество символов в одной строке чека, напечатанной стандартным шрифтом (`Font0Width`).
-- Список настроек (`DeviceSetting`) — это произвольный набор настроек, дополнительный к описанному выше набору. Например, это может быть COM-порт, TCP/IP-адрес, скорость обмена, пароль доступа и др.
+- Name of a fiscal register model, for example, «MSTAR-TK. AFP protocol» (`Code`).
+- Fiscal data format version (`OfdProtocolVersion`).
+- Table of tax rates (`FiscalRegisterTaxItems`).
+- Table of payment types — determined by the type (`FiscalRegisterPaymentTypes`).
+- Number of characters per receipt row printed in a standard font (`Font0Width`).
+- The (`DeviceSetting`) settings are a list of extra settings. For instance, COM port, TCP/TP address, data interchange rate, access password, and so on.
 
-Схема подключения оборудования к iikoFront для всех видов оборудования одинаковая.
-Для того чтобы начать пользоваться своей моделью фискального регистратора, нужно зарегистрировать ее в списке оборудования.
-Для этого нужно создать класс, реализующий `ICashRegisterFactory`, который будет являться представителем новой модели фискального регистратора, и добавить новую модель в список оборудования с помощью  метода `RegisterCashRegisterFactory()`. 
+The equipment-to-Syrve POS connection diagram is the same for all types of devices. To begin using your fiscal printer, you need to register the device on the list of equipment. For this, you need to create a class implementing the `ICashRegisterFactory`that will represent your fiscal register and add the model to the list of equipment through the `RegisterCashRegisterFactory()` method. 
 
-В `ICashRegisterFactory` указывается имя модели оборудования и его настройки. Таким образом, в iikoOffice по имени модели можно будет найти фискальный регистратор и создать или отредактировать его настройки. 
+`ICashRegisterFactory` should specify the device model name and settings. This way, you can find your fiscal register in Syrve Office by the model and add or edit its settings
 
-Пример плагина, реализующего интеграцию с фискальным регистратором, можно посмотреть в проекте `Resto.Front.Api.SampleCashRegisterPlugin`.
+The plugin sample implementing the integration with a fiscal register (printer) can be found in the `Resto.Front.Api.SampleCashRegisterPlugin` project.
 
+## Scales ##
 
-## Весы ##
+In the API, scales are given as the `IScale` type. Like any other device, a scale includes the device identifier and name. The `IScale` type contains one command — weigh (`MeasureWeight()`).
 
-В Api весы представлены типом `IScale`. Как и любое устройство, весы в себе содержат идентификатор устройства и его имя. Тип `IScale` состоит из одной команды - взвесить (`MeasureWeight()`).
+The weighing result is the `ScaleWeightResult` type object which includes the weight in kilos (`Weight`).
 
-Результатом взвешивания является объект типа `ScaleWeightResult`, который включает в себя вес в килограммах (`Weight`).
+ДTo begin using your scale, you need to register the device on the list of equipment. For this, you need to create the `IScaleFactory`type that will represent your scale and add the model to the list of equipment through `RegisterScaleFactory()`. 
 
-Для того чтобы начать пользоваться своей моделью весов, нужно зарегистрировать ее в списке оборудования. Чтобы зарегистрировать модель, нужно создать тип `IScaleFactory`, который будет являться представителем новой модели весов, и добавить ее в список оборудования с помощью `RegisterScaleFactory()`. 
+`IScaleFactory` should specify the device model name and settings. This way, you can find your scale in Syrve Office by the model and add or edit its settings. 
 
-В `IScaleFactory` указывается имя модели оборудования и его настройки. Т.о. в BackOffice по имени модели можно будет найти весы и создать или отредактировать их настройки. 
+The plugin sample implementing the integration with a scale can be found in the `Resto.Front.Api.SampleScalePlugin` project.
 
-Пример плагина, реализующего интеграцию с весами, можно посмотреть в  проекте `Resto.Front.Api.SampleScalePlugin`.
+### Device Automatic Startup ###
 
-### Автоматический запуск устройств ###
-iikoFront умеет автоматически запускать устройства. Если устройство не запущено, любое выполнение команды на нем, кроме запуска, приведет к неудаче. Чтобы вручную не запускать устройство через BackOffice («Настройки оборудования») или iikoFront («Инструменты» -> «Настройки оборудования»), можно воспользоваться нижеописанным способом.
-В настройках устройства в BackOffice установите галочку «Запускать автоматически». В целевых методах (например, DoCheque, OpenSession для ФР) добавьте проверку состояния устройства и выбросите исключение [`DeviceNotStartedException`](http://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_DeviceNotStartedException.htm):
+Syrve POS can start devices automatically. If the device is not running, any command would fail to execute save for the startup. To avoid starting up devices manually in Syrve Office («Equipment settings») or in Syrve POS («Tools» > «Equipment settings»), follow this. In the device settings in Syrve Office, check the «Autorun» option. In target methods (for instance, DoCheque, OpenSession for FCR), add the device status check and throw the [`DeviceNotStartedException`](http://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_DeviceNotStartedException.htm) exception:
+
 ```cs
 private void CheckStarted()
 {
@@ -57,4 +48,5 @@ private void CheckStarted()
         throw new DeviceNotStartedException("Device not started");
 }
 ```
-При возникновение такого исключения iikoFront попытается произвести запуск устройства и затем выполнить целевую команду.
+
+When such an exception occurs, Syrve POS would try to start the device and then run the target command.

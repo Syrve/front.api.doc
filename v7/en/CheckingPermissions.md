@@ -1,6 +1,7 @@
 ---
 title: Verification and request of permissions
 layout: default
+order: 5
 ---
 # Verification and request of permissions #
 

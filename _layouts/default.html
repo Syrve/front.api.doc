@@ -93,7 +93,7 @@
         </div>
     </header>
     <aside>
-        {% assign pagesByTitle = site.pages | where_exp: "post", "post.title" | sort: 'title' %}
+        {% assign pagesByTitle = site.pages | where_exp: "post", "post.title" | sort: 'order' %}
 
         <!-- common topics -->
         {% for p in pagesByTitle %}

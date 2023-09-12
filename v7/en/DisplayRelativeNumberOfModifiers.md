@@ -1,6 +1,7 @@
 ---
 title: Displaying the relative amount of modifiers
 layout: default
+order: 4
 ---
 
 # Displaying the relative amount of modifiers

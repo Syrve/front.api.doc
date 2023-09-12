@@ -1,6 +1,7 @@
 ---
 title: Dialog for entering rows and barcodes
 layout: default
+order: 1
 ---
 # Dialog for entering rows and barcodes #
 

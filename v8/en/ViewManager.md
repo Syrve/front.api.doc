@@ -1,6 +1,7 @@
 ---
 title: Dialog windows
 layout: default
+order: 1
 ---
 ### Numeric strings entry dialog
 Beginning with version V8, the structure of the settings class, [`ExtendedInputDialogSettings`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_ExtendedInputDialogSettings.htm), has been changed and is transferred as a parameter to the [`Dialog window`](https://syrve.github.io/front.api.doc/v6/en/ViewManager.html) - [`ShowExtendedInputDialog()`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_UI_IViewManager_ShowExtendedInputDialog.htm).

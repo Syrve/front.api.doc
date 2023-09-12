@@ -1,6 +1,7 @@
 ---
 title: Version Control
 layout: default
+order: 4
 ---
 Keeping several versions of the API makes it possible to improve the service without detriment to the backward compatibility. On the one hand, new requirements that demand changes appear all the time, on the other hand, any change in the program interface may [impair](https://docs.microsoft.com/en-us/archive/blogs/ericlippert/every-public-change-is-a-breaking-change) the operation of existing plugins. To tackle this issue, the API has several versions: at some point, a version is no longer developed, the interface is frozen, and the development continues within the next version. Whatever changes are introduced at a later time, a plugin developed for a frozen version will be functioning properly while this version is supported.
 

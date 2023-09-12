@@ -1,6 +1,7 @@
 ---
 title: Cashbox screen
 layout: default
+order: 6
 ---
 # Extending the functional of the cashbox screen #
 
