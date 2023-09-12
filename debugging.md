@@ -4,6 +4,7 @@ layout: default
 redirect_from:
   - /v6/en/Debugging
   - /v7/en/Debugging
+order: 2
 ---
 When starting up, the Syrve POS application scans for plugins and launches `Resto.Front.Api.Host.exe` process-container for each of them, in the context of which the plugin will work. For the convenience of debugging, it is possible to run this process directly from the development interface, to do that in the plugin project debugging parameters you need to set the `Resto.Front.Api.Host.exe` host process as an external program and transfer the following command line arguments:
 

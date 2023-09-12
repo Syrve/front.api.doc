@@ -1,6 +1,7 @@
 ---
 title: Folder structure 
 layout: default
+order: 3
 ---
 # Overview #
 Each plugin is installed in its own folder within the *Plugins* folder ([V6+]({{ site.baseurl }}/2015/10/23/load-plugins-from-subdirectories.html)). One folder ‒ one plugin. At least two files must be in the folder: a plugin DLL file and Manifest.xml. Along with these files, the plugin folder and subfolders may include additional libraries, configuration files, resources, and others.
