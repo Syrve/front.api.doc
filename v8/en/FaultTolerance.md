@@ -1,6 +1,7 @@
 ---
 title: Failover
 layout: default
+order: 2
 ---
 
 The V8Preview6 version introduces the possibility to control the state of the Main Terminal (MT) of a group and, if needed, to transfer this role to another terminal.

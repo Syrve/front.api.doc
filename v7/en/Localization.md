@@ -1,6 +1,7 @@
 ---
 title: Localization
 layout: default
+order: 2
 ---
 # Localization #
 

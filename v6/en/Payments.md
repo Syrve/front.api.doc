@@ -1,43 +1,43 @@
 ---
-title: Оплатные действия
+title: Payment Actions
 layout: default
 ---
-## Добавление оплат
-Для добавления оплаты в заказ существуют методы:
+## Adding Payments
+The following methods are used to add payments
 
-- [IEditSession.AddPaymentItem](https://iiko.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPaymentItem.htm) &mdash; добавить оплату
+- [IEditSession.AddPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPaymentItem.htm) — add a payment
 
-- [IEditSession.AddExternalPaymentItem](https://iiko.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddExternalPaymentItem.htm) &mdash; добавить внешнюю оплату
+- [IEditSession.AddExternalPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddExternalPaymentItem.htm) — add an external payment
 
-- [IEditSession.AddPreliminaryPaymentItem](https://iiko.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPreliminaryPaymentItem.htm) &mdash; добавить предварительную оплату _(имеет смысл только для заказов доставки)_
+- [IEditSession.AddPreliminaryPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPreliminaryPaymentItem.htm) — add an advance payment (*it is useful for delivery orders only*)
 
-Также можно использовать одноименные [методы](https://iiko.github.io/front.api.sdk/v6/html/Methods_T_Resto_Front_Api_Extensions_OperationServiceExtensions.htm) сервиса операций&ndash;расширений, в которых неявно создаётся [сессия редактирования]({{ site.baseurl }}/v6/ru/Data%20editing.html)
-(_отличие в необходимости выполнения нескольких действий над заказом.
-Если помимо добавления оплаты требуется, например, добавить гостя к заказу, то нужно использовать методы в рамках сессии редактирования_).
-Для настройки и регистрации внешних типов оплаты см. статью [Интеграция с внешними типами оплаты](PaymentProcessor.html).
+You can also use the same-name [methods](https://syrve.github.io/front.api.sdk/v6/html/Methods_T_Resto_Front_Api_Extensions_OperationServiceExtensions.htm) of extension operations where the [editing session]({{ site.baseurl }}/v6/en/Data%20editing.html) is created implicitly (*as opposed to multiple order actions. If apart from payment, you need, for instance, to add a guest, use methods within the editing session*). To set up and register external payment types, see the [External Payment Types](PaymentProcessor.html) article.
 
-##### Ограничения добавления оплат:
-Платеж может быть добавлен в заказ, только если заказ находится в статусе новый (`New`) или пречек (`Bill`), иначе метод выбрасывает исключение [`ConstraintViolationException`](http://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_ConstraintViolationException.htm).
-Кроме того нельзя добавить в заказ несколько непроведенных элементов оплаты одного типа
-(_NOTE: планируется разрешить добавлять несколько непроведенных элементов оплаты в заказ_).
+##### Payment restrictions:
+Payment can be added only if the order is `New` or the `Guest Bill` is printed, otherwise, the method throws the [`ConstraintViolationException`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_ConstraintViolationException.htm)exception. Besides, you cannot add several unposted payments of one type (*NOTE: it is planned to lift this restriction*).
 
-##### Примеры
+##### Examples
 
-- Добавление в заказ оплаты наличными
-```cs
-var order = PluginContext.Operations.GetOrders().Last(o => o.Status == OrderStatus.New);
-var paymentType = PluginContext.Operations.GetPaymentTypes().Last(x => x.Kind == PaymentTypeKind.Cash);
-var credentials = PluginContext.Operations.GetCredentials();
-var paymentItem = PluginContext.Operations.AddPaymentItem(100m, null, paymentType, order);
-```
-- Добавление в доставочный заказ оплаты картой
+- Adding cash payments
+
 ```cs
 var deliveryOrder = PluginContext.Operations.GetDeliveryOrders().Last(o => o.Status == OrderStatus.New);
 var paymentType = PluginContext.Operations.GetPaymentTypes().Last(x => x.Kind == PaymentTypeKind.Card && x.Name.ToUpper() == "DINERS");
 var additionalData = new CardPaymentItemAdditionalData { CardNumber = "123456" };
 PluginContext.Operations.AddPreliminaryPaymentItem(150, additionalData, paymentType, deliveryOrder, PluginContext.Operations.GetCredentials());
 ```
-- Добавить в заказ внешнюю непроведенную оплату
+
+- Adding card payments to delivery orders
+
+```cs
+var deliveryOrder = PluginContext.Operations.GetDeliveryOrders().Last(o => o.Status == OrderStatus.New);
+var paymentType = PluginContext.Operations.GetPaymentTypes().Last(x => x.Kind == PaymentTypeKind.Card && x.Name.ToUpper() == "DINERS");
+var additionalData = new CardPaymentItemAdditionalData { CardNumber = "123456" };
+PluginContext.Operations.AddPreliminaryPaymentItem(150, additionalData, paymentType, deliveryOrder, PluginContext.Operations.GetCredentials());
+```
+
+- Adding external unposted payments
+
 ```cs
 var order = PluginContext.Operations.GetOrders().Last(o => o.Status == OrderStatus.New);
 var paymentType = PluginContext.Operations.GetPaymentTypes().Last(x => x.Kind == PaymentTypeKind.Card && x.Name.ToUpper() == "DINERS");
@@ -47,22 +47,21 @@ PluginContext.Operations.AddExternalPaymentItem(150, false, additionalData, paym
 
 ![card](../../img/payment/api_cardExternal.png)
 
-Комментарии:
-- В примерах используется выражение `PluginContext.Operations.GetOrders().Last(...)` &mdash; получение последнего попавшегося заказа из списка.
-Для решения бизнес&ndash;задач следует использовать соответствующий критерий отбора.
-- `PluginContext.Operations.GetCredentials()` &mdash; здесь и далее в примерах приводится метод&ndash;расширение, [реализованный](https://github.com/iiko/front.api.sdk/blob/master/sample/v6/Resto.Front.Api.SamplePlugin/OperationServiceExtensions.cs) в примере проекта SamplePlugin.
+Comments:
+- The `PluginContext.Operations.GetOrders().Last(...)` expression is used in the examples, which means getting the last order on the list. Use a corresponding selection criterion to solve business tasks.
+- `PluginContext.Operations.GetCredentials()` — hereinafter, examples show an extension method [made available](https://github.com/iiko/front.api.sdk/blob/master/sample/v6/Resto.Front.Api.SamplePlugin/OperationServiceExtensions.cs) in the SamplePlugin example.
 
-## Оплата заказа
-Для оплаты заказа существуют методы:
+## Payment for the order
+The following methods are used to pay orders:
 
-- [IOperationService.PayOrder](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrder.htm) &mdash; оплата заказа
+- [IOperationService.PayOrder](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrder.htm) — order payment
 
-- [IOperationService.PayOrderAndPayOutOnUser](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrderAndPayOutOnUser.htm) &mdash; оплата заказа в расчет официанту
+- [IOperationService.PayOrderAndPayOutOnUser](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrderAndPayOutOnUser.htm) — order payment to waiter
+there is also a method to convert the payment into prepayment in the POS
 
-также существует метод, с помощью которого можно превратить элемент оплаты в предоплату iikoFront
-- [IOperationService.ProcessPrepay](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm)
+- [IOperationService.ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm)
 
- Если оплата производится фискальным наличным типом, то на пользователя, от чьего имени производится операция оплаты методом `IOperationService.PayOrderAndPayOutOnUser`, будет оформлено [фискальное изъятие](https://ru.iiko.help/smart/project-iikofront/topic-43).
+If the payment is effected using the fiscal cash method, then the user, on behalf of which the `IOperationService.PayOrderAndPayOutOnUser` is made, will have the [fiscal withdrawal](https://en.syrve.help/articles/#!syrve-pos-8-5/pay-order-to-waiter).
 
 #### Примеры
 
@@ -102,8 +101,8 @@ PluginContext.Operations.PayOrderAndPayOutOnUser(credentials, order, paymentType
 ```
 
 ##### Комментарии:
-- При оплате заказа на главной кассе (в кассовую смену главной кассы) с помощью методов [IOperationService.PayOrder](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrder.htm) или
- [IOperationService.PayOrderAndPayOutOnUser](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrderAndPayOutOnUser.htm) заказ закроется, распечатаются все необходимые квитанции, будет напечатан фискальный чек, а сам заказ окажется в закрытых в iikoFront (_NOTE: дополнить раздел пояснением про фискальное изъятие в расчет официанту_).
+- При оплате заказа на главной кассе (в кассовую смену главной кассы) с помощью методов [IOperationService.PayOrder](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrder.htm) или
+ [IOperationService.PayOrderAndPayOutOnUser](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrderAndPayOutOnUser.htm) заказ закроется, распечатаются все необходимые квитанции, будет напечатан фискальный чек, а сам заказ окажется в закрытых в iikoFront (_NOTE: дополнить раздел пояснением про фискальное изъятие в расчет официанту_).
 
 ### Возврат оплаты
 Возврат оплаты и возврат заказов по инициативе плагина пока не реализован, поэтому должен выполняться со стационарных терминалов iikoFront пользователем системы.
@@ -128,7 +127,7 @@ PluginContext.Operations.AddExternalPaymentItem(150, true, null, paymentType, or
 #### Добавление в заказ проведенной оплаты и превращение ее в предоплату iikoFront
 
 Иногда требуется в заказ добавить такой элемент оплаты, чтобы он отображался в отчетах iikoOffice до закрытия заказа.
-Тогда в заказ нужно добавить оплату методом `AddExternalPaymentItem` с параметром `isProcessed` равным `true`, затем вызвать метод [IOperationService.ProcessPrepay](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm).
+Тогда в заказ нужно добавить оплату методом `AddExternalPaymentItem` с параметром `isProcessed` равным `true`, затем вызвать метод [IOperationService.ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm).
 
 ##### Пример
 ```cs
@@ -144,7 +143,7 @@ PluginContext.Operations.ProcessPrepay(credentials, order, paymentItem);
 
 #### Добавление в заказ предварительного платежа с последующим превращением в предоплату iikoFront
 
-Для оплаты доставочного заказа следует сначала добавить предварительную оплату с помощью метода [IEditSession.AddPreliminaryPaymentItem](https://iiko.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPreliminaryPaymentItem.htm), а после вызвать метод [IOperationService.ProcessPrepay](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm).
+Для оплаты доставочного заказа следует сначала добавить предварительную оплату с помощью метода [IEditSession.AddPreliminaryPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPreliminaryPaymentItem.htm), а после вызвать метод [IOperationService.ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm).
 
 ##### Пример
 ```cs
@@ -173,11 +172,11 @@ PluginContext.Operations.ProcessPrepay(credentials, PluginContext.Operations.Get
 
 ## Удаление оплат
 
-- [IEditSession.DeletePaymentItem](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePaymentItem.htm) &mdash; удалить оплату
+- [IEditSession.DeletePaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePaymentItem.htm) &mdash; удалить оплату
 
-- [IEditSession.DeleteExternalPaymentItem](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeleteExternalPaymentItem.htm) &mdash; удалить внешнюю оплату
+- [IEditSession.DeleteExternalPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeleteExternalPaymentItem.htm) &mdash; удалить внешнюю оплату
 
-- [IEditSession.DeletePreliminaryPaymentItem](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePreliminaryPaymentItem.htm) &mdash; удалить предварительную оплату _(имеет смысл только для доставочного заказа)_
+- [IEditSession.DeletePreliminaryPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePreliminaryPaymentItem.htm) &mdash; удалить предварительную оплату _(имеет смысл только для доставочного заказа)_
 
 ##### Пример
 
