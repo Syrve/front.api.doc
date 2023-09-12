@@ -1,65 +1,45 @@
 ---
-title: Лицензирование
+title: Licensing
 layout: default
 ---
-Лицензирование плагинов является принудительным.
-Прежде чем приступить к разработке плагина, необходимо получить лицензию разработчика, она позволит запустить тестовый экземпляр приложения iikoFront для разработки, отладки и тестирования плагина.
-Пользователям, устанавливающим уже готовый плагин, необходимо будет приобрести на него лицензию.
-Этот механизм защищает разработчиков плагинов от их несанкционированного использования, а также позволяет компании iiko контролировать использование некоторых функций. 
+Plugin licensing is compulsory. Before you start developing a plugin, get the developer license, which allows you to start an Syrve POS test instance for the development, debugging, and testing. Users that want to install a ready-made plugin need to purchase a corresponding license. This approach protects plugin developers from unauthorized use of their plugins and allows Syrve to control certain functions.
 
-## Схемы лицензирования ##
+## Licensing Plans ##
 
-С технической точки зрения, есть две схемы лицензирования:
+Technically, there are two licensing plans:
 
-- Плата за экземпляр плагина: ограничивается количество одновременно работающих экземпляров плагина.
-- Плата за внешнее подключение к плагину: ограничивается количество одновременно работающих с плагином устройств.
+- Pay per plugin instance: the number of concurrently running plugin instances is limited.
+- Pay per external connection to plugin: the number of devices concurrently working with is limited.
 
-### Плата за экземпляр плагина ##
+### Pay per plugin instance ##
 
-Данный вариант может применяться для плагинов, предоставляющих законченную функциональность и представляющих самостоятельную ценность.
-Например, плагин, дублирующий состав текущего заказа на экран покупателя, мог бы лицензироваться по этой схеме.
-Контроль лицензий осуществляется автоматически приложением iikoFront, плагин будет загружен только при наличии лицензии на него.
-Для одновременного использования плагина на нескольких терминалах требуется лицензия на соответствующее количество плагинов.
-Так, если плагин должен быть установлен на 10 терминалов, потребуется лицензия на 10 экземпляров плагина.
+This option can be used for complete and fully functional plugins with intrinsic value. For instance, a plugin that displays current order items on the customer screen should be licensed under this plan. Licenses are monitored automatically by Syrve POS — the plugin will be loaded only if the license is available. To use a plugin simultaneously on several POS terminals, a license should be issued for the required number of plugin instances. Thus, if a plugin should work on 10 POS terminals, a license for 10 plugin copies is required.
 
-Чтобы защитить плагин по этой схеме, необходимо:
+To protect the plugin under this plan, you need to:
 
-- Зарегистрироваться в iiko для получения идентификатора лицензируемого модуля.
-- Пометить класс плагина атрибутом [`PluginLicenseModuleId`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Attributes_PluginLicenseModuleIdAttribute.htm), указав полученный при регистрации идентификатор.
+- Register in Syrve to get a licensed module ID.
+- Mark the plugin class with the [`PluginLicenseModuleId`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Attributes_PluginLicenseModuleIdAttribute.htm) attribute and specify the acquired registration ID.
 
-### Плата за внешнее подключение к плагину ##
-Данная схема применима для плагинов, которые являются посредниками между iikoFront и внешними устройствами.
-За контроль лицензий в таком случае отвечает плагин.
-Помимо самого факта включения модуля в лицензию, могут быть установлены дополнительные ограничения, основное из которых — количество слотов.
-Слот модуля — это своего рода ячейка, которую на время может занять плагин или подключенное к нему устройство.
-Подключаясь попеременно, два устройства могут обходиться одним слотом, по очереди занимая и освобождая его, но для одновременной работы им понадобится два слота.
-Например, если плагин обеспечивает работу мобильных терминалов на предприятии, состоящем из двух групп отделений, в каждой из которых установлено по одному экземпляру плагина, и в обеих группах используется по 5 мобильных терминалов, то пользователю необходима лицензия на 10 слотов.
-Количество работающих экземпляров плагина при этом не учитывается.
+### Pay per external connection to plugin ##
+This plan can work for plugins used as intermediaries between Syrve POS and external devices. In this case, a plugin controls licenses. Along with the module licensing, other additional restrictions can be imposed, the number of slots being the main one. A module slot is a kind of cell that can be temporarily taken by a plugin or a device connected to it. Two devices can use one slot in turns, but they will need two slots to be able to work at the same time. Suppose a plugin enables the operation of mobile terminals in the store consisting of two groups of sections, each of which has one plugin instance installed, whereas both groups have 5 mobile terminals each. Such a setting requires a license for 10 slots. In this case, the number of active instances is not taken into account.
 
-Для реализации этой схемы защиты необходимо:
+To implement the protection procedure, follow this:
 
-- Зарегистрироваться в iiko для получения идентификаторов двух лицензируемых модулей:
-    - модуля для самого плагина, как в предыдущем варианте, но здесь это формальность, нужен только для привязки плагина с помощью атрибута [`PluginLicenseModuleId`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Attributes_PluginLicenseModuleIdAttribute.htm), чтобы плагин запускался, на практике это может быть бесплатный модуль без ограничения количества,
-    - модуля для внешних подключений, который и будет использоваться в дальнейшем.
-- Реализовать возможность идентификации подключающихся устройств таким образом, чтобы одному устройству всегда соответствовал один и тот же идентификатор.
-- При установке внешнего подключения вызвать метод [`AcquireSlot`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_ILicensingService_AcquireSlot.htm) сервиса [`ILicensingService`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_ILicensingService.htm), указав полученный при регистрации идентификатор модуля и идентификатор подключающегося устройства. Запомнить ссылку на возвращённый методом объект.
-- При завершении внешнего подключения вызвать метод `Dispose` у объекта, возвращённого методом `AcquireSlot` при установке подключения.
+- Register in Syrve to get IDs for two licensed modules:
+    - Plugin module, a formality unlike the previous plan, which is only required to link the plugin via the [`PluginLicenseModuleId`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Attributes_PluginLicenseModuleIdAttribute.htm)attribute used to start the plugin. In practice, this can be a free-of-charge module with no quantity restriction.
+    - External connection module to be further used.
+- Provide for the device identification so that each device has a unique static ID.
+- When establishing an external connection, invoke the [`AcquireSlot`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_ILicensingService_AcquireSlot.htm) method of the [`ILicensingService`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_ILicensingService.htm)service and specify the module ID acquired at the registration and the device ID. Remember the link to the object returned by the method.
+- When completing the external connection, invoke the `Dispose` method for the object returned by the `AcquireSlot` method at the time the connection was established.
 
-При вызове `AcquireSlot` один из слотов модуля плагина отмечается занятым указанным устройством.
-Если свободных слотов нет, метод генерирует исключение [`InsufficientLicenseException`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_InsufficientLicenseException.htm), значит, уже подключено максимально разрешённое количество устройств, и очередному устройству в подключении должно быть отказано.
+When `AcquireSlot` is invoked, one of the module slots is marked as used by the specified device. If there are no free slots, the method generates [`InsufficientLicenseException`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_InsufficientLicenseException.htm), which means that a maximum permissible number of devices is connected, and the next device in queue must be declined.
 
-Необходимо учитывать, что возможность освободить слот есть не всегда: работа плагина или приложения iikoFront может быть прервана внезапным выключением питания компьютера, возможны сетевые проблемы (манипуляции с лицензиями могут требовать сетевого взаимодействия) и прочее.
-Чтобы избежать «утечки» слотов, когда они занимаются, но не освобождаются, важно обеспечить неизменную идентификацию устройств.
-Например, если некое устройство подключилось к плагину, заняв один слот, а после внезапной перезагрузки это устройство подключается снова, то, имея прежний идентификатор, оно повторно займёт свой слот, а будь у него новый идентификатор, ему бы понадобился ещё один слот, а первый слот навсегда остался бы занятым.
+It should be noted that a slot can be freed up at any time: the plugin or Syrve POS app operation can be interrupted by an unexpected workstation power-off, network failure (license handling may require network communication), and so on. To avoid the slot «leakage» when slots are taken but not released, it is important to provide a uniform device identification. If, for instance, a device had connected to the plugin and used a slot, then in case of an unexpected reboot, this device will retake its slot provided it has the same ID. If it has a new ID, the device will need one more slot, and the first slot will remain permanently used.
 
-## Регистрация ##
-Разработчику необходимо зарегистрировать свой плагин как лицензируемый модуль в iiko, а пользователю получить лицензию на использование этого модуля.
-При регистрации плагину назначается некий идентификатор, целое число, это и будет идентификатором модуля.
-Это может быть как новый модуль, созданный специально для этого плагина, так и универсальный, используемый для небольших частных доработок.
-Разработчик привязывает плагин к модулю, указывая его идентификатор с помощью атрибута [`PluginLicenseModuleId`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Attributes_PluginLicenseModuleIdAttribute.htm).
-Пользователю необходимо будет получить лицензию, включающую в себя соответствующий модуль.
+## Registration ##
+A developer needs to register their plugin as a licensed module in Syrve, and a user needs to obtain a license for this module. At the registration, a plugin is assigned an ID, an integer number, which is, in fact, the module ID. This can be whether a new module created specifically for this plugin or a multipurpose module used for some minor individual modifications. A developer links a plugin to the module by specifying its ID using the   [`PluginLicenseModuleId`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Attributes_PluginLicenseModuleIdAttribute.htm)attribute. A user needs to obtain a license that includes a corresponding module.
 
-Для регистрации, получения лицензии разработчика, получения идентификатора лицензируемого модуля и заключения договора необходимо отправить заявку по адресу [api@iiko.ru](mailto:api@iiko.ru).
+To register, obtain a developer license, obtain a licensed module ID, and sign a contract, contact your Syrve vendor.
 
-## Ссылки ##
-- [Общая справка по лицензированию API всех продуктов iiko](https://ru.iiko.help/articles/#!api-documentations/apistart)
+## Links ##
+- [Syrve API Documentation](https://en.syrve.help/articles/api/getting-started-api)
