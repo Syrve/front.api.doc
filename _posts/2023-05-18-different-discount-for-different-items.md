@@ -1,6 +1,6 @@
 ---
-title: Разные скидки для разных блюд
+title: Different discounts for different dishes
 layout: default
 ---
 
-В API V8Preview6 для метода [`ChangeSelectiveDiscount`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_ChangeSelectiveDiscount.htm) была добавлена [`перегрузка`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_ChangeSelectiveDiscount_1.htm). Данная перегрузка позволяет передавать список пар, состоящих из Id элементов заказа и соответствующих им размеров скидок, которые нужно им присвоить.
+In API V8Preview6 for the method [`ChangeSelectiveDiscount`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_ChangeSelectiveDiscount.htm) was added [`overload`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_ChangeSelectiveDiscount_1.htm). This overload allows you to pass a list of pairs consisting of Id elements of the order and the corresponding discount amounts that need to be assigned to them.

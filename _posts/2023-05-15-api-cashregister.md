@@ -1,56 +1,56 @@
 ---
-title: Работа с фискальным регистратором из API V8Preview6
+title: API V8Preview6 cash register operating
 layout: default
 ---
 
-В API V8Preview6 добавлены методы для работы непостредственно с ФР
+Methods for working directly with cash register have been added to the V8Preview6 API
 
-Открытие кассовой смены на ФР
-[`OpenCashRegisterSession`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_OpenCashRegisterSession.htm)
-Поддерживается только при наличии в лицензии модуля 21052601. Для корректной работы устройство должно быть запущено и смена на устройстве должна быть закрыта.
-Для выполнения операции пользователь должен обладать разрешением CAN_EXECUTE_FISCAL_REGISTER_COMMANDS.
+Opening a cash register session at cash register
+[`OpenCashRegisterSession`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_OpenCashRegisterSession.htm)
+Supported only if module 21052601 is included in the license. For correct operation, the device must be running and the shift on the device must be closed.
+To perform the operation, the user must have the CAN_EXECUTE_FISCAL_REGISTER_COMMANDS permission.
 
-Закрытие кассовой смены на ФР(печать Z отчета)
-[`DoZReport`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_DoZReport.htm)
-Поддерживается только при наличии в лицензии модуля 21052601. Для корректной работы устройство должно быть запущено и смена на устройстве должна быть закрыта.
-Для выполнения операции пользователь должен обладать разрешением CAN_EXECUTE_FISCAL_REGISTER_COMMANDS.
-Если параметр [`printCashRegisterTape`] ежедневный журнал будет напечатан вместе с Z-отчетом.
+Closing a cash register session (printing a Z report)
+[`DoZReport`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_DoZReport.htm)
+Supported only if module 21052601 is included in the license. For correct operation, the device must be running and the shift on the device must be closed.
+To perform the operation, the user must have the CAN_EXECUTE_FISCAL_REGISTER_COMMANDS permission.
+If the parameter [`printCashRegisterTape`] the daily log will be printed along with the Z report.
 
-Открытие денежного ящика 
-[`CashRegisterOpenDrawer`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterOpenDrawer.htm)
-Для выполнения операции пользователь должен обладать разрешением CAN_EXECUTE_FISCAL_REGISTER_COMMANDS.
-В данной версии поддерживается только открытие денежного ящика подключенного к ФР, работа с внешним денежным ящиком не поддерживается.
+Opening a cash drawer 
+[`CashRegisterOpenDrawer`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterOpenDrawer.htm)
+To perform the operation, the user must have the CAN_EXECUTE_FISCAL_REGISTER_COMMANDS permission.
+This version only supports opening a cash drawer connected to the cash register; working with an external cash drawer is not supported.
 
-Получение текущего статуса ФР 
-[`GetCashRegisterStatus`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetCashRegisterStatus.htm)
-Для выполнения операции пользователь должен обладать разрешением CAN_EXECUTE_FISCAL_REGISTER_COMMANDS.
-Метод принимает список [`CashRegisterStatusField`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Tasks_CashRegisterStatusField.htm)
-и заполняет свойства возвращаемого объекта [`CashRegisterStatus`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterStatus.htm) соответствующие переданным в списке.
-При передаче пустого списка возвращается дефолтный объект [`CashRegisterStatus`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterStatus.htm)
+Receiving the current status of the cash register 
+[`GetCashRegisterStatus`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetCashRegisterStatus.htm)
+To perform the operation, the user must have the CAN_EXECUTE_FISCAL_REGISTER_COMMANDS permission.
+The method accepts a list [`CashRegisterStatusField`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Tasks_CashRegisterStatusField.htm)
+and fills the properties of the returned object [`CashRegisterStatus`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterStatus.htm) corresponding to those passed in the list.
+When passing an empty list, the default object [`CashRegisterStatus`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterStatus.htm) is returned.
  
-Возвращает дополнительные поддерживаемые операции
-[`GetQueryInfo`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetQueryInfo.htm)
-Возвращает дополнительные поддерживаемые операции [`QueryInfoResult.SupportedCommands`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_QueryInfoResult_SupportedCommands.htm)
-которые могут быть вызваны  спомощью метода [`CashRegisterDirectIO`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterDirectIO.htm)
+Returns additional supported operations
+[`GetQueryInfo`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetQueryInfo.htm)
+Returns additional supported operations [`QueryInfoResult.SupportedCommands`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_QueryInfoResult_SupportedCommands.htm)
+that can be called by the method [`CashRegisterDirectIO`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterDirectIO.htm)
 
-Выполнение дополнительной операции
-[`CashRegisterDirectIO`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterDirectIO.htm)
-Для выполнения операции пользователь должен обладать разрешением CAN_EXECUTE_FISCAL_REGISTER_COMMANDS.
-Позволяет выполнить дополнительную операцию, нужно передать в параметре [`CommandExecute`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Tasks_CommandExecute.htm)
-название дополнительной операции [`Name`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Tasks_CommandExecute_Name.htm) и значения параметров [`Parameters`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Tasks_CommandExecute_Parameters.htm)
-Этот метод используется для выполнения операций специфических для конкретной модели ФР, не соответствующих какому либо методу общего интерфейса[`ICashRegister `](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Devices_ICashRegister.htm)
+Performing an additional operation
+[`CashRegisterDirectIO`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterDirectIO.htm)
+To perform the operation, the user must have the CAN_EXECUTE_FISCAL_REGISTER_COMMANDS permission.
+Allows you to perform an additional operation, you need to pass it in the parameter [`CommandExecute`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Tasks_CommandExecute.htm)
+the name of the additional operation [`Name`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Tasks_CommandExecute_Name.htm) and parameter values [`Parameters`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Tasks_CommandExecute_Parameters.htm)
+This method is used to perform operations specific to a particular cash register ​​model that do not correspond to any method of the general interface[`ICashRegister `](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Devices_ICashRegister.htm)
  
-Запуск ФР
-[`CashRegisterStart`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterStart.htm)
+Сash register start
+[`CashRegisterStart`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterStart.htm)
  
-Остановка ФР
-[`CashRegisterStop`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterStop.htm)
-Устройства запускаются при старте iikoFront и останваливаются при завершении работы iikoFront (если в настройках устройства включен автозапуск).
-Команды запуска и остановки ФР нужны для того чтобы можно было остановить устройство и освободить COM-порт или другой порт который занимает устройство и после запустить устройство
-без перезапуска iikoFront.
+Сash register stop
+[`CashRegisterStop`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterStop.htm)
+Devices start when SyrvePOS starts and stop when SyrvePOS shuts down (if autostart is enabled in the device settings).
+The cash register start and stop commands are needed so that you can stop the device and free up a COM port or other port that the device occupies and then start the device
+without restarting SyrvePOS.
 
-Проверка кода маркировки 
-[`CheckFfd12Marking`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CheckFfd12Marking.htm)
-Для выполнения операции пользователь должен обладать разрешением CAN_EXECUTE_FISCAL_REGISTER_COMMANDS.
-Проверяет код маркировки в формате ФФД 1.2 позиции чека [`ChequeSale`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeSale.htm)
-У параметра должно быть не пустым свойство [`Ffd12`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Ffd12.htm)
+Checking the marking code 
+[`CheckFfd12Marking`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CheckFfd12Marking.htm)
+To perform the operation, the user must have the CAN_EXECUTE_FISCAL_REGISTER_COMMANDS permission.
+Checks the marking code in FFD format 1.2 of the check item [`ChequeSale`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeSale.htm)
+The parameter must have a non-empty property [`Ffd12`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Ffd12.htm)

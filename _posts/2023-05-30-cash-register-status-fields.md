@@ -1,22 +1,22 @@
 ---
-title: Добавление новых возможностей GetCashRegisterStatus.
+title: Adding new GetCashRegisterStatus features.
 layout: default
 ---
 
-В API V8Preview6 добавлена возможность получения дополнительных свойств с помощью [`IOperationService.GetCashRegisterStatus`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetCashRegisterStatus.htm).
+The V8Preview6 API has added the ability to retrieve additional property using [`IOperationService.GetCashRegisterStatus`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetCashRegisterStatus.htm).
 
 Новые добавленные поля:
-* [`SerialNumber`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SerialNumber.htm) - Серийный номер ФР
-* [`SessionNumber`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SessionNumber.htm) - Номер текущей сессии
-* [`RefundsCount`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_RefundsCount.htm) - Количество возвратов за смену
-* [`RefundsSum`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_RefundsSum.htm)- Итог возвратов за смену
-* [`CancelCount`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_CancelCount.htm) - Количество отмен за смену
-* [`CancelSum`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_CancelSum.htm) - Итог отмен за смену
-* [`SalesCount`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SalesCount.htm) - Количество продаж за смену
-* [`SalesSum`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SalesSum.htm) - Итог продаж за смену
-* [`SalesSumTotal`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SalesSumTotal.htm) - Общий итог продаж ФР
-* [`CashPaymentSum`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_CashPaymentSum.htm) - Итог наличных продаж ФР за смену
-* [`NonCashPaymentsSum`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_NonCashPaymentsSum.htm) - Итог безналичных продаж ФР за смену
+* [`SerialNumber`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SerialNumber.htm) - Cash register serial number
+* [`SessionNumber`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SessionNumber.htm) - Current session number
+* [`RefundsCount`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_RefundsCount.htm) - Number of refunds per shift
+* [`RefundsSum`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_RefundsSum.htm)- Sum of refunds per shift
+* [`CancelCount`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_CancelCount.htm) - Number of cancellations per shift
+* [`CancelSum`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_CancelSum.htm) - Sum of cancellations per shift
+* [`SalesCount`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SalesCount.htm) - Number of sales per shift
+* [`SalesSum`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SalesSum.htm) - Sum of sales per shift
+* [`SalesSumTotal`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SalesSumTotal.htm) - Total sales of cash register
+* [`CashPaymentSum`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_CashPaymentSum.htm) - Sum cash payment sales per shift
+* [`NonCashPaymentsSum`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_NonCashPaymentsSum.htm) - Sum non-cash payment sales per shift
 
-Для получения данных необходимо в [`GetCashRegisterStatusTask.StatusFields`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Tasks_GetCashRegisterStatusTask_StatusFields.htm) передать дополнительные значения, соответствующие нужным данным. 
-Список всех возможных значений - [`CashRegisterStatusField`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Tasks_CashRegisterStatusField.htm).
+To receive data you must pass additional values ​​in the [`GetCashRegisterStatusTask.StatusFields`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Tasks_GetCashRegisterStatusTask_StatusFields.htm) that correspond to the required data. 
+List of all possible values- [`CashRegisterStatusField`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_Tasks_CashRegisterStatusField.htm).
