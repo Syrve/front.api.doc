@@ -1,6 +1,6 @@
 ---
-title: В IProduct добавлено свойство ItemCatgory - признак предмета расчета.
+title: ItemCatgory - attribute of the subject of calculation is added to IProduct.
 layout: default
 ---
 
-В API v8 в интерфейс [`IProduct`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Assortment_IProduct.htm) добавлено свойство [`ItemCategory`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Assortment_IProduct_ItemCategory.htm) - [`признак предмета расчета`](https://ru.iiko.help/smart/project-iikooffice/topic-244).
+In API v8 in the interface [`IProduct`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Assortment_IProduct.htm) attribute added [`ItemCategory`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Assortment_IProduct_ItemCategory.htm) - [`attribute of the subject of calculation`](https://ru.iiko.help/smart/project-iikooffice/topic-244).
