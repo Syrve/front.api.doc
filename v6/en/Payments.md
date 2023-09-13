@@ -40,16 +40,16 @@ PluginContext.Operations.AddPreliminaryPaymentItem(150, additionalData, paymentT
 
 ```cs
 var order = PluginContext.Operations.GetOrders().Last(o => o.Status == OrderStatus.New);
-var paymentType = PluginContext.Operations.GetPaymentTypes().Last(x => x.Kind == PaymentTypeKind.Card && x.Name.ToUpper() == "DINERS");
+var paymentType = PluginContext.Operations.GetPaymentTypes().Last(x => x.Kind == PaymentTypeKind.Card && x.Name.ToUpper() == "Visa Bank cards");
 var additionalData = new CardPaymentItemAdditionalData { CardNumber = "123456" };
-PluginContext.Operations.AddExternalPaymentItem(150, false, additionalData, paymentType, order, PluginContext.Operations.GetCredentials());
+PluginContext.Operations.AddExternalPaymentItem(10, false, additionalData, paymentType, order, PluginContext.Operations.GetCredentials());
 ```
 
 ![card](../../img/payment/api_cardExternal.png)
 
 Comments:
 - The `PluginContext.Operations.GetOrders().Last(...)` expression is used in the examples, which means getting the last order on the list. Use a corresponding selection criterion to solve business tasks.
-- `PluginContext.Operations.GetCredentials()` — hereinafter, examples show an extension method [made available](https://github.com/iiko/front.api.sdk/blob/master/sample/v6/Resto.Front.Api.SamplePlugin/OperationServiceExtensions.cs) in the SamplePlugin example.
+- `PluginContext.Operations.GetCredentials()` — hereinafter, examples show an extension method [made available](https://github.com/syrve/front.api.sdk/blob/main/sample/v6/Resto.Front.Api.SamplePlugin/OperationServiceExtensions.cs) in the SamplePlugin example.
 
 ## Payment for the order
 The following methods are used to pay orders:
@@ -63,25 +63,22 @@ there is also a method to convert the payment into prepayment in the POS
 
 If the payment is effected using the fiscal cash method, then the user, on behalf of which the `IOperationService.PayOrderAndPayOutOnUser` is made, will have the [fiscal withdrawal](https://en.syrve.help/articles/#!syrve-pos-8-5/pay-order-to-waiter).
 
-#### Примеры
+#### Examples
 
-##### Оплата заказа, в котором достаточно внесенных денежных средств
+##### Payment for an order that has enough deposited funds
 
-Пусть существует заказ IOrder order, который необходимо закрыть в iikoFront и в заказ уже внесено достаточно проведенных оплат
-(*проведенные элементы оплаты это либо предоплаты, внесенные на экране кассы iikoFront, либо оплаты, добавленные по инициативе плагина методом `AddExternalPaymentItem` с флагом `isProcessed` равным `true`*).
-Для такого заказа можно вызвать метод:
+Assume there is an IOrder order that needs to be closed in Syrve POS. This order has enough posted payments: *prepayments made on the POS checkout screen or payments initiated by the plugin using the `AddExternalPaymentItem` method with the `isProcessed` flag that is `true`*. This order can have the following method invoked:
+
 ```cs
 operationService.PayOrder(credentials, order);
 ```
 
 ![payOrder](../../img/payment/api_payOrder.png)
 
-##### Оплата заказа наличными с расчетом официанту
+##### Paying the order in cash to the waiter
 
-Пусть существует заказ `IOrder order`, который необходимо оплатить наличными на всю сумму заказа и закрыть в iikoFront.
-Для этого нужно выбрать соответствующий `paymentType`.
-Затем вызывается метод `IOperationService.PayOrderAndPayOutOnUser`.
-В примере ниже заказ оплачивается наличными на всю сумму заказа:
+Assume there is an `IOrder order` that needs to be tendered to cash in full and closed in Syrve POS. For this, select a corresponding `paymentType`. Then invoke the `IOperationService.PayOrderAndPayOutOnUser` method. In the following example, an order is fully paid in cash:
+
 ```cs
 var order = PluginContext.Operations.GetOrders().Last(o => o.Status == OrderStatus.New || o.Status == OrderStatus.Bill);
 var credentials = PluginContext.Operations.AuthenticateByPin("777");
@@ -89,9 +86,9 @@ var paymentType = operationService.GetPaymentTypesToPayOutOnUser().First(x => x.
 PluginContext.Operations.PayOrderAndPayOutOnUser(credentials, order, paymentType, order.ResultSum);
 ```
 
-##### Оплата плагинным типом оплаты
+##### Paying the order using plugins
 
-Пусть существует `IOrder order` который нужно оплатить плагинным типом оплаты.
+Assume there is an `IOrder order` that needs to be tendered using a plugin payment method.
 
 ```cs
 var order = PluginContext.Operations.GetOrders().Last(o => o.Status == OrderStatus.New);
@@ -100,22 +97,20 @@ var credentials = PluginContext.Operations.GetCredentials();
 PluginContext.Operations.PayOrderAndPayOutOnUser(credentials, order, paymentType, order.ResultSum);
 ```
 
-##### Комментарии:
-- При оплате заказа на главной кассе (в кассовую смену главной кассы) с помощью методов [IOperationService.PayOrder](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrder.htm) или
- [IOperationService.PayOrderAndPayOutOnUser](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrderAndPayOutOnUser.htm) заказ закроется, распечатаются все необходимые квитанции, будет напечатан фискальный чек, а сам заказ окажется в закрытых в iikoFront (_NOTE: дополнить раздел пояснением про фискальное изъятие в расчет официанту_).
+##### Comments:
+- When paying orders on the main cash register (during the main cash register till shift) using [IOperationService.PayOrder](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrder.htm) or
+ [IOperationService.PayOrderAndPayOutOnUser](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrderAndPayOutOnUser.htm) methods, the order will be closed and given on the corresponding list in Syrve POS and all required receipts and the fiscal bill printed.
 
-### Возврат оплаты
-Возврат оплаты и возврат заказов по инициативе плагина пока не реализован, поэтому должен выполняться со стационарных терминалов iikoFront пользователем системы.
+### Refunding
+For now, refunds and order returns cannot be initiated by the plugin, therefore, it should be done on Syrve POS-powered terminals by users.
 
-### Проведение оплаты
+### Payment processing
 
-#### Добавление в заказ оплаты, проведенной на внешней стороне
-В некоторых случаях требуется добавить такой элемент оплаты в заказ, обработка которого уже выполнена вне iikoFront.
-Для этого используется метод `AddExternalPaymentItem`, которому в параметре `isProcessed` передается значение `true`.
-В данном случае iikoFront считает, что необходимые транзакции, связанные с элементом оплаты, были выполнены вовне.
-Поэтому со своей стороны не предпринимает действий по обработке и помечает данный элемент оплаты проведенным.
+#### Adding externally-processed payments
+Sometimes it is required to add payments processed outside Syrve POS. For this, the `AddExternalPaymentItem` method is used. The `isProcessed` parameter is `true`. In this case, Syrve POS treats the required payment transactions as externally processed. Therefore, it does not process them but rather marks them as posted.
 
-##### Пример
+##### Example
+
 ```cs
 var order = PluginContext.Operations.GetOrders().Last(o => o.Status == OrderStatus.New);
 var paymentType = PluginContext.Operations.GetPaymentTypes().Last(x => x.Kind == PaymentTypeKind.Cash);
@@ -124,12 +119,12 @@ PluginContext.Operations.AddExternalPaymentItem(150, true, null, paymentType, or
 
 ![cash](../../img/payment/api_cashExternalProcessed.png)
 
-#### Добавление в заказ проведенной оплаты и превращение ее в предоплату iikoFront
+#### Adding processed payments and converting them into Syrve POS prepayments
 
-Иногда требуется в заказ добавить такой элемент оплаты, чтобы он отображался в отчетах iikoOffice до закрытия заказа.
-Тогда в заказ нужно добавить оплату методом `AddExternalPaymentItem` с параметром `isProcessed` равным `true`, затем вызвать метод [IOperationService.ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm).
+Once in a while, such payments need to be added to the order and displayed in Syrve Office reports before closing the order. Then the `AddExternalPaymentItem` payment with the `true` `isProcessed` parameter needs to be added. Then, invoke the [IOperationService.ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm) method.
 
-##### Пример
+##### Example
+
 ```cs
 var order = PluginContext.Operations.GetOrders().Last(o => o.Status == OrderStatus.New);
 var paymentType = PluginContext.Operations.GetPaymentTypes().Last(x > x.Kind == PaymentTypeKind.Card && x.Name.ToUpper() == "DINERS");
@@ -141,11 +136,12 @@ PluginContext.Operations.ProcessPrepay(credentials, order, paymentItem);
 ```
 ![card](../../img/payment/api_cardExternalPrepay.png)
 
-#### Добавление в заказ предварительного платежа с последующим превращением в предоплату iikoFront
+#### Adding prepayments and converting them into Syrve POS prepayments
 
-Для оплаты доставочного заказа следует сначала добавить предварительную оплату с помощью метода [IEditSession.AddPreliminaryPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPreliminaryPaymentItem.htm), а после вызвать метод [IOperationService.ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm).
+To pay for a delivery order, first add a prepayment using the method [IEditSession.AddPreliminaryPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPreliminaryPaymentItem.htm) method and then invoke the [IOperationService.ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm) method.
 
-##### Пример
+##### Example
+
 ```cs
 var order = PluginContext.Operations.GetDeliveryOrders().Last(o => o.Status == OrderStatus.New || o.Status == OrderStatus.Bill);
 var paymentType = PluginContext.Operations.GetPaymentTypes().Last(i => i.Kind == PaymentTypeKind.Cash);
@@ -154,38 +150,36 @@ var paymentItem = PluginContext.Operations.AddPreliminaryPaymentItem(order.Resul
 PluginContext.Operations.ProcessPrepay(credentials, PluginContext.Operations.GetDeliveryOrderById(order.Id), paymentItem);
 ```
 
-## Типы оплат, которые поддерживают тихое проведение (Silent-оплата)
-Порой клиентам нужна возможность проводить предоплату или вносить чаевые по инициативе плагина (без входа на попап предоплаты или чаевых iikoFront) непроведенным типом оплаты (для последующего проведения на стороне iikoFront).
-Непроведенный тип оплаты подразумевает, что он был создан c флагом `isProcessed` равным `false`.
-Проведение какой-либо оплаты по инициативе плагина требует, чтобы оплата поддерживала так называемую тихую оплату, когда для проведения не требуется взаимодействие с пользовательским интерфейсом iikoFront (например, для сбора данных), считается, что все необходимые данные уже собраны.
-Среди типов оплат, поддерживающих тихую оплату, есть те, которые поддерживают ее по умолчанию:
-- Наличные
-- Банковские карты, платежная система которых в задана как "Внешняя".
-Настройка платежной системы типа оплаты в iikoOffice должна быть следующей:
+## Payment types that support silent processing (Silent Payment)
+From time to time, customers need to post prepayments and add tips through the plugin (without using Syrve POS functionality) as not processed payments to be further processed on the POS. Not processed or unposted payment means that is was created with the `false` `isProcessed` flag. For the payments to be processed by the plugin, they should support the so called silent payment — when the processing does not require the interaction with the Syrve POS user interface (e.g. to collect data). It is believed that all the necessary data is collected. Some payment types support the silent payment by default:
+
+- Cash
+- Bank cards, the payment system of which is set to “External”. The payment system must be configured in Syrve Office the following way:
+
 ![paymentType](../../img/payment/cardPaymentType.png)
 
-Также, поддержку тихой оплаты можно реализовать для внешнего плагинного типа.
-Подробнее см. в разделе [Внешние типы оплаты](PaymentProcessor.html).
+The silent payment can also be made available for the external plugin type. For details, see the [External Payment Methods](PaymentProcessor.html) article.
 
-**Дополнительно:**
-- Добавление чаевых в заказ см. в разделе [Чаевые](Donations.html).
+**Other Settings:**
+- For adding tips, please check the [Tips](Donations.html).
 
-## Удаление оплат
+## Removing Payments
 
-- [IEditSession.DeletePaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePaymentItem.htm) &mdash; удалить оплату
+- [IEditSession.DeletePaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePaymentItem.htm) — delete payment
 
-- [IEditSession.DeleteExternalPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeleteExternalPaymentItem.htm) &mdash; удалить внешнюю оплату
+- [IEditSession.DeleteExternalPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeleteExternalPaymentItem.htm) — delete external payment
 
-- [IEditSession.DeletePreliminaryPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePreliminaryPaymentItem.htm) &mdash; удалить предварительную оплату _(имеет смысл только для доставочного заказа)_
+- [IEditSession.DeletePreliminaryPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePreliminaryPaymentItem.htm) &— delete advance payment (*it is useful for delivery orders only*)
 
-##### Пример
+##### Example
 
-- Удаление внешнего элемента оплаты из заказа
+- Removing external payments from the order
+
 ```cs
 var order = PluginContext.Operations.GetOrders().Last(o => o.Status == OrderStatus.New);
 var paymentItem = order.Payments.FirstOrDefault(i => i.IsExternal);
 if (paymentItem != null)
-    PluginContext.Operations.DeleteExternalPaymentItem(paymentItem, order, PluginContext.Operations.GetCredentials());
+ PluginContext.Operations.DeleteExternalPaymentItem(paymentItem, order, PluginContext.Operations.GetCredentials());
 ```
 
-Больше примеров можно найти в проекте SDK SamplePaymentPlugin.
+For more examples, please check the SDK SamplePaymentPlugin project.

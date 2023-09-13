@@ -9,7 +9,7 @@ Plugins can request data (rows, barcodes, cards) from the user using dialog wind
 
 ## How does it look in Syrve POS?
 
-The Row Entry Dialog can be shown everywhere the [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) is available. In [`Resto.Front.Api.SamplePlugin`](https://github.com/syrve/front.api.sdk/tree/master/sample/v7preview7/Resto.Front.Api.SamplePlugin) in the [`ButtonsTester`](https://github.com/syrve/front.api.sdk/blob/master/sample/v7preview7/Resto.Front.Api.SamplePlugin/ButtonsTester.cs) class there is an example of showing it by clicking the `SamplePlugin: Show extended keyboard view`:
+The Row Entry Dialog can be shown everywhere the [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) is available. In [`Resto.Front.Api.SamplePlugin`](https://github.com/syrve/front.api.sdk/tree/main/sample/v7preview7/Resto.Front.Api.SamplePlugin) in the [`ButtonsTester`](https://github.com/syrve/front.api.sdk/blob/main/sample/v7preview7/Resto.Front.Api.SamplePlugin/ButtonsTester.cs) class there is an example of showing it by clicking the `SamplePlugin: Show extended keyboard view`:
 
 ![extendedKeyboardDialog](../../img/extendedKeyboardDialog/extendedKeyboardDialog.png)
 

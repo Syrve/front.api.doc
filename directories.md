@@ -33,7 +33,7 @@ However, V4/V5 plugins must hold to the contract terms and specify attributes fo
 # Examples #
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
-<Manifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../Binaries/iiko/Manifest.xsd">
+<Manifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../Binaries/syrve/Manifest.xsd">
   <FileName>Resto.Front.Api.SamplePlugin.dll</FileName>
   <TypeName>Resto.Front.Api.SamplePlugin.SamplePlugin</TypeName>
   <ApiVersion>V6</ApiVersion>
@@ -41,4 +41,4 @@ However, V4/V5 plugins must hold to the contract terms and specify attributes fo
 </Manifest>
 ```
 
-This [example](https://github.com/syrve/front.api.sdk/blob/master/sample/v6/Resto.Front.Api.SamplePlugin/Manifest.xml), as well as the [*Manifest.xsd*](https://github.com/syrve/front.api.sdk/blob/master/sample/v6/Binaries/Manifest.xsd) file scheme, can be found in the Syrve POS API SDK offline package [Syrve POS API SDK](https://github.com/syrve/front.api.sdk/tree/master/sample/v6).
+This [example](https://github.com/syrve/front.api.sdk/blob/main/sample/v6/Resto.Front.Api.SamplePlugin/Manifest.xml), as well as the [*Manifest.xsd*](https://github.com/syrve/front.api.sdk/blob/main/sample/v6/Binaries/Manifest.xsd) file scheme, can be found in the Syrve POS API SDK offline package [Syrve POS API SDK](https://github.com/syrve/front.api.sdk/tree/main/sample/v6).
