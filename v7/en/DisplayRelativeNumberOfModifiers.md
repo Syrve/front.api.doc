@@ -6,18 +6,18 @@ order: 4
 
 # Displaying the relative amount of modifiers
 
-Considering the value of the `IRestaurant.DisplayRelativeNumberOfModifiers` setting in Syrve POS calculates the number of modifier portions in string form, which is displayed on the UI.
+Considering the value of the [`IRestaurant.DisplayRelativeNumberOfModifiers`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_IRestaurant_DisplayRelativeNumberOfModifiers.htm) setting in Syrve POS calculates the number of modifier portions in string form, which is displayed on the UI.
 
 For example, a dish has the Sour cream modifier, which is included in the group of modifiers. For this modifier is run:
 - the amount depends on the amount of the main dish
 - modifier is free
 - the default amount of modifier is 3
 
-Then if `IRestaurant.DisplayRelativeNumberOfModifiers` is `true` it will display:
+Then if [`IRestaurant.DisplayRelativeNumberOfModifiers`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_IRestaurant_DisplayRelativeNumberOfModifiers.htm) is `true` it will display:
 - _+2 Sour cream_, if increase the amount of the modifier by 2
 - _- Sour cream_, if reducing the amount by 1
 
-If `IRestaurant.DisplayRelativeNumberOfModifiers` is `false` the absolute amount of modifier in the dish will be displayed:
+If [`IRestaurant.DisplayRelativeNumberOfModifiers`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_IRestaurant_DisplayRelativeNumberOfModifiers.htm) is `false` the absolute amount of modifier in the dish will be displayed:
 - _х5 Sour cream_, if increase the amount of the modifier by 2
 - _х2 Sour cream_, if reducing the amount by 1
 

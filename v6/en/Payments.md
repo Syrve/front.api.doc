@@ -5,11 +5,11 @@ layout: default
 ## Adding Payments
 The following methods are used to add payments
 
-- [IEditSession.AddPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPaymentItem.htm) — add a payment
+- [`IEditSession.AddPaymentItem`](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPaymentItem.htm) — add a payment
 
-- [IEditSession.AddExternalPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddExternalPaymentItem.htm) — add an external payment
+- [`IEditSession.AddExternalPaymentItem`](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddExternalPaymentItem.htm) — add an external payment
 
-- [IEditSession.AddPreliminaryPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPreliminaryPaymentItem.htm) — add an advance payment (*it is useful for delivery orders only*)
+- [`IEditSession.AddPreliminaryPaymentItem`](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPreliminaryPaymentItem.htm) — add an advance payment (*it is useful for delivery orders only*)
 
 You can also use the same-name [methods](https://syrve.github.io/front.api.sdk/v6/html/Methods_T_Resto_Front_Api_Extensions_OperationServiceExtensions.htm) of extension operations where the [editing session]({{ site.baseurl }}/v6/en/Data%20editing.html) is created implicitly (*as opposed to multiple order actions. If apart from payment, you need, for instance, to add a guest, use methods within the editing session*). To set up and register external payment types, see the [External Payment Types](PaymentProcessor.html) article.
 
@@ -54,12 +54,12 @@ Comments:
 ## Payment for the order
 The following methods are used to pay orders:
 
-- [IOperationService.PayOrder](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrder.htm) — order payment
+- [`IOperationService.PayOrder`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrder.htm) — order payment
 
-- [IOperationService.PayOrderAndPayOutOnUser](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrderAndPayOutOnUser.htm) — order payment to waiter
+- [`IOperationService.PayOrderAndPayOutOnUser`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrderAndPayOutOnUser.htm) — order payment to waiter
 there is also a method to convert the payment into prepayment in the POS
 
-- [IOperationService.ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm)
+- [`IOperationService.ProcessPrepay`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm)
 
 If the payment is effected using the fiscal cash method, then the user, on behalf of which the `IOperationService.PayOrderAndPayOutOnUser` is made, will have the [fiscal withdrawal](https://en.syrve.help/articles/#!syrve-pos-8-5/pay-order-to-waiter).
 
@@ -98,8 +98,8 @@ PluginContext.Operations.PayOrderAndPayOutOnUser(credentials, order, paymentType
 ```
 
 ##### Comments:
-- When paying orders on the main cash register (during the main cash register till shift) using [IOperationService.PayOrder](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrder.htm) or
- [IOperationService.PayOrderAndPayOutOnUser](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrderAndPayOutOnUser.htm) methods, the order will be closed and given on the corresponding list in Syrve POS and all required receipts and the fiscal bill printed.
+- When paying orders on the main cash register (during the main cash register till shift) using [`IOperationService.PayOrder`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrder.htm) or
+ [`IOperationService.PayOrderAndPayOutOnUser`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_PayOrderAndPayOutOnUser.htm) methods, the order will be closed and given on the corresponding list in Syrve POS and all required receipts and the fiscal bill printed.
 
 ### Refunding
 For now, refunds and order returns cannot be initiated by the plugin, therefore, it should be done on Syrve POS-powered terminals by users.
@@ -121,7 +121,7 @@ PluginContext.Operations.AddExternalPaymentItem(150, true, null, paymentType, or
 
 #### Adding processed payments and converting them into Syrve POS prepayments
 
-Once in a while, such payments need to be added to the order and displayed in Syrve Office reports before closing the order. Then the `AddExternalPaymentItem` payment with the `true` `isProcessed` parameter needs to be added. Then, invoke the [IOperationService.ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm) method.
+Once in a while, such payments need to be added to the order and displayed in Syrve Office reports before closing the order. Then the `AddExternalPaymentItem` payment with the `true` `isProcessed` parameter needs to be added. Then, invoke the [`IOperationService.ProcessPrepay`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm) method.
 
 ##### Example
 
@@ -138,7 +138,7 @@ PluginContext.Operations.ProcessPrepay(credentials, order, paymentItem);
 
 #### Adding prepayments and converting them into Syrve POS prepayments
 
-To pay for a delivery order, first add a prepayment using the method [IEditSession.AddPreliminaryPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPreliminaryPaymentItem.htm) method and then invoke the [IOperationService.ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm) method.
+To pay for a delivery order, first add a prepayment using the method [`IEditSession.AddPreliminaryPaymentItem`](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPreliminaryPaymentItem.htm) method and then invoke the [`IOperationService.ProcessPrepay`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm) method.
 
 ##### Example
 
@@ -165,11 +165,11 @@ The silent payment can also be made available for the external plugin type. For 
 
 ## Removing Payments
 
-- [IEditSession.DeletePaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePaymentItem.htm) — delete payment
+- [`IEditSession.DeletePaymentItem`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePaymentItem.htm) — delete payment
 
-- [IEditSession.DeleteExternalPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeleteExternalPaymentItem.htm) — delete external payment
+- [`IEditSession.DeleteExternalPaymentItem`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeleteExternalPaymentItem.htm) — delete external payment
 
-- [IEditSession.DeletePreliminaryPaymentItem](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePreliminaryPaymentItem.htm) &— delete advance payment (*it is useful for delivery orders only*)
+- [`IEditSession.DeletePreliminaryPaymentItem`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeletePreliminaryPaymentItem.htm) &— delete advance payment (*it is useful for delivery orders only*)
 
 ##### Example
 
@@ -182,4 +182,4 @@ if (paymentItem != null)
  PluginContext.Operations.DeleteExternalPaymentItem(paymentItem, order, PluginContext.Operations.GetCredentials());
 ```
 
-For more examples, please check the SDK SamplePaymentPlugin project.
+For more examples, please check the [SDK SamplePaymentPlugin](https://github.com/Syrve/front.api.sdk/tree/main/sample/v7) project.
