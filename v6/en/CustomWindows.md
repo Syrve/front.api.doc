@@ -1,11 +1,11 @@
 ---
-title: Произвольные окна
+title: Custom Dialogs
 layout: default
 ---
-# FAQ по UI и .Net 
-Если [диалоговых окон iikoFront API](ViewManager.html "ViewManager") недостаточно, плагин может показывать собственные окна, однако, необходимо учитывать некоторые нюансы.
+# FAQ about UI and .Net
+If existing [Syrve POS dialogs](ViewManager.html "ViewManager") are not enough, the plugin can show user-defined dialogs, however, certain specifics should be taken into account.
 
-Во-первых, хост-процесс плагина по умолчанию не содержит необходимого для UI [STA-потока](https://msdn.microsoft.com/library/ms809971.aspx "Understanding and Using COM Threading Models"). Плагин должен создать его самостоятельно. Пример кода:
+First, the plugin default host process does not include the [STA thread](https://msdn.microsoft.com/library/ms809971.aspx "Understanding and Using COM Threading Models"). required for the UI. Though the plugin must create it. Sample code:
 
 ```cs
 ctor()
@@ -22,7 +22,8 @@ private void EntryPoint()
 }
 ```
 
-Во-вторых, открытое фоновым процессом окно по умолчанию не имеет фокуса, поэтому события ввода будут направлены прежнему активному окну (то есть окну iikoFront). По [задумке](https://devblogs.microsoft.com/oldnewthing/20090220-00/?p=19083 "Foreground activation permission is like love: You can’t steal it, it has to be given to you") Microsoft, приложение не может стать активным само по себе, эстафету ему может передать только предыдущее активное окно, либо фокус может назначить пользователь. Однако, последнее можно имитировать программно:
+Second, by default, a background process dialog has no focus, therefore, input events pertain to the previously active dialog, i.e. Syrve POS dialog. According to [Microsoft](https://devblogs.microsoft.com/oldnewthing/20090220-00/?p=19083 "Foreground activation permission is like love: You can’t steal it, it has to be given to you"), the app cannot be foreground on its own, it’s only the previously active dialog that can do it, or it is the user who can foreground the app. However, the latter can be pre-programmed:
+
 ```cs
 public static void ClickWindow(Window wnd)
 {
@@ -39,7 +40,7 @@ public static void ClickWindow(Window wnd)
 }
 ```
 
-В-третьих, окно плагина, будучи независимым окном, может оказаться позади окна iikoFront. Режим отображения поверх всех окон — тоже [не панацея](https://social.msdn.microsoft.com/Forums/en-US/fb4a7d5f-c98b-461f-a527-7d5dd4cd03e6/multiple-topmost-windows?forum=wpf "Multiple Topmost Windows"), потому что могут быть и другие topmost-окна (в том числе само приложение iikoFront). Плагин может привязать своё окно как дочернее к окну iikoFront через WinApi-функцию `SetParent`. Хотя в API не публикуется hwnd фронтового окна, плагин может самостоятельно его [найти](https://stackoverflow.com/questions/10676649/attach-window-to-window-of-another-process).
+Third, the plugin dialog, being an independent window, can be put behind the Syrve POS window. The Always On Top mode [cannot solve](https://social.msdn.microsoft.com/Forums/en-US/fb4a7d5f-c98b-461f-a527-7d5dd4cd03e6/multiple-topmost-windows?forum=wpf "Multiple Topmost Windows") the issue, as other topmost windows can be present, including the Syrve POS app itself. The plugin can link its dialog to the Syrve POS window as a child dialog via the `SetParent` WinAPI function. Although the Syrve POS window hwnd is not published in the API, the plugin can [find](https://stackoverflow.com/questions/10676649/attach-window-to-window-of-another-process) it on its own.
 
 
 

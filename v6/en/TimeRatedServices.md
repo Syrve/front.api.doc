@@ -1,93 +1,74 @@
 ---
-title: Повременные услуги
+title: Pay-Per-Time Services
 layout: default
 ---
-## Общее описание 
+## Overview
 
-Приложение iikoFront может использоваться для продажи не только товаров и блюд, но также услуг с повременной тарификацией.
-Это могут быть заведения с оплатой за проведённое время (аквапарки, антикафе), прокат инвентаря и многое другое, но классический пример — бильярд, именно он будет использован в данной статье для описания предметной области.
+The Syrve POS app can be used not only to sell goods and items but also for services charged per time. Venues, where customers pay per time they spend there (water parks, bowling, anticafés), can be a good example. In this article, we use pool to describe the subject matter.
 
-### Запуск и остановка
-Услугу можно запускать и останавливать.
-Когда услуга запущена, ведётся отсчёт времени, растёт «количество» и, соответственно, стоимость.
-Когда услуга остановлена, отсчёт времени приостанавливается, эти периоды не оплачиваются.
+### Start & Stop
+You start and stop the service. The system tracks time while the service is running; the «quantity» is growing and thus growing the total amount. When the service is stopped, the time meter is stopped as well. Customers only pay for the playtime.
 
-Услугу можно заказать на определённое время, в этом случае оплачивается всё заказанное время, даже если фактически услуга использовалась меньшее время.
-Например, посетитель может заказать бильярд на час, при этом стоимость изначально будет установлена за 1 час и не будет меняться, а «количество» будет расти с течением времени.
-При достижении заданного лимита времени услуга автоматически остановится.
-Другой вариант — оплата по факту, можно играть, пока не надоест, и заплатить за итоговое время, тогда лимит не задаётся, но услуга в любом случае остановится при достижении максимально возможной продолжительности в 12 часов.
+Customers may choose to pay for a specific time in advance. In this case, the service is paid in full even if customers decide to leave earlier. Suppose a guest buys one hour of pool. In this case, the time limit and the price are set and won’t change, unlike the «quantity», which will grow as time passes. When the limit is reached, the service will stop automatically. Alternatively, customers may choose to pay upon completion of services for the overall playtime. In this case, the time limit is not set, and the time will continue to progress until the maximum permissible duration of 12 hours is reached.
 
-Запуск и остановка услуги могут сопровождаться дополнительным действием, привязанным к столу, на котором расположен заказ.
-В случае бильярда это может быть включение освещения над столом на время игры: изначально свет выключен, запустили услугу — свет включился, остановили — погас.
-Отсюда возникает ограничение — не более одной запущенной услуги на столе.
-Пока это ограничение действует для всех столов независимо от того, настроены ли подобные дополнительные действия.
-В будущих версиях это ограничение не будет распространяться на столы или услуги, не имеющие привязок к внешним устройствам.
+The starting and stopping can be accompanied by an additional action linked to the table where the order is placed. In the case of pool, it can be putting the light on over the table during the playtime: by default, the lights are off, when the service is started, the light turns on, when the service is stopped, the light goes off. This creates a restriction — no more than one concurrently running service per table. For now, this restriction applies to all tables regardless of whether such additional actions are set or not. In later versions, this restriction will not apply to the tables or services with no links to external devices.
 
-### Тарификация
-Стоимость услуги может зависеть от дня недели и меняться со временем. Возможны два варианта тарификации:
+### Rates
+The service price may depend on the day of the week and change with time. There are two rate types:
 
-- по времени суток — например, днём услуга может стоить дешевле, а в вечерние часы дороже, это позволяет сбалансировать периоды низкого и высокого спроса;
-- по времени самой услуги — например, когда первый час самый дорогой, а каждый следующий всё дешевле, это мотивирует посетителей потреблять услугу в большем объёме.
+- By time of day — in the middle of the day the service may be cheaper than in the evening, which helps to balance the low-demand and high-demand periods out.
+- By service time — the first hour may be the most expansive while each successive hour is cheaper than the previous, which makes it tempting to purchase more time.
 
-Учёт времени ведётся по следующим правилам:
+The time is tracked according to the following rules:
 
-- Задаётся единица измерения, и время действия услуги округляется вверх до кратного значения, например, если настроена почасовая тарификация и услуга была запущена 70 минут, платить надо будет за два часа.
-- Может быть задана минимальная продолжительность — например, если услугу запускали всего на 10 минут, а минимальная продолжительность — полчаса, платить надо будет за полчаса, даже если выбрана поминутная тарификация. Если при тех же настройках услугу запускали на 31 минуту, то и заплатить надо будет за 31 минуту. 
-- С течением времени переключение между тарифами происходит автоматически, запоминается продолжительность использования услуги по каждому из тарифов. Периоды, соответствующие разным тарифам, будут оплачиваться по разным ценам.  
+- A measurement unit needs to be set. The service time is rounded up to the nearest rated interval, for instance, if the hourly rate charging is set and the time since the service start is 70 minutes, customers should pay for two hours.
+- Minimum service duration can be set. In this case, if, for instance, a service is used for 10 minutes only, whereas the minimum duration is set to half an hour, a customer will need to pay for half an hour even if the per-minute charging is enabled. If the service with the same settings is used for 31 minutes, then a customer will need to pay for 31 minutes only.
+- As time passes, the system switches from rate to rate automatically and stores the service time used under each rate. Periods, corresponding to different rates, are priced differently.  
 
-## Структуры данных ##
+## Data Structure ##
 
-### Услуга
-[`IOrderServiceItem`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderServiceItem.htm) — элемент заказа, соответствующий повременной услуге. Расположен в коллекции [`IOrder.Items`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_Items.htm) наряду с блюдами, которые можно готовить ([`IOrderCookingItem`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderCookingItem.htm)).
-В меню повременной услуге соответствует продукт ([`IProduct`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Assortment_IProduct.htm)) с типом [`ProductType.Service`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Assortment_ProductType.htm) и имеющий параметры тарификации [`IProduct.RateSchedule`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Assortment_IProduct_RateSchedule.htm) (если параметры тарификации не заданы, то это услуга без повременной тарификации, она добавляется в заказ и оплачивается как обычное блюдо).
+### Service
+[`IOrderServiceItem`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderServiceItem.htm) — order item that corresponds to the time-based service. It is located in the [`IOrder.Items`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_Items.htm) collection together with food items ([`IOrderCookingItem`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderCookingItem.htm)).
+A pay-per-time service is given as the ([`IProduct`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Assortment_IProduct.htm)) product on the menu with the [`ProductType.Service`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Assortment_ProductType.htm) type and has the [`IProduct.RateSchedule`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Assortment_IProduct_RateSchedule.htm) charging parameters (if charging parameters are not set, the service has no time-based rates and can be added to the order and paid as a regular item).
 
-Ключевые свойства повременной услуги:
+Key properties of the pay-per-time service:
 
-- [`Service`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_Service.htm) — продукт, соответствующий этой услуге, определяет доступность в меню, базовую цену (тариф по умолчанию) и т. п.
-- [`Periods`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_Periods.htm) — список периодов работы услуги, соответствующих разным тарифам.
-При запуске услуги в список добавляется первый период, его время и стоимость растут до тех пор, пока не произойдёт переключение на другой тариф, для другого тарифа будет добавлен второй период и так далее.
-Каждому тарифу соответствует один период: если тарифная сетка настроена таким образом, что сначала действует один тариф, затем другой, а после него снова первый, то сначала будет расти время первого периода, затем второго, а потом снова первого.
-- [`IsStarted`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_IsStarted.htm) — запущена ли услуга в данный момент. 
-- [`Price`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_Price.htm) — базовая цена за единицу времени (отдельные периоды могут тарифицироваться по другим ценам).
-- [`TimeLimit`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_TimeLimit.htm) — лимит времени.
-Если он задан, услуга автоматически остановится при достижении лимита. Даже если вручную остановить услугу раньше, оплатить все равно надо будет всё заказанное время, при этом использованное время учитывается и оплачивается в рамках периодов, а неиспользованное — в рамках самой услуги (см. `RemainingLimitCost`). 
-- [`RemainingLimitCost`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_RemainingLimitCost.htm) — стоимость неиспользованной части лимита времени. Если лимит не задан, 0. При задании лимита изначально будет полная стоимость лимита времени (ибо услугу ещё не запускали, нет ни одного периода работы, всё заказанное время ещё не использовано), со временем будет уменьшаться одновременно с увеличением стоимостей периодов (всё меньше неиспользованная часть лимита и всё больше использованная), пока не дойдёт до нуля.
-- [`Cost`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_Cost.htm) — полная стоимость этой услуги, включает в себя сумму за все периоды и стоимость неиспользованного остатка лимита времени.
-- [`ResultSum`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_ResultSum.htm) — итоговая стоимость этой услуги, включая скидки, надбавки и НДС.
+- [`Service`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_Service.htm) — the product associated with the service defines the availability on the menu, base price (default rate), and so on.
+- [`Periods`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_Periods.htm) — a list of service intervals representing different rates. When the service is started, the first period will be added to the list. The period time and value will grow until the next rate is enabled, which will add the second period, and so on. Each rate has one period (interval) associated with it: if—according to the rate scale—rates are enabled in turns, the time spent in the first period will increase, then the same will be true for the second period, and then the first period again.
+- [`IsStarted`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_IsStarted.htm) — whether or not the service is running at the moment.
+- [`Price`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_Price.htm) — base unit price (certain periods can have different rates).
+- [`TimeLimit`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_TimeLimit.htm) — a time limit. If set, the service will stop automatically when the limit is reached. Even if you stop the service prematurely, the entire service time needs to be paid anyways, in which case, used time is registered and paid under preconfigured periods, whereas, unused time — under the service itself (see  `RemainingLimitCost`). 
+- [`RemainingLimitCost`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_RemainingLimitCost.htm) — unused time price. If the limit is not set, 0. When the limit is set, the entire time limit price will be due (the service is not yet started, no ordered time is used). With time, the time limit total value will decrease (until dropped to zero), while the period total value will increase (unused limit time will grow smaller, and used time will become larger).
+- [`Cost`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_Cost.htm) — overall service value includes amounts accumulated over all periods and the value of unused time.
+- [`ResultSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_ResultSum.htm) — total service value, including discounts, surcharges, and the VAT.
 
-### Период услуги
-[`IOrderServiceItemPeriod`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod.htm) — период работы услуги по определённому тарифу, включает в себя все отрезки времени, когда соответствующий тариф был активен.
+### Service Period
+[`IOrderServiceItemPeriod`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod.htm) — a period a service operates at a particular rate, which includes all time intervals under this rate.
 
-Ключевые свойства периода повременной услуги:
+Key properties of the service period:
 
-- [`Service`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod_Service.htm) — продукт, соответствующий тарифу этого периода. Либо продукт типа  [`ProductType.Service`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Assortment_ProductType.htm), взятый из услуги как тариф по умолчанию, либо продукт типа  [`ProductType.Rate`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Assortment_ProductType.htm), взятый из тарифной сетки.
-- [`Price`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod_Price.htm) — цена за единицу времени.
-- [`ElapsedTime`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod_ElapsedTime.htm) — суммарное время, когда соответствующий тариф был активен.
-Если услугу несколько раз запускали и останавливали, либо были переключения между тарифами туда и обратно, все отрезки времени, когда тариф был активен, будут собраны в один период, и здесь будет точная (не округлённая) суммарная длина всех этих отрезков.
-Оплачивается округлённое время, но запоминается фактическое. Например, если оплата почасовая, а в `ElapsedTime` набралось всего 10 минут, стоимость периода будет соответствовать одному часу и не изменится в следующие 50 минут действия этого тарифа.
-- [`Cost`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod_Cost.htm) — полная стоимость этого периода.
-Она уже включена в стоимость услуги (и [полную](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_Cost.htm), и [итоговую](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_ResultSum.htm)), поэтому не следует их повторно суммировать.
-Данное свойство предназначено лишь для возможности детализации стоимости услуги по тарифам.
+- [`Service`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod_Service.htm) — product associated with the period rate. Alternatively, it is the [`ProductType.Service`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Assortment_ProductType.htm) product specified in the service as the default rate or the [`ProductType.Rate`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Assortment_ProductType.htm) product specified in the rate scale.
+- [`Price`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod_Price.htm) — price per time unit.
+- [`ElapsedTime`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod_ElapsedTime.htm) — overall time the service is used under the particular rate. If the service is started and stopped more than once or rates are switched back and forth, the system would combine all time intervals associated with the rate into one. It would be a precise, not rounded period of time. The system registers the actual time, however, a guest would pay for a rounded time. For instance, if the service is charged hourly and the ElapsedTime is 10 minutes only, the period value will correspond to one hour and will not change during the next 50 minutes under this rate.
+- [`Cost`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod_Cost.htm) — пoverall period value. It is already included in the service value (both  [overall](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_Cost.htm) and [total](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_ResultSum.htm)), therefore, there is no need to sum them up. This property is only intended to break the service cost down by rates.
 
-### Настройки тарификации
-[`RateSchedule`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_RateSchedule.htm) — настройки повременной услуги, ключевые свойства:
+### Rate Settings
+[`RateSchedule`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_RateSchedule.htm) — charging mode: by service time or by the time of day.
 
-- [`TimingMode`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_RateSchedule_TimingMode.htm) — режим тарификации, по времени суток или по времени самой услуги.
-- [`Items`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_RateSchedule_Items.htm) — тарифная сетка, список элементов типа [`RateScheduleItem`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_RateScheduleItem.htm), определяющих отрезки времени с отличными от базового тарифами. Отрезок времени ([`RateScheduleInterval`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_RateScheduleInterval.htm)) определяется днём недели и смещением начала и конца отрезка относительно начала шкалы тарификации. В зависимости от выбранного режима тарификации (`TimingMode`) началом шкалы будет либо начало суток (вся шкала *[0;24)* часа), либо начало действия услуги (вся шкала *[0;12)* часов).
-Гарантируется, что отрезки времени не пересекаются.
-Если список пуст, всегда действует базовый тариф.
-- [`TimingStep`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_RateSchedule_TimingStep.htm) — единица измерения. Фактическое время работы услуги округляется вверх до ближайшего кратного значения.
-- [`MinimumDuration`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_RateSchedule_MinimumDuration.htm) — минимальная продолжительность услуги, либо `null`, если нижняя граница не задана.
+- [`TimingMode`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_RateSchedule_TimingMode.htm) — charging mode: by service time or by the time of day.
+- [`Items`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_RateSchedule_Items.htm) — rate scale, list of [`RateScheduleItem`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_RateScheduleItem.htm) items that define time intervals with rates other than the base rate. The time interval ([`RateScheduleInterval`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_RateScheduleInterval.htm)) is defined by the day of the week and the shift of the interval beginning and the end against the rate scale beginning. Depending on the selected charging mode (`TimingMode`) н, the scale begins together with the day (entire scale is *[0;24)*  hours) or together with the service (entire scale is *[0;12]* hours). Such time intervals are sure will not overlap. If the list is empty, the base rate is enabled all the time.
+- [`TimingStep`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_RateSchedule_TimingStep.htm) — measurement unit. The real service time is rounded up to the nearest rate step.
+- [`MinimumDuration`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_RateSchedule_MinimumDuration.htm) — minimum service duration or null if the lower limit is not set.
 
-## Управление услугой
-[`AddOrderServiceItem`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_AddOrderServiceItem.htm) — добавление услуги в заказ.
+## Service Management
+[`AddOrderServiceItem`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_AddOrderServiceItem.htm) — adding the service to the order.
 
-[`StartService`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_StartService.htm) — запуск услуги.
+[`StartService`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_StartService.htm) — starting the service.
 
-[`StopService`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_StopService.htm) — остановка услуги. При пречеке или оплате заказа услуга остановится автоматически.
+[`StopService`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_StopService.htm) — stopping the service. If a guest bill is printed or the order is paid, the service will stop automatically.
 
-## Примеры
-В плагине SamplePlugin, входящем в состав SDK, появились примеры добавления услуги в заказ, запуска и остановки услуги — методы [`StartService`] и [`StopService`] в классе [`EditorTester`](https://github.com/syrve/front.api.sdk/blob/main/sample/v6/Resto.Front.Api.SamplePlugin/EditorTester.cs):
+## Examples
+The SamplePlugin included in the SDK shows examples of the service adding, starting, and stopping — [`StartService`] and [`StopService`] methods in the [`EditorTester`](https://github.com/syrve/front.api.sdk/blob/main/sample/v6/Resto.Front.Api.SamplePlugin/EditorTester.cs) class:
 
 ```cs
 private static void StartService()

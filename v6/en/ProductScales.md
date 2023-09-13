@@ -1,20 +1,21 @@
 ---
-title: Размер блюда
+title: Item Size
 layout: default
 ---
-В версиях до 5.0 предполагалось, что блюдо каждый раз готовится одинаково, его состав и размер полностью описываются его технологической картой. Для продажи таких блюд, которые могут выпекаться в формах разного диаметра (пироги, пицца), напитков в стаканчиках разного объёма и т. п. приходилось регистрировать блюдо каждого размера как отдельное блюдо, следовательно, плодить наборы модификаторов под каждый размер, дублировать прочие (не относящиеся к размерам) настройки блюд и модификаторов, при редактировании заказа в iikoFront при необходимости выбрать другой размер приходилось удалять одно блюдо и добавлять другое. В меню куча кнопок, в отчётах куча строчек. Назрела потребность ввести самостоятельное понятие _размер блюда_.  
+In earlier versions (before 5.0), it was assumed that items are cooked the same way all the time and that all the ingredients and sizes are covered by the recipe. To sell items that may have different sizes, like pizza, pies, beverages, and so on, users had to register each item of each size as a separate item, and so create modifiers for each size and duplicate other item and modifier settings. When editing orders in the POS, users had to remove one item and then add another one in order to change the size. This resulted in the menu having a large number of buttons and reports with many rows. We had to introduce a standalone concept — *item size*.  
 
-Размер блюда — дополнительная характеристика, определяющая состав и расход ингредиентов, выход готового блюда и, соответственно, его цену. Набор взаимозаменяемых размеров образует _шкалу размеров_. Если блюду назначена шкала размеров, при добавлении блюда в заказ необходимо выбрать один из размеров этой шкалы. Некоторые размеры могут быть недоступны для конкретного блюда. Модификаторы будут готовиться в том же размере, что и блюдо, некоторые из них могут быть недоступны для выбранного размера. 
+The item size is the additional property that defines the ingredients and their quantity, ready-made item output weight, and, therefore, the price. A set of interchangeably used sizes makes the size scale. If an item has a size scale assigned, users need to select one of the sizes from the scale when adding the item. Some items do not have all the sizes available. A modifier size corresponds to the item size, though some modifiers may be unavailable for the selected size.
 
-## Ключевые типы ##
-- `IProduct` — элемент номенклатуры, имеет свойство `Scale` со ссылкой на шкалу размеров. Аналогичную ссылку на шкалу размеров имеет и шаблон составного блюда `CompoundItemTemplate`. Если блюду не назначена шкала размеров, то `null`. 
-- `IProductScale` — шкала размеров, для неё известны название шкалы (`Name`) и размер по умолчанию (`DefaultSize`). Список размеров этой шкалы можно получить с помощью сервисного метода `GetProductScaleSizes`.
-- `IProductSize` — размер блюда, имеет полный и краткий варианты названия (`Name` и `KitchenName`).
-- Методы `AddOrderProductItem` и `AddOrderCompoundItem` имеют аргумент `size`, позволяющий указать размер добавляемого блюда.
-- `OrderCookingItem` — добавленные в заказ блюда (`OrderProductItem` и `OrderCompoundItem`) имеют свойство `Size` со ссылкой на выбранный размер.
-- Выбранный размер можно поменять с помощью метода редактирования `ChangeOrderCookingItemSize`.
-- Одна и та же шкала может использоваться для многих продуктов, однако, не все продукты доступны во всех размерах. Узнать, в каких размерах заведомо недоступен тот или иной продукт, можно с помощью сервисного метода `GetDisabledSizes`.
-- Метод `GetPrice` теперь позволяет узнать цену с учётом размера (помимо ценовой категории и даты). 
+## Key Types ##
+- `IProduct` — stocklist item has the `Scale` property with a link to the size scale. A `CompoundItemTemplate` buildup item also has a similar link to the size scale. If an item has not size scale assigned, then `null`. 
+- `IProductScale` — size scale with the scale `Name` and the `DefaultSize`. A list of the scale sizes can be obtained using the `GetProductScaleSizes` service method.
+- `IProductSize` —  item size has two name options: full name — `Name` and short name — `KitchenName`.
+- Methods `AddOrderProductItem` and `AddOrderCompoundItem` have the size argument that allows specifying the item size.
+- `OrderCookingItem` — order items (`OrderProductItem` and `OrderCompoundItem`) have the `Size` property with a link to the selected size.
+- The selected size can be changed using the `ChangeOrderCookingItemSize` edit method.
+- One and the same scale can be used for many items, however, not all the items are available in all sizes. To learn which sizes are not available for this or that item, use the `GetDisabledSizes` service method.
+- The `GetPrice` method now allows getting the item price with account to the size (along with the price category and date).
 
-## Примеры ##
-Пример работы с размерами можно посмотреть во входящем в состав SDK плагине Resto.Front.Api.SamplePlugin (`EditorTester.AddCompoundItem`).
+
+## Examples ##
+A size handling example can be found in the Resto.Front.Api.SamplePlugin (`EditorTester.AddCompoundItem`) plugin as part of the SDK.
