@@ -1,24 +1,24 @@
 ---
-title: Отмена процесса оплаты
+title: Canceling the payment process
 layout: default
 ---
 
-Начиная с API V8 появилась возможность прерывать оплату / сторнирование заказа, внесение / возврат предоплаты.
+Starting with API V8, it became possible to interrupt payment/cancel an order, make/return an advance payment.
 
-После проведения оплат в платежной системе (если таковая поддерживается типом оплаты) перед началом фискализации на фискальном регистраторе в API срабатывает уведомление
-[`BeforeDoCheque`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_INotificationService_BeforeDoCheque.htm).
-Раньше оно позволяло менять заказ через
-[`IOperationService`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_IOperationService.htm),
-доступный в аргументах уведомления, например, добавлять какие-либо внешние данные
-([`AddOrderExternalData`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_AddOrderExternalData.htm)).
-Также оно позволяло взаимодействовать с пользователем через
-[`IViewManager`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm),
-показывать различные окна в iikoFront в случае, если оплата выполнялась не в фоне.
+After making payments in the payment system (if one is supported by the payment type), before the start of fiscalization, a notification is triggered on the fiscal registrar in the API
+[`BeforeDoCheque`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_INotificationService_BeforeDoCheque.htm).
+Previously, it allowed you to change your order via
+[`IOperationService`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_IOperationService.htm),
+available in notification arguments, for example, add some external data
+([`AddOrderExternalData`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_AddOrderExternalData.htm).
+It also allowed interaction with the user through
+[`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm),
+show different windows in iikoFront if the payment was not performed in the background.
 
-Теперь ко всему прочему добавилась возможность отменять процесс оплаты путем генерации исключения `OperationCanceledException` в соответствующем подписчике.
-Это может быть востребовано в случаях, когда проверяются дополнительные условия,
-невыполнение которых может препятствовать закрытию / сторнированию заказа или внесению / возврату предоплаты.
+Now, in addition to everything else, we have added the ability to cancel the payment process by generating an `OperationCanceledException` exception in the corresponding subscriber.
+This may be required in cases where additional conditions are checked,
+failure to comply with which may prevent the closure/reversal of the order or the payment/refund of the prepayment.
 
-Также, в аргументах уведомления появился список оплат, над которыми конкретно сейчас происходит операция и для которых должен напечататься чек.
+Also, in the notification arguments, a list of payments has appeared on which an operation is currently taking place and for which a receipt should be printed.
 
-Уведомление генерируется как для фискальных, так и для нефискальных типов оплат.
+The notification is generated for both fiscal and non-fiscal types of payments.

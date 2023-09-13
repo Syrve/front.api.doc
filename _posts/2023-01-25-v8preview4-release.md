@@ -1,8 +1,8 @@
 ---
-title: Выпущена версия V8Preview4
+title: V8Preview4 released
 layout: default
 ---
 
-Вышла очередная версия [iikoRms 8.3](https://ru.iiko.help/articles/#!releasenotes/2023-winter), а вместе с ней и промежуточный релиз [V8Preview4](https://www.nuget.org/packages/Resto.Front.Api.V8Preview4/8.3.6036-alpha). Эта версия будет поддерживаться в 8.3 и 8.4.
+The next version [iikoRms 8.3](https://en.syrve.help/articles/#!releasenotes/2023-winter) has been released, and with it an interim release [V8Preview4](https://www.nuget.org/packages/Resto.Front.Api.V8Preview4/8.3.6036-alpha). This version will be supported in 8.3 and 8.4.
 
-Версия V7Preview7, несмотря на новость из [статьи]({{ site.baseurl }}/2021/07/07/v7preview7-release.html), продолжает поддерживаться в 8.3. Подробнее о версиях API [тут]({{ site.baseurl }}/versioning.html).
+Version V7Preview7, despite the news from [article]({{ site.baseurl }}/2021/07/07/v7preview7-release.html), continues to be supported in 8.3. More information about API versions [here]({{ site.baseurl }}/versioning.html).
