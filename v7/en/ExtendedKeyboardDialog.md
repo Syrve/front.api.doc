@@ -45,7 +45,7 @@ PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: String input exam
 
 With these parameters, the dialog will respond only to keyboard input. Barcode scanning and card rolling will not be taken into. All words will be entered with a capital letter. This may be helpful when entering the first name, last name and middle name.
 
-The result must be converted to [`StringInputDialogResult`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_View_StringInputDialogResult.htm)type. Let's append the code:
+The result must be converted to [`StringInputDialogResult`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_View_StringInputDialogResult.htm) type. Let's append the code:
 
 ```cs
 PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: String input example", x =>

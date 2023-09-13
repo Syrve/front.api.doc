@@ -23,7 +23,7 @@ The current application language can be read using the [`IOperationService.GetHo
 var settings = PluginContext.Operations.GetHostTerminalSettings();
 ```
 
-The method returns an object that implements the [`IHostTerminalSettings`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Organization_IHostTerminalSettings.htm)interface. It includes two localization properties:
+The method returns an object that implements the [`IHostTerminalSettings`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Organization_IHostTerminalSettings.htm) interface. It includes two localization properties:
 - `CultureInfo Culture` - language that is selected on the terminal.
 - `CultureInfo UICulture` - has been added to the V7 API. The property now includes the same value as the `Culture` value. Later support for different cultures for data and the user interface is planned.
 

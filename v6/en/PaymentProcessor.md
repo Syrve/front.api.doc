@@ -12,7 +12,7 @@ Plugins used for external payment types must be [licensed](Licensing.html).
 A plugin registers an external payment type using [`IOperationService.RegisterPaymentSystem(...)`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_RegisterPaymentSystem.htm).
 `paymentSystem` is a required parameter to be passed to this method. It is a class instance that implements `IExternalPaymentProcessor`. 
 Upon registration, a new payment system will be available in Syrve Office.
-You can find it under the name IExternalPaymentProcessor.PaymentSystemName in the «Non-cash» type field if you select the «External Payment Type» as the payment type in the new payment type window.
+You can find it under the name [`IExternalPaymentProcessor.PaymentSystemName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_IExternalPaymentProcessor_PaymentSystemName.htm) in the «Non-cash» type field if you select the «External Payment Type» as the payment type in the new payment type window.
 
 ![backPT](../../img/payment/backPT.png)
 
@@ -22,13 +22,14 @@ If you add a [payment type](https://en.syrve.help/articles/#!office-8-5/topic-10
 
 Explanation of terms:
 
-- *Payment System * – defines the way payments are posted and returned. The payment system is used as a single instance in the entire Syrve RMS.
+- *Payment System* – defines the way payments are posted and returned. The payment system is used as a single instance in the entire Syrve RMS.
 - *Payment Type* - refers to any payment system. It has customizable properties as fiscality, transfer accounts, and so on. If you make the external payment type fiscal, it will be classified as the *«Bank Cards»* type, if you leave it non-fiscal, it will fall within the *«Non-Cash Payment»* type. Within one payment system, you can add any number of payment types.
 относится к какой-либо платёжной системе.
 - *Payment Item* – refers to orders in Syrve POS. When a user while on the [payment screen](https://en.syrve.help/articles/#!syrve-pos-8-5/checkout) or [prepayment screen](https://en.syrve.help/articles/#!syrve-pos-8-5/checkout/a/h2_2092503229) selects any payment method, a payment item of a corresponding payment method is added to the order. Payment items can be added via the API ([Adding Payments](Payments.html)).
 
 ## IExternalPaymentProcessor Interface
 To carry out the required business procedures of posting and refunding payments made using external payment types, the [`IExternalPaymentProcessor`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IExternalPaymentProcessor.htm) interface needs to be implemented
+
 ```cs
 public interface IExternalPaymentProcessor
 {
@@ -65,17 +66,16 @@ Where:
 - `orderId` – Syrve POS order ID;
 - `paymentTypeId` – payment type ID The list of all payment types can be obtained using the [`IOperationService.GetPaymentTypes()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_GetPaymentTypes.htm) method; a specific payment type can be obtained using the [`OperationService_TryGetPaymentTypeById(...)`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_TryGetPaymentTypeById.htm) method;
 - `transactionId` – transaction ID;
-- `pointOfSale` – [Point of sale](GroupsAndPointsOfSale.html) where this payment item is processed;
+- `pointOfSale` – [`Point of sale`](GroupsAndPointsOfSale.html) where this payment item is processed;
 - `cashier` – cashier;
 - `printer` – instance of [`IReceiptPrinter`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IReceiptPrinter.htm) that enables printing on the Syrve POS receipt printer;
 - `viewManager` – instance of [`IViewManager`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_UI_IViewManager.htm) used to [view windows](ViewManager.html) while processing payments;
 - `context` – instance of [`IPaymentDataContext`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IPaymentDataContext.htm) used to save data in the payment item;
 - `progressBar` – instance of [`IProgressBar`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_UI_IProgressBar.htm) used to change the text in the progress bar while processing payments.
 
-For details on the object signature, please refer to the [в документации](https://syrve.github.io/front.api.sdk/v6).
+For details on the object signature, please refer to the [documentation](https://syrve.github.io/front.api.sdk/v6).
 
 If you, for example, need to integrate with a hotel system:
-
 
 - When taking payments, you need to ask users to provide a room number or produce a room key.
 - Then refer to the hotel service.
@@ -148,8 +148,8 @@ To abort the operation silently, you can use the [`PaymentActionCancelledExcepti
 Arguments [`IReceiptPrinter`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IReceiptPrinter.htm), [`IViewManager`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_UI_IViewManager.htm) and  [`IPaymentDataContext`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IPaymentDataContext.htm) exist only while the method is running; once the method is complete, the instances are removed. So there is no point to save them as variables for they cannot be used outside the method.
 
 ### Silent Payment
-Sometimes, businesses need solutions to effect plugin payments within the very plugins but without the Syrve POS cash register screen. For this, the plugin should implement the [CanPaySilently](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) method of the plugin payment processor. The method result is the answer to this question: *«Whether or not the plugin can process silent payments?»*.
-To make this possible, an order should have a plugin payment item added. Silent payments may require the [ProcessPrepay](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm) method with the `isProcessed` flag set to `false` to be called.
+Sometimes, businesses need solutions to effect plugin payments within the very plugins but without the Syrve POS cash register screen. For this, the plugin should implement the [`CanPaySilently`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) method of the plugin payment processor. The method result is the answer to this question: *«Whether or not the plugin can process silent payments?»*.
+To make this possible, an order should have a plugin payment item added. Silent payments may require the [`ProcessPrepay`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_ProcessPrepay.htm) method with the `isProcessed` flag set to `false` to be called.
 The `SDK` shows a use case of the user-written class with the *SilentPay* property:
 
 ```cs
@@ -184,7 +184,7 @@ private void AddAndProcessExternalPrepay()
 }
 ```
 
-In turn, Syrve POS sends the specified serialized class to the payment context ([IPaymentContext](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IPaymentDataContext.htm)) and then this class is extracted and deserialized in the [CanPaySilently](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) method.
+In turn, Syrve POS sends the specified serialized class to the payment context ([`IPaymentContext`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_IPaymentDataContext.htm)) and then this class is extracted and deserialized in the [`CanPaySilently`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) method.
 
 ```
 public bool CanPaySilently(decimal sum, Guid? orderId, Guid paymentTypeId, IPaymentDataContext context)
@@ -194,7 +194,7 @@ public bool CanPaySilently(decimal sum, Guid? orderId, Guid paymentTypeId, IPaym
 }
 ```
 
-Depending on the [CanPaySilently](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) response, Syrve POS would call `Pay` or `PaySilently` plugin processor method. Therefore, the plugin defines the way a new payment should be processed.
+Depending on the [`CanPaySilently`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IExternalPaymentProcessor_CanPaySilently.htm) response, Syrve POS would call `Pay` or `PaySilently` plugin processor method. Therefore, the plugin defines the way a new payment should be processed.
 
 ## Refund Methods
 

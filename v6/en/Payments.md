@@ -14,7 +14,7 @@ The following methods are used to add payments
 You can also use the same-name [methods](https://syrve.github.io/front.api.sdk/v6/html/Methods_T_Resto_Front_Api_Extensions_OperationServiceExtensions.htm) of extension operations where the [editing session]({{ site.baseurl }}/v6/en/Data%20editing.html) is created implicitly (*as opposed to multiple order actions. If apart from payment, you need, for instance, to add a guest, use methods within the editing session*). To set up and register external payment types, see the [External Payment Types](PaymentProcessor.html) article.
 
 ##### Payment restrictions:
-Payment can be added only if the order is `New` or the `Guest Bill` is printed, otherwise, the method throws the [`ConstraintViolationException`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_ConstraintViolationException.htm)exception. Besides, you cannot add several unposted payments of one type (*NOTE: it is planned to lift this restriction*).
+Payment can be added only if the order is `New` or the `Guest Bill` is printed, otherwise, the method throws the [`ConstraintViolationException`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_ConstraintViolationException.htm) exception. Besides, you cannot add several unposted payments of one type (*NOTE: it is planned to lift this restriction*).
 
 ##### Examples
 
