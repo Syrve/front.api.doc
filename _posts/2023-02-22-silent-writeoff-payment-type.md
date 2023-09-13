@@ -1,48 +1,48 @@
 ---
-title: Тип оплаты "Без выручки" стал поддерживать тихую оплату
+title: The "No Revenue" payment type now supports silent payment
 layout: default
 ---
 
-В iikoFront версии 8.4.4 и выше появилась возможность закрывать заказ, содержащий в себе оплату типом "Без выручки", дистанционно с помощью метода
-[`PayOrder`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_PayOrder.htm).
+In SyrvePOS version 8.4.4 and higher, it became possible to close an order containing payment type "Without revenue" remotely using the method
+[`PayOrder`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_PayOrder.htm).
 
-Также в API V8 в
-[`WriteoffPaymentItemAdditionalData`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Payments_WriteoffPaymentItemAdditionalData.htm)
-было добавлено новое поле
-[`AuthorizationUser`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Payments_WriteoffPaymentItemAdditionalData_AuthorizationUser.htm) —
-"Сотрудник или гость, на которого производится списание".
-Это поле нужно заполнять в случае, если в настройках типа оплаты "Без выручки" выбрана авторизация сотрудником или гостем.
-У передаваемого юзера в персональной карточке должна стоять галочка напротив "Гость" и/или "Сотрудник" в зависимости от настройки в типе оплаты.
-Если авторизация в типе оплаты не требуется, `AuthorizationUser` можно не указывать.
+Also in API V8
+[`WriteoffPaymentItemAdditionalData`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Payments_WriteoffPaymentItemAdditionalData.htm)
+a new field has been added
+[`AuthorizationUser`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Payments_WriteoffPaymentItemAdditionalData_AuthorizationUser.htm) —
+"Employee or guest to whom the debit is made".
+This field must be filled in if authorization by an employee or guest is selected in the “Without revenue” payment type settings.
+The transferred user must have a checkmark next to “Guest” and/or “Employee” in their personal card, depending on the settings in the payment type.
+If authorization is not required in the payment type, `AuthorizationUser` can be omitted.
 
-У сотрудника, чьи
-[`ICredentials`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Security_ICredentials.htm)
-мы передаем в метод добавления оплаты в заказ, должно быть право F_COTH (Закрывать заказы за счет заведения).
+The employee whose
+[`ICredentials`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Security_ICredentials.htm)
+we pass to the method of adding payment to the order, there must be the right F_COTH (Close orders at the expense of the establishment).
 
-Пример использования:
+Usage example:
 
 ```
-// Сотрудник, у которого будет проверяться право F_COTH (Закрывать заказы за счет заведения).
+// An employee whose right to F_COTH (Close orders at the expense of the establishment) will be checked.
 var credentials = PluginContext.Operations.AuthenticateByPin("777");
 var order = PluginContext.Operations.GetOrders().Last(o => o.Status == OrderStatus.New);
 var paymentType = PluginContext.Operations.GetPaymentTypes().First(x => x.Kind == PaymentTypeKind.Writeoff);
 var additionalData = new WriteoffPaymentItemAdditionalData
 {
     Ratio = 1,
-    Reason = "Списание",
-    // Сотрудник или гость, на которого производится списание.
-    AuthorizationUser = PluginContext.Operations.GetUsers().SingleOrDefault(user => user.Name == "Гость Григорий")
+    Reason = "Debit",
+    // Employee or guest to whom the debit is made.
+    AuthorizationUser = PluginContext.Operations.GetUsers().SingleOrDefault(user => user.Name == "Guest Gregory")
 };
-// Добавление внешнего непроведенного платежа без выручки.
+// Adding an external unsettled payment without revenue.
 PluginContext.Operations.AddExternalPaymentItem(order.ResultSum, false, additionalData, null, paymentType, order, credentials);
-// Или же добавление обычного платежа без выручки.
+// Or adding a regular payment without revenue.
 // PluginContext.Operations.AddPaymentItem(order.ResultSum, additionalData, paymentType, order, credentials);
 
 order = PluginContext.Operations.GetOrderById(order.Id);
-// Дистанционная оплата заказа существующими в заказе платежами локально.
+// Remote payment of an order using local payments existing in the order.
 PluginContext.Operations.PayOrder(credentials, order, true);
 ```
 
-Документация, которая может быть полезна:
+Documentation that may be useful:
 
-- [Оплатные действия]({{ site.baseurl }}/v6/ru/Payments).
+- [Payment actions]({{ site.baseurl }}/v6/ru/Payments).

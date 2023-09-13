@@ -1,32 +1,32 @@
 ---
-title: Навигация в заказ по инициативе плагина
+title: Navigation to order initiated by plugin
 layout: default
 ---
 
-В API V8 сделали первый шаг к возможности навигироваться между экранами iikoFront по инициативе плагина.
-Пока поддерживается только навигация в заказ по плагинным кнопкам или с экрана редактирования заказа.
+In API V8 we took the first step towards the ability to navigate between SyrvePOS screens at the initiative of a plugin.
+For now, only order navigation via plug-in buttons or from the order editing screen is supported.
 
-В [`IViewManager`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_IViewManager.htm)
-был добавлен новый метод
-[`NavigateToOrderAfterOperation`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_UI_IViewManager_NavigateToOrderAfterOperation.htm).
+In [`IViewManager`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_UI_IViewManager.htm)
+a new method has been added
+[`NavigateToOrderAfterOperation`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_UI_IViewManager_NavigateToOrderAfterOperation.htm).
 
-Его можно вызвать во вью-менеджере, который приходит в плагин при нажатии плагинных кнопок:
+It can be called in the view manager, which comes to the plugin when you click the plugin buttons:
 
-- на ДОП - Дополнения —
-[`AddButtonToPluginsMenu`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AddButtonToPluginsMenu.htm)
-- на экране закрытого заказа —
-[`AddButtonToClosedOrderScreen`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AddButtonToClosedOrderScreen.htm)
-- на экране возврата заказов закрытых кассовых смен —
-[`AddButtonToProductsReturnScreen`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AddButtonToProductsReturnScreen.htm)
-- на экране редактирования заказа —
-[`AddButtonToOrderEditScreen`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AddButtonToOrderEditScreen.htm)
+- on SUP - Supplements —
+[`AddButtonToPluginsMenu`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AddButtonToPluginsMenu.htm)
+- on the closed order screen —
+[`AddButtonToClosedOrderScreen`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AddButtonToClosedOrderScreen.htm)
+- on the order return screen for closed cash register shifts —
+[`AddButtonToProductsReturnScreen`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AddButtonToProductsReturnScreen.htm)
+- on the order editing screen —
+[`AddButtonToOrderEditScreen`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AddButtonToOrderEditScreen.htm)
 
-А также во вью-менеджере, который приходит в плагин при редактировании из API текущего открытого на фронте заказа:
+And also in the view manager, which comes to the plugin when editing from the API the current order opened at the SyrvePOS:
 
-- вызов внутри
-[`TryEditCurrentOrder`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_TryEditCurrentOrder.htm)
+- calling inside
+[`TryEditCurrentOrder`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_TryEditCurrentOrder.htm)
 
-Навигация возможна только в открытый заказ.
-При вызове метода проверяются соответствующие права текущего залогиненного на фронте сотрудника.
-Такие же, какие проверяются при навигации путем нажатия кнопок на самом фронте.
-Навигация в заказ доставки пока невозможна.
+Navigation is only possible in an open order.
+When calling the method, the corresponding rights of the currently logged in employee at the SyrvePOS are checked.
+The same ones that are checked when navigating by pressing the buttons on the front itself.
+Navigation to delivery order is not yet possible.

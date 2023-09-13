@@ -1,68 +1,69 @@
 ---
-title: Возврат товаров и заказов закрытых кассовых смен
+title: Products and orders returns from closed cash register shifts
 layout: default
 ---
 
-Теперь появилась возможность делать возврат товаров или заказов закрытых кассовых смен не только из [UI iikoFront](https://ru.iiko.help/articles/#!iikofront-8-3/topic-38), но и из API V8.
+Now it is possible to return products or orders from closed cash register shifts not only from [UI SyrvePOS](https://en.syrve.help/articles/#!syrve-pos-8-5/product-return), but also from the V8 API.
 
-В одной из [предыдущих новостей]({{ site.baseurl }}/2023/03/09/past-orders.html)
-мы рассказали о способах получения заказов закрытых кассовых смен.
-Теперь, если это необходимо, можно откорректировать список блюд такого заказа, и сделать его возврат путем вызова метода
-[`StornoPastOrder`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_StornoPastOrder.htm).
+In one of the [previous news]({{ site.baseurl }}/2023/03/09/past-orders.html)
+we talked about ways to receive orders from closed cash register shifts.
+Now, if necessary, you can adjust the list of dishes of such an order and return it by calling the method
+[`StornoPastOrder`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_StornoPastOrder.htm).
 
-Если же нужно сделать возврат товаров, не привязанных к конкретному заказу, можно воспользоваться методом
-[`StornoPastOrderItems`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_StornoPastOrderItems.htm),
-заранее сформировав список товаров `items` к возврату.
-[`PastOrderItem.Price`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_PastOrderItem_Price.htm) и
-[`PastOrderItem.SumWithoutDiscounts`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_PastOrderItem_SumWithoutDiscounts.htm)
-не используются, их можно не заполнять при передаче в метод.
+If you need to return goods that are not tied to a specific order, you can use the method
+[`StornoPastOrderItems`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_StornoPastOrderItems.htm),
+having previously generated a list of goods `items` to be returned.
+[`PastOrderItem.Price`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_PastOrderItem_Price.htm) and
+[`PastOrderItem.SumWithoutDiscounts`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_PastOrderItem_SumWithoutDiscounts.htm)
+are not used; they can be left blank when passed to a method.
 
-Также из API можно указать [размер блюда](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_PastOrderItem_ProductSize.htm), если размеры поддерживаются им.
-Каждый из передаваемых `items` может помечаться как модификатор или главное блюдо
-([`PastOrderItem.IsMainDish`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_PastOrderItem_IsMainDish.htm)).
-Аналогично UI и без строгих проверок на соответствие типу номенклатуры из карточки.
-Но модификатором не может быть первый элемент списка.
-Также блюдо помеченное модификатором не может иметь размер.
-У каждого [`PastOrderItem`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Orders_PastOrderItem.htm)
-должны быть указаны место приготовления и тип места приготовления.
+You can also specify from the API [dish size](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_PastOrderItem_ProductSize.htm), if sizes are supported by it.
+Each of the passed `items` can be marked as a modifier or main dish
+([`PastOrderItem.IsMainDish`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_PastOrderItem_IsMainDish.htm).
+Similar to the UI and without strict checks for compliance with the type of item from the card.
+But the modifier cannot be the first element of the list.
+Also, a dish marked with a modifier cannot have a size.
+Each [`PastOrderItem`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Orders_PastOrderItem.htm)
+must indicate the place of preparation and the type of place of preparation.
 
-На данный момент возврат возможен только на фискальном регистраторе по умолчанию текущего терминала.
-Кассовая смена на ФР должна быть открыта, наличности должно хватать при возврате наличными.
+At the moment, a refund is only possible on the default fiscal registrar of the current terminal.
+The cash register shift must be open and there must be enough cash for cash returns.
 
-Тип оплаты для сторнирования можно получить через
-[`GetPaymentTypesToStornoPastOrderItems`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPaymentTypesToStornoPastOrderItems.htm).
-Можно также возвращать [плагинным типом оплаты]({{ site.baseurl }}/v6/ru/PaymentProcessor.html)
-(с флажком `canProcessPaymentReturnWithoutOrder` равным `true`, переданным в
-[`RegisterPaymentSystem`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_RegisterPaymentSystem.htm)).
+The payment type for reversal can be obtained via
+[`GetPaymentTypesToStornoPastOrderItems`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPaymentTypesToStornoPastOrderItems.htm).
+You can also return [plugin payment type]({{ site.baseurl }}/v6/ru/PaymentProcessor.html)
+(with checkbox `canProcessPaymentReturnWithoutOrder` equal `true`, transferred to
+[`RegisterPaymentSystem`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_RegisterPaymentSystem.htm).
 
-Тип удаления для сторнирования можно получить через
-[`GetRemovalTypesToStornoPastOrderItems`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetRemovalTypesToStornoPastOrderItems.htm).
-Тип удаления может быть
+The deletion type for reversal can be obtained via
+[`GetRemovalTypesToStornoPastOrderItems`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetRemovalTypesToStornoPastOrderItems.htm).
+The type of deletion can be
 
-- без списания
-([`IRemovalType.WriteoffType`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IRemovalType_WriteoffType.htm)` == WriteoffType.None`)
-- со списанием
-([`IRemovalType.WriteoffType`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IRemovalType_WriteoffType.htm)`.HasFlag(WriteoffType.Cafe`))
+- without write-off
+([`IRemovalType.WriteoffType`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IRemovalType_WriteoffType.htm)` == WriteoffType.None`)
+- with write-off
+([`IRemovalType.WriteoffType`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IRemovalType_WriteoffType.htm)`.HasFlag(WriteoffType.Cafe`))
 
-При сторнировании со списанием проверяется наличие настраиваемого типа оплаты "Возврат от покупателя".
+When reversing with a write-off, the presence of the custom payment type "Return from customer" is checked.
 
-Отделение должно принадлежать текущей группе и у отделения должен быть склад.
+The branch must belong to the current group and the branch must have a warehouse.
 
-Система налогообложения передается только если была получена через
-[`GetTaxationSystemsToStornoPastOrderItems`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetTaxationSystemsToStornoPastOrderItems.htm).
+The tax system is transferred only if it was received through
+[`GetTaxationSystemsToStornoPastOrderItems`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetTaxationSystemsToStornoPastOrderItems.htm).
 
-При сторнировании со списанием проверяется право F_STRN (Производить возврат оплаты).
-При сторнировании без списания проверяется право F_SWWOFF (Производить возврат оплаты по чеку без возврата на склад).
 
-Примеры:
+When reversing with a write-off, the right F_STRN (Return payment) is checked..
+When reversing without writing off, the right F_SWWOFF (Return payment on a check without returning to the warehouse) is checked..
+
+Examples:
 ```
 private void StornoPastOrder()
 {
     var pastOrder = PluginContext.Operations.GetPastOrders().First();
     var paymentType = pastOrder.Payments.First();
 
-    // rt.WriteoffType.HasFlag(WriteoffType.Cafe) - сторнирование со списанием
-    // rt.WriteoffType == WriteoffType.None - сторнирование без списания
+    // rt.WriteoffType.HasFlag(WriteoffType.Cafe) - reversal with write-off
+    // rt.WriteoffType == WriteoffType.None - reversal without write-off
     var removalType = PluginContext.Operations.GetRemovalTypesToStornoPastOrderItems().First(rt => rt.WriteoffType.HasFlag(WriteoffType.Cafe));
     var section = pastOrder.RestaurantSection;
     var orderType = pastOrder.OrderType;
@@ -84,8 +85,8 @@ private void StornoProducts()
 {
     var paymentType = PluginContext.Operations.GetPaymentTypesToStornoPastOrderItems().First(pt => pt.Name.Contains("SampleApiPayment"));
 
-    // rt.WriteoffType.HasFlag(WriteoffType.Cafe) - сторнирование со списанием
-    // rt.WriteoffType == WriteoffType.None - сторнирование без списания
+    // rt.WriteoffType.HasFlag(WriteoffType.Cafe) - reversal with write-off
+    // rt.WriteoffType == WriteoffType.None - reversal without write-off
     var removalType = PluginContext.Operations.GetRemovalTypesToStornoPastOrderItems().First(rt => rt.WriteoffType.HasFlag(WriteoffType.Cafe));
     var section = PluginContext.Operations.GetTerminalsGroupRestaurantSections(PluginContext.Operations.GetHostTerminalsGroup()).First();
     var orderType = PluginContext.Operations.GetOrderTypes().FirstOrDefault(ot => ot.OrderServiceType == OrderServiceTypes.Common);
@@ -118,8 +119,8 @@ private IEnumerable<PastOrderItem> GetPastOrderItems(IReadOnlyList<IProduct> act
         ProductSize = PluginContext.Operations.GetProductSizes().FirstOrDefault(ps => ps.Name.Contains("S")),
         Amount = 2,
         SumWithDiscounts = 100.5m,
-        Price = 0, // не используется в StornoPastOrderItems
-        SumWithoutDiscounts = 0, // не используется в StornoPastOrderItems
+        Price = 0, // not used in StornoPastOrderItems
+        SumWithoutDiscounts = 0, // not used in StornoPastOrderItems
     };
 
     product = activeProducts.First(p => p.Name.Contains("Сливки"));
@@ -130,8 +131,8 @@ private IEnumerable<PastOrderItem> GetPastOrderItems(IReadOnlyList<IProduct> act
         ProductSize = null,
         Amount = 2,
         SumWithDiscounts = 0m,
-        Price = 0, // не используется в StornoPastOrderItems
-        SumWithoutDiscounts = 0, // не используется в StornoPastOrderItems
+        Price = 0, // not used in StornoPastOrderItems
+        SumWithoutDiscounts = 0, // not used in StornoPastOrderItems
     };
 
     product = activeProducts.First(p => p.Name.Contains("Пюре"));
@@ -142,8 +143,8 @@ private IEnumerable<PastOrderItem> GetPastOrderItems(IReadOnlyList<IProduct> act
         ProductSize = null,
         Amount = 1,
         SumWithDiscounts = 90m,
-        Price = 0, // не используется в StornoPastOrderItems
-        SumWithoutDiscounts = 0, // не используется в StornoPastOrderItems
+        Price = 0, // not used in StornoPastOrderItems
+        SumWithoutDiscounts = 0, // not used in StornoPastOrderItems
     };
 
     product = activeProducts.First(p => p.Name.Contains("Бутылка"));
@@ -154,8 +155,8 @@ private IEnumerable<PastOrderItem> GetPastOrderItems(IReadOnlyList<IProduct> act
         ProductSize = null,
         Amount = 2,
         SumWithDiscounts = -15m,
-        Price = 0, // не используется в StornoPastOrderItems
-        SumWithoutDiscounts = 0, // не используется в StornoPastOrderItems
+        Price = 0, // not used in StornoPastOrderItems
+        SumWithoutDiscounts = 0, // not used in StornoPastOrderItems
     };
 }
 ```

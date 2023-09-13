@@ -1,23 +1,23 @@
 ---
-title: Получение закрытых заказов
+title: Receiving closed orders
 layout: default
 ---
 
-В API V8Preview4 была расширена возможность получения информации о закрытых заказах.
+The V8Preview4 API has expanded the ability to obtain information about closed orders.
 
  
-Метод [`GetPastOrder`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPastOrder.htm) был изменен, и теперь требует только Id заказа.
+Method [`GetPastOrder`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPastOrder.htm) has been changed to only require the Order Id.
 
-Также были добавлены два новых метода:
-[`GetPastOrders`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPastOrders.htm) и
-[`GetPastOrdersBySum`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPastOrdersBySum.htm).
+Two new methods have also been added:
+[`GetPastOrders`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPastOrders.htm) and
+[`GetPastOrdersBySum`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPastOrdersBySum.htm).
 
-[`GetPastOrders`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPastOrders.htm)
-позволяет искать заказ по его номеру.
-В случае отсутствия номере заказа будет возвращена информация о всех закрытых заказах за указанный интервал времени.
+[`GetPastOrders`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPastOrders.htm)
+allows you to search for an order by its number.
+If the order number is missing, information about all closed orders for the specified time interval will be returned..
 
-[`GetPastOrdersBySum`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPastOrdersBySum.htm)
-ищет заказы по итоговой сумме оплаты (после всех скидок и надбавок).
+[`GetPastOrdersBySum`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPastOrdersBySum.htm)
+searches for orders based on the total payment amount (after all discounts and surcharges).
 
-В вышеприведенных методах задание временного интервала является необязательным.
-При его отсутствии в качестве интервала будет задан промежуток времени за последние 3 месяца. 
+In the above methods, setting the time interval is optional.
+If it is absent, the interval will be set to the time period for the last 3 months. 
