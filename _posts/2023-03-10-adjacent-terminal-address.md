@@ -1,8 +1,8 @@
 ---
-title: Адрес соседнего терминала 
+title: Address of the neighboring terminal 
 layout: default
 ---
 
-В API V8Preview2 появилась возможность узнать адрес соседнего терминала.
+In API V8Preview2 it became possible to find out the address of a neighboring terminal.
 
-Был добавлен метод [`TryGetTerminalAddress`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_TryGetTerminalAddress.htm), который возвращает адрес заданного терминала. Возвращаемое значение может быть адресом IPv4/IPv6, доменным или NetBIOS именем.
+A method has been added [`TryGetTerminalAddress`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_TryGetTerminalAddress.htm), which returns the address of the given terminal. The return value can be an IPv4/IPv6 address, domain name, or NetBIOS name.

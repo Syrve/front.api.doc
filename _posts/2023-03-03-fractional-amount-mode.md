@@ -1,14 +1,14 @@
 ---
-title: Доработки для дробного количества товаров
+title: Improvements for fractional quantities of goods
 layout: default
 ---
 
-Добавлена возможность получения настроек, связанных с весовыми товарами.
+Added the ability to obtain settings related to weighted goods.
 
-В продукт было добавлено новое свойство
-[`IProduct.UseBalanceForSell`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Assortment_IProduct_UseBalanceForSell.htm),
-которое показывает, доступна ли продажа данного товара на вес.
+A new feature has been added to the product
+[`IProduct.UseBalanceForSell`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Assortment_IProduct_UseBalanceForSell.htm),
+which shows whether this product is available for sale by weight.
 
-В ресторан было добавлено новое свойство
-[`IRestaurant.FractionalAmountMode`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Organization_IRestaurant_FractionalProductAmountMode.htm),
-которое отображает настройку торгового предприятия: ввод дробного количества товаров.
+A new feature has been added to the restaurant
+[`IRestaurant.FractionalAmountMode`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Organization_IRestaurant_FractionalProductAmountMode.htm),
+which displays the setting of a retail establishment: entering a fractional quantity of goods.

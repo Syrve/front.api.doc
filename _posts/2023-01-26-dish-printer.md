@@ -1,11 +1,11 @@
 ---
-title: Добавлена возможность выбора принтера блюд
+title: Added the ability to select a food printer
 layout: default
 ---
 
-Начиная с API V8 появилась возможность получить принтер блюд.
+Starting with API V8, it became possible to get a dish printer.
 
-Принтер блюд можно получить через [`IOperationService`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_IOperationService.htm), используя метод [`TryGetDishPrinter`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_TryGetDishPrinter.htm).
+The food printer can be obtained through [`IOperationService`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_IOperationService.htm), using method [`TryGetDishPrinter`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_TryGetDishPrinter.htm).
 
-Для каждого отделения ([`IRestaurantSection`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Organization_Sections_IRestaurantSection.htm)) можно получить свой отдельный принтер блюд. 
-Если не указать отделение, для которого нужно получить принтер блюд, то будет попытка получить принтер блюд для отделения ресторана стола по умолчанию.
+For each department ([`IRestaurantSection`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Organization_Sections_IRestaurantSection.htm) you can get your own separate food printer. 
+If you do not specify the department for which you want to get a dish printer, then an attempt will be made to get a dish printer for the restaurant department's table by default.

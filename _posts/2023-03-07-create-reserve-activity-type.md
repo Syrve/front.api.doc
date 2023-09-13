@@ -1,6 +1,6 @@
 ---
-title: В методы CreateReserve и CreateBanquet добавлено поле ActivityType, позволяющее добавлять описание типа события в текстовом виде
+title: An ActivityType field has been added to the CreateReserve and CreateBanquet methods, allowing you to add a description of the event type in text form
 layout: default
 ---
 
-В API V8 в методы [`CreateReserve`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_CreateReserve.htm) и [`CreateBanquet`](https://iiko.github.io/front.api.sdk/v8/html/Overload_Resto_Front_Api_Editors_IEditSession_CreateBanquet.htm) добавлено поле ActivityType, которое позволяет задать описание типа предстоящего события в свободной форме, например, "Свадьба", "День рождения" и т.д.
+In API V8 in methods [`CreateReserve`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_CreateReserve.htm) and [`CreateBanquet`](https://syrve.github.io/front.api.sdk/v8/html/Overload_Resto_Front_Api_Editors_IEditSession_CreateBanquet.htm) added the ActivityType field, which allows you to specify a description of the type of upcoming event in free form, for example, “Wedding”, “Birthday”, etc.

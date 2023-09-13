@@ -1,8 +1,8 @@
 ---
-title: Редактирование заказа перед печатью сервисного чека
+title: Editing an order before printing a service receipt
 layout: default
 ---
 
-В API V8Preview4 появилась возможность редактировать заказ непосредственно перед печатью сервисного чека.
+API V8Preview4 now allows you to edit an order immediately before printing a service receipt.
 
-Перед печатью сервисного чека срабатывает уведомление [`BeforeServiceCheque`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_INotificationService_BeforeServiceCheque.htm). Теперь оно позволяет менять заказ через [`IOperationService`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_IOperationService.htm), ставший доступным в аргументах уведомления.
+Before printing a service receipt a notification [`BeforeServiceCheque`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_INotificationService_BeforeServiceCheque.htm) is triggered. Now it allows you to change your order via [`IOperationService`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_IOperationService.htm), became available in the notification arguments.
