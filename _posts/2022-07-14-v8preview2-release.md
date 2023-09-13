@@ -1,8 +1,8 @@
 ---
-title: Выпущена версия V8Preview2
+title: V8Preview2 released
 layout: default
 ---
 
-Вышла очередная версия [iikoRms 8.1](https://en.iiko.help/articles/#!releasenotes/2022-summer), а вместе с ней и промежуточный релиз [V8Preview2](https://www.nuget.org/packages/Resto.Front.Api.V8Preview2/8.1.6013-alpha). Эта версия будет поддерживаться в 8.1 и 8.2.
+The next version has been released [SyrveRms 8.1](https://en.syrve.help/articles/#!releasenotes/2022-summer), and with it an interim release [V8Preview2](https://www.nuget.org/packages/Resto.Front.Api.V8Preview2/8.1.6013-alpha). This version will be supported in 8.1 and 8.2.
 
-Версия V7Preview7 и V8Preview1 продолжают поддерживаться в 8.1, далее их поддержка прекратится. Подробнее о версиях API [тут]({{ site.baseurl }}/versioning.html).
+Versions V7Preview7 and V8Preview1 continue to be supported in 8.1, and will no longer be supported. More information about API versions [here]({{ site.baseurl }}/versioning.html).
