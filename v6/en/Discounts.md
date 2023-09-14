@@ -1,96 +1,72 @@
 ---
-title: Скидки и надбавки
+title: Discounts & Surcharges
 layout: default
 ---
-iikoRms имеет встроенную дисконтную систему. Сторонние системы лояльности (plazius, iikoCard и прочие) в данной статье не рассматриваются.
-Дисконтная система iikoRms позволяет начислять скидки и надбавки по различным условиям.
-Под скидкой понимается уменьшение стоимости элемента заказа на определённую сумму, а под набавкой — увеличение. Поскольку разница между скидкой и надбавкой заключается лишь в знаке числа, вычитаемого из стоимости, для упрощения терминологии и то, и другое будем называть скидками (в коде [`DiscountType`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountType.htm), [`DiscountItem`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountItem.htm), [`DiscountCard`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountCard.htm) и так далее), подразумевая, что положительное значение [`DiscountSum`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IAppliedDiscountItem_DiscountSum.htm) в предметной области соответствует скидке, а отрицательное — надбавке.
+Syrve Office has a built-in discount system. External loyalty systems (Plazius, Syrve Loyalty, and others) are not covered in this article. Syrve Office discount system allows applying discounts and surcharges under various conditions. A discount means an item price decrease for a particular amount, and a surcharge — increase. To simplify the terms we use hereunder and since the difference between a discount and a surcharge is merely the sign of the amount in question, let us call both the discounts (in the code [`DiscountType`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountType.htm), [`DiscountItem`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountItem.htm), [`DiscountCard`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountCard.htm) etc.), implying that the positive [`DiscountSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IAppliedDiscountItem_DiscountSum.htm) value corresponds to the discount and negative — to the surcharge if used within the subject matter.
 
-Вообще говоря, скидку можно настроить таким образом, что в пределах заказа на одно блюдо она будет снижать стоимость, то есть действовать как скидка, а на другое — повышать, то есть действовать как надбавка, поэтому разделение на скидки и надбавки можно считать весьма условным. 
+Generally, a discount can be so configured that within an order it may concurrently decrease the price of one item, acting as a discount, and increase the price of another, acting like a surcharge, therefore, the separation of discounts and surcharges seems quite symbolic.
 
-## Ограничения ##
-Правила и условия применения скидок ([`DiscountItem`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountItem.htm)) определяются типом ([`DiscountType`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountType.htm)), это может быть фиксированная сумма (ваучер), процент от стоимости, округление (отбрасывание копеек) и так далее, но результат применения скидки ([`AppliedDiscountItem`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IAppliedDiscountItem.htm)) — это всегда абсолютная величина, конкретное число.
-Алгоритмы применения скидок зависят от [категории блюда](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Assortment_IProduct_Category.htm), [отделения заказа](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Organization_Sections_IRestaurantSection.htm), суммы заказа ([`FullSum`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_FullSum.htm)), [режима обслуживания](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Organization_OrderServiceType.htm), текущего времени и [времени сервисной печати](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderRootItem_PrintTime.htm), скидки могут комбинироваться или не комбинироваться между собой, применяться как параллельно (к полной стоимости), так и последовательно (с учётом применения предыдущих скидок), все эти условия являются деталью реализации и не опубликованы в API.
+## Restrictions ##
+Rules and conditions for the discount ([`DiscountItem`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountItem.htm)) application are defined by the type of discount ([`DiscountType`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountType.htm)). It can be a fixed amount (coupon), percentage of the price, rounding off (cents dropping), and so on, but the amount after discount ([`AppliedDiscountItem`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IAppliedDiscountItem.htm)) is always an absolute value, a specific number. Discounts application algorithms depend on the [item category](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Assortment_IProduct_Category.htm), [order section](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Organization_Sections_IRestaurantSection.htm), order amount ([`FullSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_FullSum.htm)), [service mode](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Organization_OrderServiceType.htm), current time, and [service printing time](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrderRootItem_PrintTime.htm); discounts can be combined or not, can be applied both in parallel (to the full price), and in series (with account to previous discounts), — all such conditions are implementation specifics and are not published in the API.
 
-В API доступны лишь общие настройки, такие как:
+General settings are given in the API, such as:
 
-- [`IsActive`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_IsActive.htm) — действует ли скидка в [текущей группе](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_GetHostTerminalsGroup.htm),
-- [`IsAutomatic`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_IsAutomatic.htm) — может ли скидка добавляться в заказы автоматически,
-- [`CanApplyManually`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_CanApplyManually.htm) — может ли скидка быть добавлена в заказ вручную, путём выбора из списка,
-- [`CanApplyByCardNumber`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_CanApplyByCardNumber.htm) — может ли скидка быть добавлена в заказ по номеру дисконтной карты (путём ввода номера карты на цифровой клавиатуре),
-- [`CanApplyByDiscountCard`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_CanApplyByDiscountCard.htm) — может ли скидка быть добавлена в заказ по дисконтной карте (путём считывания трека карты),
-- [`DiscountByFlexibleSum`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_DiscountByFlexibleSum.htm) — требуется ли при добавлении скидки в заказ указать её сумму,
-- [`CanApplySelectively`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_CanApplySelectively.htm) — можно ли выборочно применить скидку к нескольким элементам заказа.  
+- [`IsActive`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_IsActive.htm) — whether or not a discount is active in the [current group](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_GetHostTerminalsGroup.htm),
+- [`IsAutomatic`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_IsAutomatic.htm) — can a discount be added to orders automatically or not,
+- [`CanApplyManually`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_CanApplyManually.htm) — can a discount be added to orders manually or not by selecting it from the list,
+- [`CanApplyByCardNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_CanApplyByCardNumber.htm) — can a discount be added to orders using a discount card number (by entering the card No. on the on-screen keyboard) or not,
+- [`CanApplyByDiscountCard`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_CanApplyByDiscountCard.htm) — can a discount be added to orders using a discount card (by reading a card track),
+- [`DiscountByFlexibleSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_DiscountByFlexibleSum.htm) — whether or not a discount amount should be specified when adding the discount,
+- [`CanApplySelectively`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_CanApplySelectively.htm) — can a discount be applied selectively to several order items.
 
-Сумма скидки вычисляется отдельно для каждого элемента заказа, даже если скидка действует на весь заказ. Таким образом, скидка на заказ — это сумма скидок на его элементы.
-Сумма скидки, как и любая другая денежная величина, кратна минимальному номиналу валюты.
-Сумма всех действующих на элемент заказа скидок не превышает его стоимости, иными словами, результат вычитания скидок из стоимости может достичь нуля (скидка 100%), но отрицательным стать не может.
-Для надбавок такого ограничения нет, к стоимости элемента заказа можно прибавить сколь угодно большое значение.
+The discount amount is calculated for each item separately even if the discount applies to the entire order. Therefore, an order discount is all item discounts put together. The discount amount as any other monetary amount is divisible by the minimum currency face value. The total of all applicable discounts cannot exceed the price, in other words, the item price after all discounts can be zero (100% discount) but cannot be a negative amount. Surcharges do not have such a restriction — any amount can be added to the order price.
 
-## Жизненный цикл ##
-Добавленная в заказ скидка может находиться в одном из двух состояний — зафиксирована, либо не зафиксирована.
-Возможны переходы между этими состояниями, но напрямую управлять этим нельзя, состояние привязано к жизненному циклу заказа.
-Сейчас скидки фиксируются при переводе заказа в [статус](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_Status.htm) `Bill` и возвращаются в незафиксированное состояние при переводе в статус `New`, но это деталь реализации, которая может измениться в любой момент.
+## Life Cycle ##
+The discount added to the order may have one of the two states: fixed or not fixed. Discounts may change from one state to another, but they can’t be managed as the state is linked to the order life cycle. Presently, discounts are fixed when an order takes the [status](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_Status.htm) `Bill` and unfixed when the order takes the `New`status, however, this procedure is subject to change.
 
-### Скидка не зафиксирована ###
-При добавлении скидки в заказ запоминаются данные лишь о том, как её вычислять.
-Суммы вычисляются на лету по требованию, результаты вычислений не запоминаются.
-Поскольку при каждом вычислении используются последние доступные значения параметров алгоритма применения скидки, включая настройки из iikoOffice и текущее время, результаты могут получаться разные. Соответственно, может меняться и итоговая стоимость заказа.
+### Unfixed Discount ###
+When the discount is added to the order, the system stores only calculating conditions. Amounts are calculated upon the request, whereas calculation results are not stored. Since each time the calculation takes place most recent available parameters of the discount application algorithm are used, including Syrve Office settings and current time, the calculation may have a different result. Therefore, the total order value may change.
 
-Автоматически добавляемые скидки ([`IsAutomatic`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_IsAutomatic.htm)) неявно присутствуют во всех заказах с незафиксированными скидками, до фиксации их не будет в списке [`Discounts`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_Discounts.htm) каждого заказа, а после фиксации — зависит от наличия эффекта применения к заказу.
+Automatic discounts ([`IsAutomatic`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_IsAutomatic.htm)) are not visible in orders with unfixed discounts and are not given on the list of [`Discounts`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_Discounts.htm) of each order, however, once discounts are fixed, the visibility depends on the application effect.
 
-### Скидка зафиксирована ###
-При достижении заказом момента, когда его итоговая стоимость больше не должна меняться, вычисляемые на лету значения (цены, скидки и т. п.) фиксируются.
-Результат последнего вычисления сохраняется и используется при последующих обращениях вместо повторного вычисления.
-Это позволяет не зависеть от изменения настроек или других параметров применения скидок.
-С этого момента помимо алгоритма и параметров применения скидки запоминаются конкретные суммы по каждому элементу заказа.
-Однако, если на момент фиксации скидка фактически не действовала (имела нулевой эффект), она удаляется из заказа. 
+### Fixed Discount ###
+When the order total amount can no longer change, automatically calculated values (prices, discounts, etc) will be fixed. The last calculation result is saved and used for further reference instead of recalculating it. This makes it possible to work regardless of the discount settings and other application parameters used. From this point on, along with the algorithm and discount application parameters, the system remembers amounts per order item. However, if at the time of fixation, the discount is not in effect (has zero effect), it is removed from the order.
 
-## Структуры данных ##
-- [`DiscountType`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountType.htm) — тип скидки, элемент справочника скидок. Весь справочник можно получить, вызвав метод [`GetDiscountTypes`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_GetDiscountTypes.htm).
-- [`DiscountItem`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountItem.htm) — добавленная в заказ скидка. Скидку в заказ можно добавить методами [`AddDiscount`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_AddDiscount.htm), [`AddFlexibleSumDiscount`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_AddFlexibleSumDiscount.htm), [`AddDiscountByCardNumber`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_AddDiscountByCardNumber.htm), [`AddFlexibleSumDiscountByCardNumber`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_AddFlexibleSumDiscountByCardNumber.htm).
-Удалить скидку можно с помощью [`DeleteDiscount`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeleteDiscount.htm).
-Список добавленных в заказ скидок — [`Discounts`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_Discounts.htm).
-- [`AppliedDiscountItem`](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IAppliedDiscountItem.htm) — результат применения ранее добавленной в заказ скидки, можно получить с помощью метода [`GetOrderAppliedDiscounts`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_GetOrderAppliedDiscounts.htm), при этом скидки могут быть применены на лету в момент запроса, либо может быть возвращён результат предыдущего применения, если он был зафиксирован в заказе.
-- [`FullSum`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_FullSum.htm) — полная стоимость заказа без учёта скидок (подытог).
-- [`ResultSum`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_ResultSum.htm) — итоговая стоимость заказа с учётом скидок.
+## Data Structure ##
+- [`DiscountType`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountType.htm) —  discount type, an item in the discount database. The database can be acquired using the [`GetDiscountTypes`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_GetDiscountTypes.htm) method.
+- [`DiscountItem`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDiscountItem.htm) — added discount. Use the [`AddDiscount`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_AddDiscount.htm), [`AddFlexibleSumDiscount`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_AddFlexibleSumDiscount.htm), [`AddDiscountByCardNumber`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_AddDiscountByCardNumber.htm), [`AddFlexibleSumDiscountByCardNumber`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_AddFlexibleSumDiscountByCardNumber.htm) methods to add a discount to the order.
+Use [`DeleteDiscount`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_DeleteDiscount.htm) to remove a discount, [`Discounts`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_Discounts.htm) to remove a list of added discounts.
+- [`AppliedDiscountItem`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IAppliedDiscountItem.htm) — a result of earlier added discounts; use the [`GetOrderAppliedDiscounts`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_GetOrderAppliedDiscounts.htm)method to get it; whereby, discounts can be applied automatically at the time the request is made, or the system returns the result of earlier applied discounts if it was fixed in the order.
+- [`FullSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_FullSum.htm) — total order amount before discounts (subtotal).
+- [`ResultSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IOrder_ResultSum.htm) — total order amount after discounts.
 
-Примечание: не следует определять суммарную скидку по заказу как разницу между двумя последними значениями, поскольку они отличаются не только учётом скидок, но и учётом налога на добавленную стоимость (НДС, VAT), не включённого в цену товаров. Сумму скидок лучше считать, суммируя [`DiscountSum`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IAppliedDiscountItem_DiscountSum.htm).
+Note. We do not recommend defining the total discount amount as the difference between the last two parameters for they differ not only in discounts but also in the VAT, not included in the item prices. The total discount amount is better be obtained by adding [`DiscountSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IAppliedDiscountItem_DiscountSum.htm) values.
 
 
-## Выборочное применение скидок ##
-По умолчанию скидки действуют на все блюда, включая те, что добавлены после назначения скидки.
-Однако, скидки с включённой настройкой `CanApplySelectively` можно выборочно применить к одному или нескольким элементам заказа, и тогда они будут действовать только на них.
-Например, при торговле выпечкой ещё горячие изделия могут продаваться по полной стоимости, а те же самые, но уже остывшие — со скидкой.
-[Элемент номенклатуры](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Assortment_IProduct.htm) в обоих случаях один и тот же.
-Решение принимает пользователь (или плагин), задавая ограничение, на какие блюда и модификаторы будет действовать скидка.
-Это ограничение работает как *белый список* (whitelist), поэтому выборочно применённая скидка не будет действовать на блюда, добавленные позднее.
-Все прочие ограничения (по категории, по времени, по сумме и т. п.) остаются в силе, то есть фактически скидка подействует только на те элементы *белого списка*, которые удовлетворяют и прочим условиям.
+## Selective Use of Discounts ##
+By default, discounts apply to all items, including those added after the discount. However, discounts with the [`CanApplySelectively`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountType_CanApplySelectively.htm) setting enabled can be selectively applied to one or more items and hence affect only them. For instance, if a venue sells bakery products, hot buns can be sold at a full price, whereas, cooled ones — at a discount. The [Stocklist item](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Assortment_IProduct.htm) is the same in both cases. It is up to a user (or a plugin) to decide which items and modifiers a discount should be applied to. This decision (or limitation) works as a *whitelist*, therefore, such a selective discount will not apply to the items added thereafter. All other limitations (category, time, amount, etc.) remain in force, meaning the discount will only apply to those whitelist items that comply with other conditions as well.
 
-Выборочно применённая скидка действует только непосредственно на заданные элементы заказа.
-Например, если в заказе есть блюдо с платными модификаторами, и скидка выборочно применена только к блюду, только на блюдо она и будет действовать.
-Чтобы выборочно применить скидку и к блюдам, и к модификаторам, необходимо явно задать и блюдо, и модификаторы. 
+If used selectively, discounts apply only to the specified order items. For instance, if there is an item with priced modifiers in the order, and a discount is applied to the item, it is only the item that will be sold at a discount. To apply a discount to both the item and modifiers, they should be expressly specified.
 
-### Ключевые функции: ###
+### Key functions ###
 
-- [`ChangeSelectiveDiscount`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_ChangeSelectiveDiscount.htm) — позволяет задать *белый список* элементов заказа, на которые может действовать скидка. Учитывая разные типы элементов, фактически это три списка — [простых блюд](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderProductItem.htm), [компонентов составных блюд](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderCompoundItemComponent.htm) и [модификаторов](https://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderModifierItem.htm).
-Если все три списка задать `null`, скидка перестанет применяться выборочно, будет действовать на весь заказ.
-- [`GetSelectiveDiscountItemSettings`](https://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_GetSelectiveDiscountItemSettings.htm) — метод возвращает параметры выборочного применения (те самые три списка), либо `null`, если скидка действует на весь заказ без ограничения по элементам.
-- [`IsSelectivelyApplied`](https://iiko.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountItem_IsSelectivelyApplied.htm) — показывает, применяется ли скидка выборочно или на весь заказ.
+- [`ChangeSelectiveDiscount`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Editors_IEditSession_ChangeSelectiveDiscount.htm) — allows creating a *whitelist* of order items that can be discounted. Taking into account various types of items existing in the system, there are in fact three lists:  [simple items](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderProductItem.htm), [components of composite items](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderCompoundItemComponent.htm) and [modifiers](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrderModifierItem.htm).
+If `null` is set for all three lists, the discount will not be applied selectively, but rather to the entire order.
+- [`GetSelectiveDiscountItemSettings`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IOperationService_GetSelectiveDiscountItemSettings.htm) — allows returning selective application parameters (above-mentioned lists) or `null` if the discount applies to the entire order without particular items specified.
+- [`IsSelectivelyApplied`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Orders_IDiscountItem_IsSelectivelyApplied.htm) — shows whether the discount applies selectively or to the entire order.
 
-### Примеры ###
-Пример выборочного применения скидки можно посмотреть во входящем в состав SDK плагине Resto.Front.Api.SamplePlugin (`EditorTester.AddSelectiveDiscount`):
+### Examples ###
+An example of a selectively applied discount can be found in the Resto.Front.Api.SamplePlugin (`EditorTester.AddSelectiveDiscount`) plugin as part of the SDK:
 
 ```cs
 /// <summary>
-/// Добавление скидки с возможностью выбора блюд.
+/// Adding a selective discount.
 /// </summary>
 private void AddSelectiveDiscount()
 {
     var order = PluginContext.Operations.GetOrders().Last();
     var selectedDish = new List<IOrderProductItemStub> { order.Items.OfType<IOrderProductItem>().Last() };
     var discountType = PluginContext.Operations.GetDiscountTypes().Last(x => !x.Deleted && x.IsActive && x.CanApplySelectively);
-
     var editSession = PluginContext.Operations.CreateEditSession();
     editSession.AddDiscount(discountType, order);
     editSession.ChangeSelectiveDiscount(order, discountType, selectedDish, null, null);

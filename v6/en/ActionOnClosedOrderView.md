@@ -1,84 +1,83 @@
 ---
-title: Экран закрытого заказа 
+title: Closed Order Screen 
 layout: default
 ---
-# Расширение функционала экрана закрытого заказа #
+# Customizing Closed Order Screen #
 
-На экран закрытого заказа текущей кассовой смены и на экран возврата товаров по чеку можно добавить свои команды, которые могут выполнять операции, используя объект закрытого заказа. 
+The closed order screen (current till shift) and the product return screen can have custom commands added to run operations using a closed order object.
 
-## Как это выглядит в iikoFront?
+## How it works in Syrve POS?
 
-### 1. На экране закрытого заказа текущей кассовой смены
+### 1. Closed order screen under the current till shift
 
-Например, вот так выглядит кнопка *«SamplePlugin: Show OK popup»*, добавляемая плагином SamplePlugin из SDK.
+This is how the *«SamplePlugin: Show OK popup»*, button added by the SDK SamplePlugin looks like.
 
 ![ButtonOnClosedOrder](../../img/actionOnClosedOrderView/buttonOnClosedOrder.png) 
 
 
-Допустим, плагин показывает окно с сообщением (см. статью [*API диалоговые окна*](ViewManager.html "Диалоговые окна")).
+Suppose the plugin shows the following message (check the [*API Dialogs*](ViewManager.html "API Dialogs") articles).
 
 ![ActionOnClosedOrderView](../../img/actionOnClosedOrderView/actionOnClosedOrderView.png) 
 
-Плагин может добавить сразу несколько кнопок на экран закрытого заказа.
+The plugin can add more than one button to the closed order screen at a time.
 
 
-Например, с помощью SDK SamplePlugin были добавлены 2 кнопки: *«SamplePlugin: Show OK popup»* и *«SamplePlugin: Show input dialog»*.
-Тогда на экране закрытого заказа появится кнопка *«Дополнения»*.
+For example, 2 buttons are added using the SamplePlugin SDK: *«SamplePlugin: Show OK popup»* и *«SamplePlugin: Show input dialog»*. In this case, the *Plugins* button will appear on the closed order screen.
 
 ![ButtonsOnClosedOrder](../../img/actionOnClosedOrderView/buttonsOnClosedOrder.png) 
 
-Кнопка *«Дополнения»* также появляется, если несколько плагинов добавят по одной кнопке на экран закрытого заказа.
+The *Plugins* button will also appear on the screen if several plugins add one button each on the closed order screen.
 
-По нажатию на *«Дополнения»* будет выведен список всех кнопок, добавленных плагинами. 
+If pressed, the *Plugins* menu will show a list of all available buttons.
 
 ![ActionsOnClosedOrderView](../../img/actionOnClosedOrderView/actionsOnClosedOrderView.png) 
 
 
-### 2. На экране возврата товаров с чеком (закрытого заказа прошлой кассовой смены)
+### 2. Product return screen (closed order under the past till shift)
 
-См. [документацию](http://ru.iiko.help/articles/iikofront-6-1/topic-38) по возврату товаров с чеком (заказы из прошлых кассовых смен).
+Check the [documentation ](https://en.syrve.help/articles/#!syrve-pos-8-5/product-return) for the product return against the receipt (past till shift orders).
 
 ![ButtonOnPastOrderView](../../img/actionOnClosedOrderView/buttonOnPastOrderView.png) 
 
-## Как добавить свои расширения?
+## Adding Custom Plugins
 
-##### Шаг 1: Зарегистрировать обработчик для нужного типа экрана закрытого заказа:
+##### Step 1. Register a processor for a required closed order screen type:
  
 ```cs
 subscriptions = new CompositeDisposable
 {
-	// Регистрация действия на экране закрытого заказа текущей кассовой смены
+	// Registration of the action on the closed order screen under the current till shift
 	Integration.AddButtonOnClosedOrderView("SamplePlugin: Show ok popup", ShowOkPopupOnClosedOrderScreen),
 	
-	// Регистрация действия на экране закрытого заказа прошлой кассовой смены
+	// Registration of the action on the closed order screen under the past till shift
 	Integration.AddButtonOnPastOrderView("SamplePlugin: Show ok popup", ShowOkPopupOnPastOrderScreen),
 };
 ``` 
 
-Функция регистрации операции на экран закрытого заказа **текущей** кассовой смены [`AddButtonOnClosedOrderView()`](http://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Extensions_PluginIntegrationServiceExtensions_AddButtonOnClosedOrderView.htm) принимает на вход 2 аргумента:
+The operation registration function receives the following 2 arguments on the **current** till shift screen [`AddButtonOnClosedOrderView()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Extensions_PluginIntegrationServiceExtensions_AddButtonOnClosedOrderView.htm) принимает на вход 2 аргумента:
 
-- `string` — название кнопки, отображается на UI.
-- `Action<IOrder, ICashRegisterInfo, IViewManager>` — функция, которая будет вызвана при нажатии на кнопку.
+- `string` — button name is given in the UI.
+- `Action<IOrder, ICashRegisterInfo, IViewManager>` — a function that is invoked if the button is pressed.
 
-Функция регистрации операции на экран закрытого заказа **прошлой** кассовой смены [`AddButtonOnPastOrderView()`](http://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Extensions_PluginIntegrationServiceExtensions_AddButtonOnPastOrderView.htm).
+The operation registration function on the **past** till shift screen [`AddButtonOnPastOrderView()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Extensions_PluginIntegrationServiceExtensions_AddButtonOnPastOrderView.htm).
+Syrve POS does not store orders of **closed** till shifts, therefore [`AddButtonOnPastOrderView()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Extensions_PluginIntegrationServiceExtensions_AddButtonOnPastOrderView.htm).
 
-Заказы закрытых кассовых смен iikoFront не хранит, поэтому в методе [`AddButtonOnPastOrderView()`](http://iiko.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Extensions_PluginIntegrationServiceExtensions_AddButtonOnPastOrderView.htm) по идентификатору заказа не получится получить заказ [`IOrder`](http://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrder.htm). 
-Идентификатор заказа прошлой кассовой смены будет полезен плагину или внешнему сервису, если он сам ведет свое хранилище.
+Syrve POS does not store orders of closed till shifts, therefore, [`IOrder`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IOrder.htm) cannot be obtained by the order ID in the [`AddButtonOnPastOrderView()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Extensions_PluginIntegrationServiceExtensions_AddButtonOnPastOrderView.htm) method. A past till shift order ID can only be useful to the plugin or an external service if it maintains its own storage.
 
-##### Шаг 2. Описать обработчик добавляемой кнопки:
+##### Step 2. Provide the button processor description:
 
 ```cs
 private void ShowOkPopupOnClosedOrderScreen(IOrder closedOrder, ICashRegisterInfo cashRegister, IViewManager viewManager)
 {
-	viewManager.ShowOkPopup("Тестовое окно", "Сообщение показано с помощью SamplePlugin.");
+	viewManager.ShowOkPopup(“Text box", “The text is given using SamplePlugin");
 }
 ```
 
 ```cs
 private void ShowOkPopupOnPastOrderScreen(Guid pastOrderId, ICashRegisterInfo cashRegister, IViewManager viewManager)
 {
-	viewManager.ShowOkPopup("Тестовое окно", "Сообщение показано с помощью SamplePlugin.");
+	viewManager.ShowOkPopup(“Text box", “The text is given using SamplePlugin");
 }
 ```
  
-Примеры реализации можно посмотреть в проекте SDK SamplePlugin класс `ButtonsTester`.
+You can check implementation examples in the SamplePlugin SDK project, class `ButtonsTester`.
