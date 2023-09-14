@@ -1,8 +1,9 @@
 ---
 title: External Fiscal Registers
 layout: default
+order: 3
 ---
-f you can’t find the right model on the list of Syrve supported fiscal registers (FCR), you can write your own plugin. This plugin will be connected to Syrve POS and considered as an external FCR. See the [Introduction]({{ site.baseurl }}/v6/en/Devices.html) article. External FCR plugins must be [licensed]({{ site.baseurl }}/v6/en/Licensing.html).
+f you can’t find the right model on the list of Syrve supported fiscal registers (FCR), you can write your own plugin. This plugin will be connected to Syrve POS and considered as an external FCR. Check the [Introduction]({{ site.baseurl }}/v6/en/Devices.html) article. External FCR plugins must be [licensed]({{ site.baseurl }}/v6/en/Licensing.html).
 
 ## Setting Up
 You can set up an external FCR in 2 steps.
@@ -13,7 +14,7 @@ You can set up an external FCR in 2 steps.
 var cashRegisterFactory = new SampleCashRegisterFactory();
 PluginContext.Operations.RegisterCashRegisterFactory(cashRegisterFactory)
 ```
-You need this to make your new FCR model visible in Syrve RMS so you can then add it and set up as cash register equipment on your POS.
+You need this to make your new FCR model visible in Syrve Office so you can then add it and set up as cash register equipment on your POS.
 
 ![NewCashRegisterModel]({{ site.baseurl }}/img/cashRegister/newCashRegisterModel.png)
 
@@ -31,7 +32,7 @@ class SampleCashRegisterFactory : MarshalByRefObject, ICashRegisterFactory
     }
 }
 ```
-By clicking «Complete» in the new device dialog (*Syrve Office > Equipment Settings*), you invoke [`ICashRegisterFactory.Create()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegisterFactory_Create.htm)which would add a new FCR to the list of equipment. After that, SyrveRMS can communicate with the external FCR—send commands and receive responses.
+By clicking «Complete» in the new device dialog (*Syrve Office > Equipment Settings*), you invoke [`ICashRegisterFactory.Create()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegisterFactory_Create.htm)which would add a new FCR to the list of equipment. After that, Syrve Office can communicate with the external FCR—send commands and receive responses.
 
 ![CreateCashRegister]({{ site.baseurl }}/img/cashRegister/createCashRegister.png)
 
@@ -99,7 +100,7 @@ class CashRegisterSettings : DeviceSettings
 ```
 
 # Syrve POS to External Fiscal Registers Interaction
-Syrve POS communicates with External Fiscal Registers using the [`ICashRegister`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Devices_ICashRegister.htm) interface. This interface is used to control external FCR operations. For instance, if an order is being paid in Syrve POS, the control will come in the [`ICashRegister.DoCheque()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoCheque.htm) command with the [`ChequeTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeTask.htm) details required to perform the operation on the FCR. Syrve POS would standby until the command is executed and would analyze the FCR response ‒ [`CashRegisterResult`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterResult.htm).
+Syrve POS communicates with External Fiscal Registers using the [`ICashRegister`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Devices_ICashRegister.htm) interface. This interface is used to control external FCR operations. For example, if an order is being paid in Syrve POS, the control will come in the [`ICashRegister.DoCheque()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoCheque.htm) command with the [`ChequeTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeTask.htm) details required to perform the operation on the FCR. Syrve POS would standby until the command is executed and would analyze the FCR response ‒ [`CashRegisterResult`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_CashRegisterResult.htm).
 
 #### FCR Operations
 **1.** [`Setup()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_Setup.htm) — FCR setup. This is the first command executed by the plugin. It is invoked when you add a new FCR or edit existing FCR settings. The primary plugin’s task is to save and apply new [`CashRegisterSettings`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings.htm) settings that arrive as an argument. More often than not, this command stops the FCR driver, applies new settings, and starts the FCR if it has been running:
@@ -141,7 +142,7 @@ public void Start()
     SetState(State.Running);
 }
 ```
-**3.** [`Stop()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_Stop.htm) — FCR stopping. The command is invoked by clicking Stop in Syrve Office. The command is used to stop the device, free up the resources, and close ports, for instance:
+**3.** [`Stop()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_Stop.htm) — FCR stopping. The command is invoked by clicking Stop in Syrve Office. The command is used to stop the device, free up the resources, and close ports, for example:
 
 ```cs
 public void  Stop()
@@ -159,13 +160,13 @@ public void  Stop()
     SetState(State.Stopped);
 }
 ```
-**4.** [`RemoveDevice()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_RemoveDevice.htm) — Deletion. The command is invoked if the Delete shortcut menu item is clicked on the external FCR device in Syrve Office. The FCR object will be marked as removed in the RMS if the command does not throw an exception.
+**4.** [`RemoveDevice()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_RemoveDevice.htm) — Deletion. The command is invoked if the Delete shortcut menu item is clicked on the external FCR device in Syrve Office. The FCR object will be marked as removed in the Office if the command does not throw an exception.
 
 **5.** [`GetDeviceInfo()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_IDevice_GetDeviceInfo.htm) — FCR status request. The command is invoked each time the «Administration« > «Equipment Settings« menu item is selected or by clicking «Update« in the Equipment Settings window.
 
 ![GetDeviceInfo](../../img/cashRegister/getDeviceInfo.png)
 
-Depending on the [`DeviceInfo`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_DeviceInfo.htm)response, the RMS reads the FCR communication protocol as follows: is the FCR operational and what commands can be sent to it. The FCR status is described by the [`DeviceInfo`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_DeviceInfo.htm) type:
+Depending on the [`DeviceInfo`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_DeviceInfo.htm) response, the Syrve Office reads the FCR communication protocol as follows: is the FCR operational and what commands can be sent to it. The FCR status is described by the [`DeviceInfo`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_DeviceInfo.htm) type:
 - [`State`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_DeviceInfo_State.htm) — *FCR status*. It can be *«Running»*, *«Stopped»*, and so on.
 - [`Comment`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_DeviceInfo_Comment.htm) — *FCR status description*. 
 - [`Settings`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_DeviceInfo_Settings.htm) — *FCR settings* [`CashRegisterSettings`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Settings_CashRegisterSettings.htm).
@@ -203,10 +204,10 @@ Order details arrive in the [`BillTask`](https://syrve.github.io/front.api.sdk/v
 - [`IsRefund`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_IsRefund.htm) — flag to signal that an operation is canceled. If «Refund» is selected in Syrve POS, the flag takes the `true` value, and the FCR must print a refund receipt.
 - [`IsCancellation`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_IsCancellation.htm) — receipt voiding is only applicable in Belarus and Latvia. Voiding is the invalidation of incorrect sales receipts. If a cashier makes a refund, the FCR prints a refund receipt. If a cashier makes a mistake when posting receipts, a voiding receipt must be printed out.
 - [`Sales`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_Sales.htm) — [`ChequeSale`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeSale.htm) order items. Usually, those are order items details, sometimes grouped by VAT. This particularly depends on the FCR ‒ whether or not it supports FFD later than v.1.0.
-- [`СancellingSaleNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_СancellingSaleNumber.htm) — order number (applicable only in Belarus). It is filled up when the operation is canceled. There might be two operations: order guest bill and order payment. As the [`ChequeTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeTask.htm) type (see order closing operation) includes the [`BillTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_BillTask.htm) type, all current fields are related to the closing of orders as well.
+- [`CancellingSaleNumber`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_CancellingSaleNumber.htm) — order number (applicable only in Belarus). It is filled up when the operation is canceled. There might be two operations: order guest bill and order payment. As the [`ChequeTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeTask.htm) type (see order closing operation) includes the [`BillTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_BillTask.htm) type, all current fields are related to the closing of orders as well.
 - [`DiscountSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_DiscountSum.htm) — total discount amount. This includes only uncategorized discounts. Those are discounts that apply to the entire order rather than any individual item or category of items.
 - [`IncreaseSum`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_IncreaseSum.htm) — total surcharge amount. This includes only surcharges that apply to the entire order.
-- [`DiscountPercent`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_DiscountPercent.htm) — discount % on order amount. The discount or surcharge percentage here is given for reference only, so you don’t need to use them in your calculations, for instance, recalculate discounts.
+- [`DiscountPercent`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_BillTask_DiscountPercent.htm) — discount % on order amount. The discount or surcharge percentage here is given for reference only, so you don’t need to use them in your calculations, for example, recalculate discounts.
 
 ```cs
 DiscountPercent = (Order total / DiscountSum) * 100
@@ -233,7 +234,7 @@ ResultSum = Order total - all discounts - rounding amount(RoundSum) + all surcha
 
 Order items are described through the [`ChequeSale`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_ChequeSale.htm) type:
 - [`Name`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Name.htm) — item name (product, menu item, and so on).
-- [`Code`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Code.htm) — item SKU.  In some cases, an SKU may be missing (zero is used instead). For instance, a receipt with items grouped by VAT or prepayment receipt is printed out.
+- [`Code`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Code.htm) — item SKU.  In some cases, an SKU may be missing (zero is used instead). For example, a receipt with items grouped by VAT or prepayment receipt is printed out.
 - [`Price`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Price.htm) — item price before discounts and surcharges.
 - [`Amount`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_Amount.htm) — item quantity.
 - [`GuestName`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_ChequeSale_GuestName.htm) — name of quest who ordered an item.
@@ -348,7 +349,7 @@ public CashRegisterResult DoCheque([NotNull] ChequeTask chequeTask)
 
 	//printing table and order number
 	driver.PrintText(string.IsNullOrWhiteSpace(chequeTask.TableNumberLocalized)
-		? string.Format("Стол: {0}, Заказ № {1}", chequeTask.TableNumber, chequeTask.OrderNumber)
+		? string.Format("Table: {0}, Order № {1}", chequeTask.TableNumber, chequeTask.OrderNumber)
 		: chequeTask.TableNumberLocalized);
 
 	//Printing additional strings at the top of receipt
@@ -438,7 +439,7 @@ Syrve POS interrogates the FCR status each time a fiscal operation takes place.
 
 **13.** [`IsDrawerOpened()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_IsDrawerOpened.htm) — whether or not a cash drawer is open. If an FCR does not support a cash drawer status retrieval command, `true` needs to be returned
 
-**14.** [`PrintText()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_PrintText.htm) —  printing of non-fiscal documents. For instance, reports or item barcodes. The document text will be sent to the [`PrintText()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_PrintText.htm) command to print it out on paper.
+**14.** [`PrintText()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_PrintText.htm) —  printing of non-fiscal documents. For example, reports or item barcodes. The document text will be sent to the [`PrintText()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_PrintText.htm) command to print it out on paper.
 
 **15.** [`DoPayIn()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoPayIn.htm) — depositing money to the cash register. Cashier details can be retrieved the following way:
 
@@ -450,7 +451,7 @@ IUser cashier = PluginContext.Operations.GetUserById(cashierId)
 
 **17.** [`DoCorrection()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ICashRegister_DoCorrection.htm) — adjustment bill printing.
  
-![Сorrection](../../img/cashRegister/correction.png)
+![Correction](../../img/cashRegister/correction.png)
 
 Based on the [`CorrectionTask`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Tasks_CorrectionTask.htm) object, an FCR can tell which adjustment bill should be posted:
 - [`DocumentType`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Tasks_CorrectionTask_DocumentType.htm) — payment indicator: 
@@ -593,6 +594,6 @@ IUser user = PluginContext.Operations.GetUserById(cashierId);
 var name = user.Name;
 ```
 
-**3. КHow to configure deposit and withdrawal types in Syrve Office to call FCR methods DoPayIn() and DoPayOut()?**
+**3. How to configure deposit and withdrawal types in Syrve Office to call FCR methods DoPayIn() and DoPayOut()?**
 
-Most likely you have non-fiscal deposits and withdrawals configured. Those are just accounting movements that do not invoke FCR commands. Fiscal deposits and withdrawals must have an empty Chief Account. See Syrve[`user guides`](https://ru.iiko.help/smart/project-iikooffice/topic-102) on the types of deposits and withdrawals.
+Most likely you have non-fiscal deposits and withdrawals configured. Those are just accounting movements that do not invoke FCR commands. Fiscal deposits and withdrawals must have an empty Chief Account. See Syrve[`user guides`](https://en.syrve.help/articles/#!office-8-5/topic-102) on the types of deposits and withdrawals.

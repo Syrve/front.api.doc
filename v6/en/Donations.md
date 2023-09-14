@@ -1,6 +1,7 @@
 ---
 title: Tips & Charitable Contributions
 layout: default
+order: 16
 ---
 ## Adding Tips
 The following method is used to add tips:
@@ -123,8 +124,8 @@ Comments:
 
 **Note:**
 
-- For details on the Silent payment, see the [External Payment Types](PaymentProcessor.html) article.
-- Подробнее об оплатах, предварительных оплатах и предоплатах см. в разделе [Оплатные действия](Payments.html) article.
+- For details on the Silent payment, check the [External Payment Types](PaymentProcessor.html) article.
+- For details on payments, advance payments, and prepayments, see the [Payment Actions](Payments.html) article.
 
 ## Removing Tips
 The following method is used to remove tips from the order:

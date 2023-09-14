@@ -1,6 +1,7 @@
 ---
 title: Item Size
 layout: default
+order: 11
 ---
 In earlier versions (before 5.0), it was assumed that items are cooked the same way all the time and that all the ingredients and sizes are covered by the recipe. To sell items that may have different sizes, like pizza, pies, beverages, and so on, users had to register each item of each size as a separate item, and so create modifiers for each size and duplicate other item and modifier settings. When editing orders in the POS, users had to remove one item and then add another one in order to change the size. This resulted in the menu having a large number of buttons and reports with many rows. We had to introduce a standalone concept — *item size*.  
 

@@ -18,8 +18,8 @@ Then if [`IRestaurant.DisplayRelativeNumberOfModifiers`](https://syrve.github.io
 - _- Sour cream_, if reducing the amount by 1
 
 If [`IRestaurant.DisplayRelativeNumberOfModifiers`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_IRestaurant_DisplayRelativeNumberOfModifiers.htm) is `false` the absolute amount of modifier in the dish will be displayed:
-- _х5 Sour cream_, if increase the amount of the modifier by 2
-- _х2 Sour cream_, if reducing the amount by 1
+- _x5 Sour cream_, if increase the amount of the modifier by 2
+- _x2 Sour cream_, if reducing the amount by 1
 
 For the convenience of plugin developers and the possibilities to transfer the logic to their UI, here is an example of how to get a line of the number of modifiers.
 

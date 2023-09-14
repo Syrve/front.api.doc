@@ -1,6 +1,7 @@
 ---
 title: Closed Order Screen 
 layout: default
+order: 17
 ---
 # Customizing Closed Order Screen #
 
@@ -22,7 +23,7 @@ Suppose the plugin shows the following message (check the [*API Dialogs*](ViewMa
 The plugin can add more than one button to the closed order screen at a time.
 
 
-For example, 2 buttons are added using the SamplePlugin SDK: *«SamplePlugin: Show OK popup»* и *«SamplePlugin: Show input dialog»*. In this case, the *Plugins* button will appear on the closed order screen.
+For example, 2 buttons are added using the SamplePlugin SDK: *«SamplePlugin: Show OK popup»* and *«SamplePlugin: Show input dialog»*. In this case, the *Plugins* button will appear on the closed order screen.
 
 ![ButtonsOnClosedOrder](../../img/actionOnClosedOrderView/buttonsOnClosedOrder.png) 
 
@@ -54,7 +55,7 @@ subscriptions = new CompositeDisposable
 };
 ``` 
 
-The operation registration function receives the following 2 arguments on the **current** till shift screen [`AddButtonOnClosedOrderView()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Extensions_PluginIntegrationServiceExtensions_AddButtonOnClosedOrderView.htm) принимает на вход 2 аргумента:
+The operation registration function [`AddButtonOnClosedOrderView()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Extensions_PluginIntegrationServiceExtensions_AddButtonOnClosedOrderView.htm) receives the following 2 arguments on the **current** till shift screen:
 
 - `string` — button name is given in the UI.
 - `Action<IOrder, ICashRegisterInfo, IViewManager>` — a function that is invoked if the button is pressed.

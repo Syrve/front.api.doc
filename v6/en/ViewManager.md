@@ -1,6 +1,7 @@
 ---
 title: Dialogs
 layout: default
+order: 5
 ---
 # ViewManager Functionality
 
@@ -10,12 +11,12 @@ layout: default
 Examples of modal operations:
 
 - [Invoking](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_UI_Button_PerformAction.htm) of the button pressing processor for a button [added](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_IPluginIntegrationService_AddButton.htm) by the plugin in the Advanced menu. 
-- Interaction with the payment method made available within the plugin: data collection, posting, and refund processes (see [`IExternalPaymentProcessor`](https://syrve.github.io/front.api.sdk/v6/html/Methods_T_Resto_Front_Api_IExternalPaymentProcessor.htm)) (see the [External Payment Methods API](PaymentProcessor.html) article)*
+- Interaction with the payment method made available within the plugin: data collection, posting, and refund processes (see [`IExternalPaymentProcessor`](https://syrve.github.io/front.api.sdk/v6/html/Methods_T_Resto_Front_Api_IExternalPaymentProcessor.htm)) (check the [External Payment Methods API](PaymentProcessor.html) article)*
 
 ## General Concept
 A plugin invokes a method and processes the result: `var result = viewManager.ShowSomething(...)`. Depending on the method signature, the plugin receives whether a primitive variable (`bool`, `int`, `string`) or an [`IInputDialogResult`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_View_IInputDialogResult.htm) instance based on the semantics.
 
-If the business logic requires value validation (for instance, the hotel room number availability needs to be verified), the proper approach is the following:
+If the business logic requires value validation (for example, the hotel room number availability needs to be verified), the proper approach is the following:
 
 - a user closes the dialog
 - a plugin validates the result
@@ -96,7 +97,7 @@ Another setting of `ShowExtendedInputDialog()` is `ExtendedInputDialogSettings.E
 Card swiping can be enabled in both `ShowInputDialog()` and `ShowExtendedInputDialog()`. In the first case, `type = InputTypes.Card` needs to be specified, in the second – `ExtendedInputDialogSettings.EnableCardSlider = true`.  In both cases, to interpret the input result, the returnable `IInputDialogResult` needs to be brought to `CardInputDialogResult`.
 
 ### Miscellaneous
-Input methods in `ShowInputDialog()` and `ShowExtendedInputDialog()` can be combined by using available settings together. For instance, a user can be asked to enter the card number or swipe their card. In this case, the returnable result needs to be brought to each of the expected result types.
+Input methods in `ShowInputDialog()` and `ShowExtendedInputDialog()` can be combined by using available settings together. For example, a user can be asked to enter the card number or swipe their card. In this case, the returnable result needs to be brought to each of the expected result types.
 
 Example 1 (code):
 

@@ -1,6 +1,7 @@
 ---
 title: Groups & Points Of Sale
 layout: default
+order: 4
 ---
 ## Basic Definitions ##
 

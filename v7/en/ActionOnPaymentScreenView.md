@@ -13,7 +13,7 @@ For example, the *«SamplePlugin: Show OK popup»* button that is added by the S
 
 ![ButtonOnPaymentScreenView](../../img/actionOnPaymentScreenView/buttonOnPaymentScreen.png) 
 
-Suppose a plugin displays a window with a message (see the article [*API dialogs*](../../v6/en/ViewManager.html)).
+Suppose a plugin displays a window with a message (check the article [*API dialogs*](../../v6/en/ViewManager.html)).
 
 ![ButtonOnPaymentScreenView_Click](../../img/actionOnPaymentScreenView/buttonOnPaymentScreenClick.png) 
 
@@ -51,7 +51,7 @@ The [`AddButtonToPaymentScreen()`](https://syrve.github.io/front.api.sdk/v7/html
 - `bool isChecked` — whether the button is highlighted.
 - `bool isEnabled` — is the button available to be pressed.
 - `Action<(IOrder order, IOperationService os, IViewManager vm, (Guid buttonId, string caption, bool isChecked, string iconGeometry) state)> callback` — the function that will be called when the button is pressed.
-- `string iconGeometry` — button icon (see the [`syntax`](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/graphics-multimedia/path-markup-syntax?view=netframeworkdesktop-4.8)).
+- `string iconGeometry` — button icon (check the [`syntax`](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/graphics-multimedia/path-markup-syntax?view=netframeworkdesktop-4.8)).
 
 The button press function takes an [`IOrder`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Orders_IOrder.htm) order object, an [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) instance to show windows, and the current state of the button - `(Guid buttonId, string caption, bool isChecked, string iconGeometry) state`.
 
