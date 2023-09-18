@@ -109,7 +109,7 @@ PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: Barcode input exa
 
 ### Mixed input
 
-Let our dialog work with text input, barcodes, and cards. Then we need to correctly process the result of input. `SamplePlugin` еhas an example of this way. Let's modify our code to support all input types:
+Let our dialog work with text input, barcodes, and cards. Then we need to correctly process the result of input. `SamplePlugin` has an example of this way. Let's modify our code to support all input types:
 
 ```cs
 PluginContext.Operations.AddButtonToPluginsMenu("SamplePlugin: Mixed input example", x =>

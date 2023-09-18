@@ -1,6 +1,7 @@
 ---
 title: Payment Actions
 layout: default
+order: 8
 ---
 ## Adding Payments
 The following methods are used to add payments
@@ -11,7 +12,7 @@ The following methods are used to add payments
 
 - [`IEditSession.AddPreliminaryPaymentItem`](https://syrve.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_AddPreliminaryPaymentItem.htm) — add an advance payment (*it is useful for delivery orders only*)
 
-You can also use the same-name [methods](https://syrve.github.io/front.api.sdk/v6/html/Methods_T_Resto_Front_Api_Extensions_OperationServiceExtensions.htm) of extension operations where the [editing session]({{ site.baseurl }}/v6/en/Data%20editing.html) is created implicitly (*as opposed to multiple order actions. If apart from payment, you need, for instance, to add a guest, use methods within the editing session*). To set up and register external payment types, see the [External Payment Types](PaymentProcessor.html) article.
+You can also use the same-name [methods](https://syrve.github.io/front.api.sdk/v6/html/Methods_T_Resto_Front_Api_Extensions_OperationServiceExtensions.htm) of extension operations where the [editing session]({{ site.baseurl }}/v6/en/Data%20editing.html) is created implicitly (*as opposed to multiple order actions. If apart from payment, you need, for example, to add a guest, use methods within the editing session*). To set up and register external payment types, check the [External Payment Types](PaymentProcessor.html) article.
 
 ##### Payment restrictions:
 Payment can be added only if the order is `New` or the `Guest Bill` is printed, otherwise, the method throws the [`ConstraintViolationException`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Exceptions_ConstraintViolationException.htm) exception. Besides, you cannot add several unposted payments of one type (*NOTE: it is planned to lift this restriction*).
@@ -158,7 +159,7 @@ From time to time, customers need to post prepayments and add tips through the p
 
 ![paymentType](../../img/payment/cardPaymentType.png)
 
-The silent payment can also be made available for the external plugin type. For details, see the [External Payment Methods](PaymentProcessor.html) article.
+The silent payment can also be made available for the external plugin type. For details, check the [External Payment Methods](PaymentProcessor.html) article.
 
 **Other Settings:**
 - For adding tips, please check the [Tips](Donations.html).

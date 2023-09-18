@@ -8,7 +8,7 @@ Keeping several versions of the API makes it possible to improve the service wit
 ## Version Life Cycle ##
 Most of the LTS versions (Long-Term Support) are released approximately once in two years and are supported for about four years. Intermediate preview versions are released between such versions once in three months and are supported for a half of the year. Thus, at each point of time, we support two most recent LTS versions, two most recent preview versions (or one if an LTS version was released in the previous quarter), and an LTS version under development is available for your reference.
 
-LTS versions are whole numbers given successively — V1, V2, V3, V4, V5, V6, and so on. Preview versions are intermediate LTS versions under development, therefore, they have a number of the LTS version with the Preview prefix, for instance, V8Preview1, V7Preview2, and so on until V8Preview7, following which the V8 LTS version will be released.
+LTS versions are whole numbers given successively — V1, V2, V3, V4, V5, V6, and so on. Preview versions are intermediate LTS versions under development, therefore, they have a number of the LTS version with the Preview prefix, for example, V8Preview1, V7Preview2, and so on until V8Preview7, following which the V8 LTS version will be released.
 
 ### Release Schedule
 
@@ -197,12 +197,12 @@ The cycle of preview versions is a bit simpler.
 ## Choosing Versions ##
 By default, it is recommended that a stable LTS version is used; this allows to minimize migration efforts when new API versions are released. If some new functions that are not yet available in LTS versions are required, it is recommended that a current preview version is used; in this case, the migration between preview versions is required every 3-6 months until a new LTS version is out. There is no point in starting the development process for outdated versions as such versions are supported only for the backward compatibility purposes for the period when a new API version is already out but plugins are not yet switched over to it. The develop version is not recommended to be used as its interface is not yet frozen, the backward compatibility is not provided, and it is subject to change. This version is made available so that new functions could be studied and the plugin could be developed ahead of time for the upcoming API version so that by the time it is released, the plugin is ready (or almost ready) to make new functions available.
 
-The API version, for which the plugin is developed, can be determined by the `IFrontPlugin`interface version. For instance, if a plugin refers to the Resto.Front.Api.V6.dll build and implements the `IFrontPlugin` interface from this build, it is a V6 plugin.
+The API version, for which the plugin is developed, can be determined by the `IFrontPlugin`interface version. For example, if a plugin refers to the Resto.Front.Api.V6.dll build and implements the `IFrontPlugin` interface from this build, it is a V6 plugin.
 
 It is assumed that V6 plugin uses the V6 program interface.
 However, if so required, the plugin may concurrently use all supported API versions.
 Considering that starting from V6, namespaces [do not contain]({{ site.baseurl }}/2019/08/14/unify-api-namespaces.html) the API version number, in order to avoid collisions between the same-named types from different assemblies, you will have to use [extern alias](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/extern-alias).
-For instance, to get access to the operation that becomes available only in V7Preview2 using the V6 plugin, it’s enough to add a link to the Resto.Front.Api.V7Preview2.dll build and retrieve the Resto.Front.Api.V7Preview2.IOperationService service from PluginContext.Services.
+For example, to get access to the operation that becomes available only in V7Preview2 using the V6 plugin, it’s enough to add a link to the Resto.Front.Api.V7Preview2.dll build and retrieve the Resto.Front.Api.V7Preview2.IOperationService service from PluginContext.Services.
 Important: it is not recommended to implement `IFrontPlugin` interfaces of different versions—such plugin will not be loaded.
 
 ## API Version Status and Correspondence to Syrve Instance Versions ##
@@ -250,7 +250,7 @@ Important: it is not recommended to implement `IFrontPlugin` interfaces of diffe
 | V10Preview7 			 | 		            | 10.2             | 10.5     		  |
 | V10         			 | 		            | 10.3             |          		  |
 {:.mbtablestyle}
-<sup>1</sup> V6Preview4 was an experimental version, it was released at the beginning of the Syrve RMS 6.4 development cycle. Besides, V6Preview6 and V6Preview7 were skipped—V6 LTS version was released instead.
+<sup>1</sup> V6Preview4 was an experimental version, it was released at the beginning of the Syrve Office 6.4 development cycle. Besides, V6Preview6 and V6Preview7 were skipped—V6 LTS version was released instead.
 <sup>2</sup> Version V7Preview2 was [released](2020/05/28/v7preview2-release.html) late at 7.3.5 (instead of 7.2).  
 <sup>3</sup> Support for V7Preview7 has been extended to 8.4 inclusive due to problems with auto-updating plugins from V7Preview7 to V7.  
 <sup>4</sup> The lifespan of Preview versions starting from V8Preview4 has been increased by one version of Syrve Instance.
@@ -258,7 +258,7 @@ Important: it is not recommended to implement `IFrontPlugin` interfaces of diffe
 Starting from version Syrve Instance 8.5, the support cycle for Preview versions increases: version V8Preview4, which was released in 8.3, will be removed only in 8.6, i.e. supported in 8.3, 8.4, 8.5.
 
 ## Backward Compatibility
-The backward compatibility ensures that the plugin developed for a particular API version will work the same with any Syrve RMS versions that support this API version.
+The backward compatibility ensures that the plugin developed for a particular API version will work the same with any Syrve Office versions that support this API version.
 
 ### Program Compatibility
 The program compatibility forbids any changes in the public interface: data structures, method signatures, and so on must be frozen. It is clear that if any public class or method is removed, the plugin will stop compiling with the new SDK, whereas the plugin compiled for the previous SDK will crash during the operation (`TypeLoadException`, `MissingMethodException`, and so forth). There might be other less obvious malfunction of the backward compatibility. However, if we disregard some uncommon cases, adding a new class, feature, or method might go quite smoothly. But it makes it possible to use new functions without waiting for a new release. With regard to this point, a new policy is adopted:
@@ -267,8 +267,8 @@ The program compatibility forbids any changes in the public interface: data stru
 - Preview versions imply *possibly* backward-compatible changes in the public interface.
 
 ### Behavior Changes
-As a general rule, behavior changes of released API versions are not allowed. If a function works in certain conditions, it will continue working, otherwise, it won’t. API destructive use cases, when certain consequences cause more damage than the backward compatibility malfunction, might be an exception to that rule. For instance, if API vulnerabilities make some plugin errors to cause data damage or Syrve POS crashes, the API will have a corresponding protection established. This will not be considered a behavior change as properly functioning plugins will not make any difference.
+As a general rule, behavior changes of released API versions are not allowed. If a function works in certain conditions, it will continue working, otherwise, it won’t. API destructive use cases, when certain consequences cause more damage than the backward compatibility malfunction, might be an exception to that rule. For example, if API vulnerabilities make some plugin errors to cause data damage or Syrve POS crashes, the API will have a corresponding protection established. This will not be considered a behavior change as properly functioning plugins will not make any difference.
 
 ### Term of Support
-The term of support of any API version means a period of time during which Syrve RMS updates that support this API version are released. Syrve RMS products have no calendar limits on the use of any API version. All API versions that are supported by a particular Syrve RMS build are supported permanently.  Therefore, if an Syrve RMS user does not update the system, he or she may continue using the plugins as long as possible. However, in practice, a user has to update Syrve RMS to comply with changes in law, to use new functions, or to have some bugs fixed, which means that a plugin developer has to release updates compatible with new API versions in good time.
+The term of support of any API version means a period of time during which Syrve Office updates that support this API version are released. Syrve RMS products have no calendar limits on the use of any API version. All API versions that are supported by a particular Syrve RMS build are supported permanently.  Therefore, if an Syrve RMS user does not update the system, he or she may continue using the plugins as long as possible. However, in practice, a user has to update Syrve RMS to comply with changes in law, to use new functions, or to have some bugs fixed, which means that a plugin developer has to release updates compatible with new API versions in good time.
 

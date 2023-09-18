@@ -1,6 +1,7 @@
 ---
 title: Custom Dialogs
 layout: default
+order: 10
 ---
 # FAQ about UI and .Net
 If existing [Syrve POS dialogs](ViewManager.html "ViewManager") are not enough, the plugin can show user-defined dialogs, however, certain specifics should be taken into account.

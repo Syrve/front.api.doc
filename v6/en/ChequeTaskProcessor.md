@@ -1,11 +1,12 @@
 ---
 title: Fiscal Cash Register Custom Functions
 layout: default
+order: 12
 ---
 
 ## Introduction
  
-You can add any operations to the list of fiscal register commands. This may be required, for instance, if you need some operations to be carried out before or after the printing of receipts. It can be schematically displayed the following way:
+You can add any operations to the list of fiscal register commands. This may be required, for example, if you need some operations to be carried out before or after the printing of receipts. It can be schematically displayed the following way:
 
 ![DoCheque](../../img/chequeTaskProcessor/doCheque.png)
 
@@ -16,7 +17,7 @@ var chequeTaskProcessor = new ChequeTaskProcessor()
 PluginContext.Operations.RegisterChequeTaskProcessor(chequeTaskProcessor);
 ```
 
-All [`IChequeTaskProcessor`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Devices_ChequeTaskProcessor_IChequeTaskProcessor.htm) interface commands can interrupt the main operation: receipt fiscalization, depositing, withdrawing, printing of X and Z reports. For this, you need to throw any type of exception in the command body. For instance, we add a condition forbidding virtual receipt printers (FCR) to close orders:
+All [`IChequeTaskProcessor`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Devices_ChequeTaskProcessor_IChequeTaskProcessor.htm) interface commands can interrupt the main operation: receipt fiscalization, depositing, withdrawing, printing of X and Z reports. For this, you need to throw any type of exception in the command body. For example, we add a condition forbidding virtual receipt printers (FCR) to close orders:
 
 ```cs
 public BeforeDoCheckActionResult BeforeDoCheckAction(ChequeTask chequeTask, ICashRegisterInfo device, CashRegisterChequeExtensions chequeExtensions, IViewManager viewManager)
@@ -90,7 +91,7 @@ Arguments of the [`BeforeDoCheckAction()`](https://syrve.github.io/front.api.sdk
 
 ### 2. [`AfterDoCheckAction`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ChequeTaskProcessor_IChequeTaskProcessor_AfterDoCheckAction.htm)
 
-[`AfterDoCheckAction()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ChequeTaskProcessor_IChequeTaskProcessor_AfterDoCheckAction.htm) — кa command executed after the receipt fiscalization operation. The main purpose of it is to perform the final action after the printing of receipts. For instance, to queue the operation of export to the external system. The [`result`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_PostResult.htm) argument describes an FCR operation result.
+[`AfterDoCheckAction()`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_Devices_ChequeTaskProcessor_IChequeTaskProcessor_AfterDoCheckAction.htm) — a command executed after the receipt fiscalization operation. The main purpose of it is to perform the final action after the printing of receipts. For example, to queue the operation of export to the external system. The [`result`](https://syrve.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Device_Results_PostResult.htm) argument describes an FCR operation result.
 [`result.Success = true`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Success.htm) — operation is successful, otherwise, it is not.
 If the operation is not successful [`result.Success = false`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Success.htm), the error description will be given in  [`result.Message`](https://syrve.github.io/front.api.sdk/v6/html/P_Resto_Front_Api_Data_Device_Results_PostResult_Message.htm).
 

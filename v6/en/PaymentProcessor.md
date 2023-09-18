@@ -1,6 +1,7 @@
 ---
 title: External Payment Types
 layout: default
+order: 2
 ---
 # Integration With External Payment Types
 ## Overview 
@@ -22,9 +23,8 @@ If you add a [payment type](https://en.syrve.help/articles/#!office-8-5/topic-10
 
 Explanation of terms:
 
-- *Payment System* – defines the way payments are posted and returned. The payment system is used as a single instance in the entire Syrve RMS.
+- *Payment System* – defines the way payments are posted and returned. The payment system is used as a single instance in the entire Syrve Office.
 - *Payment Type* - refers to any payment system. It has customizable properties as fiscality, transfer accounts, and so on. If you make the external payment type fiscal, it will be classified as the *«Bank Cards»* type, if you leave it non-fiscal, it will fall within the *«Non-Cash Payment»* type. Within one payment system, you can add any number of payment types.
-относится к какой-либо платёжной системе.
 - *Payment Item* – refers to orders in Syrve POS. When a user while on the [payment screen](https://en.syrve.help/articles/#!syrve-pos-8-5/checkout) or [prepayment screen](https://en.syrve.help/articles/#!syrve-pos-8-5/checkout/a/h2_2092503229) selects any payment method, a payment item of a corresponding payment method is added to the order. Payment items can be added via the API ([Adding Payments](Payments.html)).
 
 ## IExternalPaymentProcessor Interface
@@ -80,7 +80,7 @@ If you, for example, need to integrate with a hotel system:
 - When taking payments, you need to ask users to provide a room number or produce a room key.
 - Then refer to the hotel service.
 - If successful, print a receipt with the amount and guest name received from the hotel system.
-- Go to Syrve RMS and save the entered number or swiped card to see the details in OLAP reports.
+- Go to Syrve Office and save the entered number or swiped card to see the details in OLAP reports.
 - Shall a refund be required, you will need to know whether a card or a number is used.
 - If not successful, abort the payment.
 
@@ -114,7 +114,7 @@ public void Pay(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transaction
     // Get order using API by ID via IOperationService.
     var order = PluginContext.Operations.TryGetOrderById(orderId.Value);
     
-    // Running random methods. For instance, effecting payment in some hotelSystem which would return the guest name if the payment is accepted and null, if the payment is declined.
+    // Running random methods. For example, effecting payment in some hotelSystem which would return the guest name if the payment is accepted and null, if the payment is declined.
     var guestName = hotelSystem.ProcessPaymentOnGuest(cardTrack, room, order?.Number, transactionId, sum);
     if (guestName == null)
         // Payment not processed, operation is aborted.
@@ -124,8 +124,8 @@ public void Pay(decimal sum, Guid? orderId, Guid paymentTypeId, Guid transaction
     var slip = new ReceiptSlip
     {
         Doc =  new XElement(Tags.Doc,
-            new XElement(Tags.Pair, "Гость", guestName),
-            new XElement(Tags.Pair, "Сумма", sum))
+            new XElement(Tags.Pair, "Guest", guestName),
+            new XElement(Tags.Pair, "Amount", sum))
     };
     
     // Printing.
@@ -207,7 +207,7 @@ void EmergencyCancelPaymentSilently(decimal sum, Guid? orderId, Guid paymentType
 
 The `EmergencyCancelPayment()` and `ReturnPayment()` methods are called when a user makes a refund on Syrve POS.
 
-The  `ReturnPayment()` method takes over when the *«Refund»* or *«Delete order»* button is tapped on the closed order screen. Or if a user deletes a posted payment. The `EmergencyCancelPayment()` takes over when a posted payment is canceled in the open order. For instance, if the fiscal payment is canceled due to the fiscal receipt printing error. If the last case does not require any specific logic, the `ReturnPayment()` method can be called from the `EmergencyCancelPayment()`. 
+The  `ReturnPayment()` method takes over when the *«Refund»* or *«Delete order»* button is tapped on the closed order screen. Or if a user deletes a posted payment. The `EmergencyCancelPayment()` takes over when a posted payment is canceled in the open order. For example, if the fiscal payment is canceled due to the fiscal receipt printing error. If the last case does not require any specific logic, the `ReturnPayment()` method can be called from the `EmergencyCancelPayment()`. 
 
 The methods take the same parameters as the payment methods. `transactionId` is the same as the one sent to the operation earlier performed `Pay()`.
 
@@ -272,7 +272,7 @@ The  [`OnPreliminaryPaymentEditing()`](https://syrve.github.io/front.api.sdk/v6/
 
 
 ## Closing & Opening Till Shifts in Syrve POS
-Some external payment systems need to perform certain actions on their side at the time a till shift is opened or closed in Syrve POS. For instance, banking systems need to carry out the verification at the till shift closing. For this, you need to subscribe to  [`INotificationService.SubscribeOnCafeSessionOpening`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_INotificationService_SubscribeOnCafeSessionOpening.htm) and [`INotificationService.SubscribeOnCafeSessionClosing`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_INotificationService_SubscribeOnCafeSessionClosing.htm).
+Some external payment systems need to perform certain actions on their side at the time a till shift is opened or closed in Syrve POS. For example, banking systems need to carry out the verification at the till shift closing. For this, you need to subscribe to  [`INotificationService.SubscribeOnCafeSessionOpening`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_INotificationService_SubscribeOnCafeSessionOpening.htm) and [`INotificationService.SubscribeOnCafeSessionClosing`](https://syrve.github.io/front.api.sdk/v6/html/M_Resto_Front_Api_INotificationService_SubscribeOnCafeSessionClosing.htm).
 
 When you open or close a till shift, a corresponding observer receives a new event. Code sample which, at the time of opening or closing a shift, prints the payment system key and whether the shift is closed or opened:
 
