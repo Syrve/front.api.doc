@@ -1,15 +1,15 @@
 ---
-title: Признак скидочной оплаты и список оплатных скидок
+title: Sign of discount payment and list of payment discounts
 layout: default
 ---
 
-В API V8Preview1 для типа оплаты добавлено новое свойство
-[`IPaymentType.IsDiscount`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Payments_IPaymentType_IsDiscount.htm),
-которое показывает, является ли тип оплаты скидочным, т.е. проводящимся как скидка.
+A new property has been added to the V8Preview1 API for payment type
+[`IPaymentType.IsDiscount`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Payments_IPaymentType_IsDiscount.htm),
+which shows whether the payment type is discounted, i.e. carried out as a discount.
 
-Также в заказе стал доступен список скидок
-[`IOrder.PaymentDiscounts`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IOrder_PaymentDiscounts.htm),
-который является результатом применения оплат заказа
-[`IOrder.Payments`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IOrder_Payments.htm),
-являющихся скидочными, т.е. проводящимися как скидка, к блюдам заказа.
-Такие оплаты являются нефискальными и фискализуются на стороне ФР не как оплаты, а как скидки путём уменьшения стоимости блюд.
+A list of discounts has also become available in the order
+[`IOrder.PaymentDiscounts`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IOrder_PaymentDiscounts.htm),
+which is the result of applying order payments
+[`IOrder.Payments`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IOrder_Payments.htm),
+that are discounted, i.e. carried out as a discount on the dishes ordered.
+Such payments are non-fiscal and are fiscalized on the FR side not as payments, but as discounts by reducing the cost of dishes.

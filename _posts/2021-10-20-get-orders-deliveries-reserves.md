@@ -1,12 +1,12 @@
 ---
-title: Обновление в методах получения списка заказов, доставок, резервов и банкетов
+title: Update in methods for obtaining a list of orders, deliveries, reserves and banquets
 layout: default
 ---
 
-В версии API V7 мы внесли изменения в методы получения списка заказов, доставок, резервов и банкетов. В том числе в методы получения данных сущностей по известной ревизии.
+In API V7, we have made changes to the methods for obtaining a list of orders, deliveries, reservations and banquets. Including methods for obtaining entity data from a known revision.
 
 
-Получение полного списка всех сущностей:
+Getting a complete list of all entities:
 
 - Не поменялся метод получения списка резервов / банкетов —
 [`GetReserves`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetReserves.htm),

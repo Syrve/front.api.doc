@@ -1,24 +1,24 @@
 ---
-title: Окна ввода даты и времени
+title: Date and time input windows
 layout: default
 ---
 
-В API V7 появилась возможность показать окна запроса даты и времени (см. статью «[Окна запроса даты и времени]({{ site.baseurl }}/v7/ru/DateTimePopups.html)»).
+In API V7, it became possible to show date and time request windows (see article «[Date and time prompt windows]({{ site.baseurl }}/v7/en/DateTimePopups.html)»).
 
-#### 1. Окно ввода даты.
+#### 1. Date entry window.
 
-Окно запроса даты показывается с помощью метода [`DateTime? IViewManager.ShowDateNumpadPopup(DateTime selectedDate, string title)`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateNumpadPopup.htm)
+The date request window is shown using the method [`DateTime? IViewManager.ShowDateNumpadPopup(DateTime selectedDate, string title)`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateNumpadPopup.htm)
 
 ![date-numpad-popup](../../../img/showDateTimePopup/DateNumpadPopup.png)
 
-#### 2. Окно ввода даты и времени.
+#### 2. Date and time input window.
 
-Окно запроса даты и времени показывается с помощью метода [`DateTime? IViewManager.ShowDateTimePopup(DateTime selectedDate, string title, DateTime minDate, DateTime maxDate)`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateTimePopup.htm)
+The date and time request window is shown using the method [`DateTime? IViewManager.ShowDateTimePopup(DateTime selectedDate, string title, DateTime minDate, DateTime maxDate)`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowDateTimePopup.htm)
 
 ![date-time-popup](../../../img/showDateTimePopup/DateTimePopup.png)
 
-#### 3. Окно календаря.
+#### 3. Calendar window.
 
-Можно показать окно ввода даты в виде календаря. Для этого добавлен метод [`DateTime? IViewManager.ShowCalendarPopup(DateTime selectedDate, string title, DateTime minDate, DateTime maxDate)`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCalendarPopup.htm)
+You can display the date entry window as a calendar. A method has been added for this purpose [`DateTime? IViewManager.ShowCalendarPopup(DateTime selectedDate, string title, DateTime minDate, DateTime maxDate)`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowCalendarPopup.htm)
 
 ![calendar-popup](../../../img/showDateTimePopup/CalendarPopup.png)

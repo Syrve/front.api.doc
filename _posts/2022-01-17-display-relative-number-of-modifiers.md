@@ -1,11 +1,11 @@
 ---
-title: Показ относительного количества модификаторов
+title: Showing relative number of modifiers
 layout: default
 ---
 
-В API V7 для ресторана появилась возможность настроить способ отображения количества групповых модификаторов блюда.
-Добавлено новое свойство [`bool IRestaurant.DisplayRelativeNumberOfModifiers`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_IRestaurant_DisplayRelativeNumberOfModifiers.htm), обозначающее, что в случае `false` количество модификатора блюда должно отображаться в виде абсолютного количества (как было ранее), а в случае `true` как разница между абсолютным количеством модификатора и его количеством по умолчанию.
+In API V7 for a restaurant, it became possible to customize the way the number of group modifiers for a dish is displayed.
+New property added [`bool IRestaurant.DisplayRelativeNumberOfModifiers`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_IRestaurant_DisplayRelativeNumberOfModifiers.htm), indicating that in the case of `false` the quantity of the dish modifier should be displayed as an absolute quantity (as was previously), and in the case of `true` as the difference between the absolute quantity of the modifier and its default quantity.
 
-Данная настройка влияет на показ модификаторов на экранах редактирования заказа, закрытого заказа, списка доставок, списка заказов, КДС и в сервис-чеках.
+This setting affects the display of modifiers on the screens for editing an order, a closed order, a list of deliveries, a list of orders, CDS and in service receipts.
 
-(подробнее см. [Показ относительного количества модификаторов]({{ site.baseurl }}/v7/ru/DisplayRelativeNumberOfModifiers.html)).
+(for more details [Showing relative number of modifiers]({{ site.baseurl }}/v7/en/DisplayRelativeNumberOfModifiers.html)).

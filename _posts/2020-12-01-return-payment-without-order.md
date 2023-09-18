@@ -1,13 +1,13 @@
 ---
-title: При возврате заказов закрытых кассовых смен стал доступен идентификатор заказа
+title: When returning orders from closed cash register shifts, the order ID became available
 layout: default
 ---
 
-В V7Preview5 в метод
-[`ReturnPaymentWithoutOrder`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IPaymentProcessor_ReturnPaymentWithoutOrder.htm)
-был добавлен новый аргумент `Nullable<Guid> orderId`.
+In V7Preview5 in the method
+[`ReturnPaymentWithoutOrder`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IPaymentProcessor_ReturnPaymentWithoutOrder.htm)
+a new argument `Nullable<Guid> orderId` has been added.
 
-Данный метод реализуется в коде плагина и вызывается из iikoFront, когда на нём пытаются вернуть заказ, который был оплачен плагинным типом в кассовой смене, которая на данный момент закрыта.
-При возврате товаров в отрыве от заказов указанный аргумент равен `null`.
-Подробнее о возврате заказов закрытых кассовых смен можно почитать в статье ["Возврат товара"](https://ru.iiko.help/smart/project-iikofront/topic-38).
-Подробнее о методе `ReturnPaymentWithoutOrder` можно почитать в статье ["Внешние типы оплаты"](https://iiko.github.io/front.api.doc/v6/ru/PaymentProcessor.html), в разделе "Методы возврата оплаты".
+This method is implemented in the plugin code and called from SyrvePOS when an attempt is made to return an order that was paid by the plugin type in a cash register shift that is currently closed.
+When returning goods separately from orders, the specified argument is `null`.
+You can read more about returning orders from closed cash register shifts in the article ["Возврат товара"](https://en.syrve.help/articles/#!syrve-pos-8-5/product-return).
+You can read more about the `ReturnPaymentWithoutOrder` method in the article ["External payment types"](https://syrve.github.io/front.api.doc/v6/ru/PaymentProcessor.html), in the "Refund Methods" section.

@@ -1,27 +1,27 @@
 ---
-title: Закрытие оплаченного доставленного доставочного заказа из API
+title: Closing a paid delivered delivery order from the APII
 layout: default
 ---
 
-Начиная с API V8Preview1 появилась возможность закрыть доставку прямо из плагина.
+Starting with API V8Preview1, it became possible to close delivery directly from the plugin.
 
-Курьерскую доставку можно закрыть вызовом метода
-[`SetDeliveryCloseTime`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_SetDeliveryCloseTime.htm).
-При этом доставочный заказ должен находиться в статусе "Закрыт"
-([`IDeliveryOrder.Status`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IOrder_Status.htm) ==
-[`OrderStatus.Closed`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Orders_OrderStatus.htm)),
-т.е. оплачен. Оплата доставочных заказов была сделана ранее, о чём мы писали в
-[заметке](https://iiko.github.io/front.api.doc/2020/12/23/pay-deliveries.html).
-Сама доставка должна находиться в статусе "Доставлена"
-([`IDeliveryOrder.DeliveryStatus`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IDeliveryOrder_DeliveryStatus.htm) ==
-[`DeliveryStatus.Delivered`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Brd_DeliveryStatus.htm)).
-Пометить доставку доставленной можно последовательным вызовом методов
-[`SetDeliveryDelivered`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_SetDeliveryDelivered.htm) и
-[`ChangeDeliveryActualDeliverTime`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_ChangeDeliveryActualDeliverTime.htm).
+Courier delivery can be closed by calling the method
+[`SetDeliveryCloseTime`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_SetDeliveryCloseTime.htm).
+In this case, the delivery order must be in the “Closed” status.
+([`IDeliveryOrder.Status`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IOrder_Status.htm) ==
+[`OrderStatus.Closed`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Orders_OrderStatus.htm),
+that is, paid. Payment for delivery orders was made earlier, as we wrote about in
+[note](https://syrve.github.io/front.api.doc/2020/12/23/pay-deliveries.html).
+The delivery itself must be in the "Delivered" status.
+([`IDeliveryOrder.DeliveryStatus`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Orders_IDeliveryOrder_DeliveryStatus.htm) ==
+[`DeliveryStatus.Delivered`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Brd_DeliveryStatus.htm)).
+You can mark a delivery as delivered by sequentially calling the methods
+[`SetDeliveryDelivered`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_SetDeliveryDelivered.htm) and
+[`ChangeDeliveryActualDeliverTime`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_ChangeDeliveryActualDeliverTime.htm).
 
-Метод принимает в качестве параметра время закрытия доставки `DateTime? closeTime`.
-Если задать этот параметр, как `null`, метод изменит статус доставки из "Закрыта" обратно в "Доставлена".
+The method takes as a parameter the delivery closing time `DateTime? closeTime`.
+If you set this parameter to `null`, the method will change the delivery status from "Closed" back to "Delivered".
 
-Данный метод не работает для доставок самовывоза, поскольку для закрытия такой доставки нужно ее просто оплатить, о чем упоминалось в
-[заметке](https://iiko.github.io/front.api.doc/2020/12/23/pay-deliveries.html),
-а возврат такой доставки подразумевает сторнирование заказа (т.е. возврат оплат), которое пока не поддерживается из API.
+This method does not work for self-pickup deliveries, since to close such a delivery you simply need to pay for it, as mentioned in
+[note](https://syrve.github.io/front.api.doc/2020/12/23/pay-deliveries.html),
+and the return of such delivery implies order reversal (i.e., refund of payments), which is not yet supported from the API.

@@ -1,18 +1,18 @@
 ---
-title: Отмена перехода на экран кассы
+title: Cancel the transition to the cash register screen
 layout: default
 ---
 
-Начиная с API V7Preview5 появилась возможность запрещать переход на экран кассы.
+Starting with API V7Preview5, it became possible to prohibit transition to the checkout screen.
 
-Перед переходом на экран кассы срабатывает уведомление
-[`NavigatingToPaymentScreen`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_NavigatingToPaymentScreen.htm).
-Раньше оно позволяло менять заказ через
-[`IOperationService`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_IOperationService.htm),
-доступный в аргументах уведомления, например, добавлять платёж.
-Также оно позволяло взаимодействовать с пользователем через
-[`IViewManager`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm),
-показывать различные окна в iikoFront.
+A notification is triggered before going to the checkout screen
+[`NavigatingToPaymentScreen`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_NavigatingToPaymentScreen.htm).
+Previously, it allowed you to change your order via
+[`IOperationService`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_IOperationService.htm),
+available in notification arguments, for example, add payment.
+It also allowed interaction with the user via
+[`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm),
+show different windows in SyrvePOS.
 
-Теперь ко всему прочему добавилась возможность отменять переход на экран кассы путем генерации исключения `OperationCanceledException` в соответствующем подписчике.
-Это может быть востребовано в случаях, когда проверяются дополнительные условия, невыполнение которых может препятствовать навигации на кассу.
+Now, in addition to everything else, we have added the ability to cancel the transition to the cash register screen by generating an `OperationCanceledException` exception in the corresponding subscriber.
+This may be required in cases where additional conditions are checked, the failure of which may prevent navigation to the checkout.
