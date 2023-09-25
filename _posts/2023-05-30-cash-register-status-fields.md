@@ -5,7 +5,7 @@ layout: default
 
 The V8Preview6 API has added the ability to retrieve additional property using [`IOperationService.GetCashRegisterStatus`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetCashRegisterStatus.htm).
 
-Новые добавленные поля:
+Newly added fields:
 * [`SerialNumber`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SerialNumber.htm) - Cash register serial number
 * [`SessionNumber`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_SessionNumber.htm) - Current session number
 * [`RefundsCount`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Results_CashRegisterStatus_RefundsCount.htm) - Number of refunds per shift

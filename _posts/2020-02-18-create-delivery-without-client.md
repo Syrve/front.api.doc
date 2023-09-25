@@ -1,12 +1,11 @@
 ---
-title: Возможность создать доставку без клиента
+title: Ability to create delivery without a client
 layout: default
 ---
-Начиная с V7 добавлена возможность создать доставку без клиента.
+Starting from V7, the ability to create a delivery without a client has been added.
 
-В версиях до V7Preview1 включительно в методе [`CreateDeliveryOrder`](http://iiko.github.io/front.api.sdk/v6/html/Overload_Resto_Front_Api_Editors_IEditSession_CreateDeliveryOrder.htm) и сущности [`DeliveryOrder`](http://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Orders_IDeliveryOrder.htm) [`Сlient`](http://iiko.github.io/front.api.sdk/v6/html/T_Resto_Front_Api_Data_Brd_IClient.htm) был обязателен. 
-Начиная с V7 в доставке [`DeliveryOrder`](http://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Orders_IDeliveryOrder.htm) клиент стал необязательным полем, а в методе [`CreateDeliveryOrder`](http://iiko.github.io/front.api.sdk/v7/html/Overload_Resto_Front_Api_Editors_IEditSession_CreateDeliveryOrder.htm) появляется возможность не задавать клиента при создании доставки.
-Номер телефона анонимного клиента соответствует телефону из доставки [`Phone`](http://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IDeliveryOrder_Phone.htm).
-В [`DeliveryOrder`](http://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Orders_IDeliveryOrder.htm) добавлено новое свойство [`ClientName`](http://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IDeliveryOrder_ClientName.htm) - имя клиента. 
-Данное поле является необязательным и используется, только если не задан клиент.
-Для изменения [`ClientName`](http://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IDeliveryOrder_ClientName.htm) добавлен новый метод [`ChangeDeliveryClientName`](http://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_ChangeDeliveryClientName.htm).
+From V7 in delivery [`DeliveryOrder`](http://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Orders_IDeliveryOrder.htm) client has become an optional field, and in the method [`CreateDeliveryOrder`](http://syrve.github.io/front.api.sdk/v7/html/Overload_Resto_Front_Api_Editors_IEditSession_CreateDeliveryOrder.htm) it becomes possible not to specify a client when creating a delivery.
+The phone number of the anonymous client corresponds to the phone number from the delivery [`Phone`](http://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IDeliveryOrder_Phone.htm).
+In [`DeliveryOrder`](http://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Orders_IDeliveryOrder.htm) new property added [`ClientName`](http://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IDeliveryOrder_ClientName.htm) - client name. 
+This field is optional and is only used if no client is specified.
+For change [`ClientName`](http://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IDeliveryOrder_ClientName.htm) new method added [`ChangeDeliveryClientName`](http://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_ChangeDeliveryClientName.htm).

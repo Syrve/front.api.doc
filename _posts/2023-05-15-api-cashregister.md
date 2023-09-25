@@ -40,10 +40,10 @@ Allows you to perform an additional operation, you need to pass it in the parame
 the name of the additional operation [`Name`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Tasks_CommandExecute_Name.htm) and parameter values [`Parameters`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_Tasks_CommandExecute_Parameters.htm)
 This method is used to perform operations specific to a particular cash register ​​model that do not correspond to any method of the general interface[`ICashRegister `](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Devices_ICashRegister.htm)
  
-Сash register start
+Cash register start
 [`CashRegisterStart`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterStart.htm)
  
-Сash register stop
+Cash register stop
 [`CashRegisterStop`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CashRegisterStop.htm)
 Devices start when SyrvePOS starts and stop when SyrvePOS shuts down (if autostart is enabled in the device settings).
 The cash register start and stop commands are needed so that you can stop the device and free up a COM port or other port that the device occupies and then start the device

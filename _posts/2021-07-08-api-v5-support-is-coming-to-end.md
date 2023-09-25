@@ -1,7 +1,7 @@
 ---
-title: Поддержка версии API V5 подходит к концу
+title: API V5 support is ending
 layout: default
 ---
-Релиз версии API V5 состоялся осенью 2017 года. Спустя два года, осенью 2019 года была выпущена версия V6, с тех пор V5 числится устаревшей. Прогресс не остановить, и уже начиная с осени 2021 года станут выходить сборки iikoRMS с поддержкой V7, а это значит, что V6 станет устаревшей, а V5 перестанет поддерживаться (подробнее см. [управление версиями]({{ site.baseurl }}/versioning.html)).
+The release of API V5 took place in the fall of 2017. Two years later, in the fall of 2019, the V6 version was released, since then V5 has been considered obsolete. Progress cannot be stopped, and starting from the fall of 2021, iikoRMS builds with V7 support will be released, which means that V6 will become obsolete, and V5 will no longer be supported (See more [version control]({{ site.baseurl }}/versioning.html)).
 
-Если у вас остались плагины на V5, сейчас самое время перевести их на V6, эта версия поддерживается всеми iikoRMS, выпущенными с сентября 2019 года (7.0+), и будет поддерживаться до осени 2023 года.
+If you still have plugins on V5, now is the time to migrate them to V6, this version is supported by all Syrve Office released since September 2019 (7.0+) and will be supported until autumn 2023.

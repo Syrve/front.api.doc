@@ -1,39 +1,39 @@
 ---
-title: Добавлена возможность задавать произвольное название для позиций заказа
+title: Added the ability to set a custom name for order items
 layout: default
 ---
 
-С версии V7Preview4 можно будет указать и получить произвольное название для позиции заказа, в которой есть ссылка на `IProduct`.
+From version V7Preview4 it will be possible to specify and receive a custom name for an order item that contains a link to `IProduct`.
 
-Доступные свойства для чтения произвольных названий:
+Available properties for reading custom names:
 
-- [`IOrderProductItem.ProductCustomName`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IOrderProductItem_ProductCustomName.htm) - 
-обычное блюдо
-- [`IOrderCompoundItemComponent.ProductCustomName`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IOrderCompoundItemComponent_ProductCustomName.htm) - 
-компонент составного блюда
-- [`IOrderServiceItem.ServiceCustomName`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_ServiceCustomName.htm) - 
-услуга
-- [`IOrderModifierItem.ProductCustomName`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IOrderModifierItem_ProductCustomName.htm) - 
-модификатор обычного блюда, составного блюда или компонента составного блюда
-- [`IOrderServiceItemPeriod.ServiceCustomName`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod_ServiceCustomName.htm) - 
-тариф повременной услуги
+- [`IOrderProductItem.ProductCustomName`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IOrderProductItem_ProductCustomName.htm) - 
+ordinary dish
+- [`IOrderCompoundItemComponent.ProductCustomName`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IOrderCompoundItemComponent_ProductCustomName.htm) - 
+component of a compound dish
+- [`IOrderServiceItem.ServiceCustomName`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItem_ServiceCustomName.htm) - 
+service
+- [`IOrderModifierItem.ProductCustomName`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IOrderModifierItem_ProductCustomName.htm) - 
+modifier for a regular dish, a compound dish, or a component of a compound dish
+- [`IOrderServiceItemPeriod.ServiceCustomName`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IOrderServiceItemPeriod_ServiceCustomName.htm) - 
+time service tariff
 
-Доступные методы для записи произвольных названий:
+Available methods for writing custom names:
 
-- Для обычного блюда
-	- [`IEditSession.SetProductItemCustomName`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Editors_IEditSession_SetProductItemCustomName.htm)
-	- [`OperationServiceExtensions.SetProductItemCustomName`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Extensions_OperationServiceExtensions_SetProductItemCustomName.htm)
-- Для компонента составного блюда
-	- [`IEditSession.SetCompoundItemComponentCustomName`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Editors_IEditSession_SetCompoundItemComponentCustomName.htm)
-	- [`OperationServiceExtensions.SetCompoundItemComponentCustomName`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Extensions_OperationServiceExtensions_SetCompoundItemComponentCustomName.htm)
-- Для услуги
-	- [`IEditSession.SetServiceItemCustomName`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Editors_IEditSession_SetServiceItemCustomName.htm)
-	- [`OperationServiceExtensions.SetServiceItemCustomName`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Extensions_OperationServiceExtensions_SetServiceItemCustomName.htm)
-- Для модификатора обычного блюда, составного блюда или компонента составного блюда
-	- [`IEditSession.SetOrderModifierItemCustomName`](https://iiko.github.io/front.api.sdk/v7/html/Overload_Resto_Front_Api_Editors_IEditSession_SetOrderModifierItemCustomName.htm)
-	- [`OperationServiceExtensions.SetOrderModifierItemCustomName`](https://iiko.github.io/front.api.sdk/v7/html/Overload_Resto_Front_Api_Extensions_OperationServiceExtensions_SetOrderModifierItemCustomName.htm)
-- Для тарифа повременной услуги
-	- [`IEditSession.SetServiceItemPeriodCustomName`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Editors_IEditSession_SetServiceItemPeriodCustomName.htm)
-	- [`OperationServiceExtensions.SetServiceItemPeriodCustomName`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Extensions_OperationServiceExtensions_SetServiceItemPeriodCustomName.htm)
+- For a regular dish
+	- [`IEditSession.SetProductItemCustomName`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Editors_IEditSession_SetProductItemCustomName.htm)
+	- [`OperationServiceExtensions.SetProductItemCustomName`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Extensions_OperationServiceExtensions_SetProductItemCustomName.htm)
+- For a component of a compound dish
+	- [`IEditSession.SetCompoundItemComponentCustomName`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Editors_IEditSession_SetCompoundItemComponentCustomName.htm)
+	- [`OperationServiceExtensions.SetCompoundItemComponentCustomName`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Extensions_OperationServiceExtensions_SetCompoundItemComponentCustomName.htm)
+- For service
+	- [`IEditSession.SetServiceItemCustomName`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Editors_IEditSession_SetServiceItemCustomName.htm)
+	- [`OperationServiceExtensions.SetServiceItemCustomName`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Extensions_OperationServiceExtensions_SetServiceItemCustomName.htm)
+- For a modifier of a regular dish, a compound dish, or a component of a compound dish
+	- [`IEditSession.SetOrderModifierItemCustomName`](https://syrve.github.io/front.api.sdk/v7/html/Overload_Resto_Front_Api_Editors_IEditSession_SetOrderModifierItemCustomName.htm)
+	- [`OperationServiceExtensions.SetOrderModifierItemCustomName`](https://syrve.github.io/front.api.sdk/v7/html/Overload_Resto_Front_Api_Extensions_OperationServiceExtensions_SetOrderModifierItemCustomName.htm)
+- For a time service tariff
+	- [`IEditSession.SetServiceItemPeriodCustomName`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Editors_IEditSession_SetServiceItemPeriodCustomName.htm)
+	- [`OperationServiceExtensions.SetServiceItemPeriodCustomName`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Extensions_OperationServiceExtensions_SetServiceItemPeriodCustomName.htm)
 
-Произвольные названия отображаются в составе заказа и в журнале событий, а также печатаются на чеках.
+Custom names are displayed as part of the order and in the event log, and are also printed on receipts.

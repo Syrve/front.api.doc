@@ -3,6 +3,6 @@ title: V8Preview1 released
 layout: default
 ---
 
-The next version has been released [Syrve Office 8.0](https://en.iiko.help/articles/#!releasenotes/2022-winter), а вместе с ней и промежуточный релиз [V8Preview1](https://www.nuget.org/packages/Resto.Front.Api.V8Preview1/8.0.6017-alpha). Эта версия будет поддерживаться в 8.0 и 8.1.
+The next version has been released [Syrve Office 8.0](https://en.syrve.help/articles/#!releasenotes/2022-spring), and with it an interim release [V8Preview1](https://www.nuget.org/packages/Resto.Front.Api.V8Preview1/8.0.6017-alpha). This version will be supported in 8.0 and 8.1.
 
-Версия V7Preview6 перестала поддерживаться начиная с 7.9. Также, несмотря на новость из [статьи]({{ site.baseurl }}/2021/07/07/v7preview7-release.html), версия V7Preview7 продолжает поддерживаться в 8.0. Подробнее о версиях API [тут]({{ site.baseurl }}/versioning.html).
+Despite the news from [article]({{ site.baseurl }}/2021/07/07/v7preview7-release.html), V7Preview7 continues to be supported in 8.0. Learn more about API versions [here]({{ site.baseurl }}/versioning.html).

@@ -1,19 +1,19 @@
 ---
-title: Добавлена возможность получить список имеющихся групп и список отделений каждой группы.
+title: Added the ability to get a list of available groups and a list of branches of each group.
 layout: default
 ---
 
-По мотивам заявки [`#143`](https://github.com/iiko/front.api.sdk/issues/143). В V7Preview4 появилась возможность получить список всех групп, а также список отделений любой, не только текущей, группы.
+In V7Preview4 it became possible to get a list of all groups, as well as a list of branches of any group, not just the current one.
 
-Добавлены методы:
-- [`GetTerminalsGroups()`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetTerminalsGroups.htm) - возвращает все имеющиеся группы
-- [`GetRestaurantSectionsByTerminalsGroup(ITerminalsGroup terminalsGroup)`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetRestaurantSectionsByTerminalsGroup.htm) - возвращает отделения указанной в аргументах группы
+Methods added:
+- [`GetTerminalsGroups()`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetTerminalsGroups.htm) - returns all existing groups
+- [`GetRestaurantSectionsByTerminalsGroup(ITerminalsGroup terminalsGroup)`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetRestaurantSectionsByTerminalsGroup.htm) - returns branches of the group specified in the arguments
 
-Кроме того, у отделения появилась ссылка на родительскую группу:
-[`IRestaurantSection.TerminalsGroup`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_Sections_IRestaurantSection_TerminalsGroup.htm)
+In addition, the branch now has a link to the parent group:
+[`IRestaurantSection.TerminalsGroup`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_Sections_IRestaurantSection_TerminalsGroup.htm)
 
-Метода получения отделений текущей группы `GetRestaurantSections` в V7Preview4 не будет. Вместо него можно пользоваться
+There will be no `GetRestaurantSections` method for getting branches of the current group in V7Preview4. You can use it instead
 ```cs
-// Получить все отделения текущей группы
+// Get all branches of the current group
 var currentGroupSections = PluginContext.Operations.GetRestaurantSectionsByTerminalsGroup(PluginContext.Operations.GetHostTerminalsGroup());
 ```

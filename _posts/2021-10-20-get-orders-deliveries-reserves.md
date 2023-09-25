@@ -8,42 +8,42 @@ In API V7, we have made changes to the methods for obtaining a list of orders, d
 
 Getting a complete list of all entities:
 
-- Не поменялся метод получения списка резервов / банкетов —
-[`GetReserves`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetReserves.htm),
-который возвращает их в любом
-[статусе](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Brd_ReserveStatus.htm);
-- Поменялся метод получения общего списка заказов (обычных и доставочных) —
-[`GetOrders`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetOrders.htm),
-у которого появились необязательные параметры:
-	- `includeDeleted` — включать в результат заказы в
-[статусе](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Orders_OrderStatus.htm)
-`Deleted`, которые раньше не включались;
-	- `excludeDeliveryOrders` — исключать из результата доставочные заказы.
-- Поменялся метод получения списка доставочных заказов (отдельно от обычных) —
-[`GetDeliveryOrders`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetDeliveryOrders.htm),
-у которого появился необязательный параметр:
-	- `includeDeleted` — включать в результат неотмененные доставки
-([статус доставки](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IDeliveryOrder_DeliveryStatus.htm) != `Cancelled`) и их заказы в
-[статусе](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Orders_OrderStatus.htm)
-`Deleted`, которые раньше включались по умолчанию.
+- The method for receiving reservations/banquets has not changed —
+[`GetReserves`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetReserves.htm),
+which returns them in any
+[status](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Brd_ReserveStatus.htm);
+- The method for obtaining a general list of orders (regular and delivery) has changed —
+[`GetOrders`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetOrders.htm),
+which now has optional parameters:
+	- `includeDeleted` — include orders in the result
+[status](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Orders_OrderStatus.htm)
+`Deleted`, which were not included before;
+	- `excludeDeliveryOrders` — exclude delivery orders from the results.
+- The method for obtaining a list of delivery orders has changed (separate from regular ones) —
+[`GetDeliveryOrders`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetDeliveryOrders.htm),
+which has an optional parameter:
+	- `includeDeleted` — include uncanceled deliveries in the results
+([delivery status](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Orders_IDeliveryOrder_DeliveryStatus.htm) != `Cancelled`) and their orders in
+[status](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Orders_OrderStatus.htm)
+`Deleted`, which were previously enabled by default.
 
-Поменялся принцип получения сущностей по ревизии.
-Раньше можно было получить только доставочные заказы и только список объектов.
-Дело в том, что помимо удаленных заказов в статусе `Deleted` бывают еще удаленные безвозвратно заказы, от которых остался только `id` и только на Главном терминале.
-Такие безвозвратно удаленные заказы получаются при делении заказа на 2ФР.
-Теперь при получении сущностей по известной ревизии возвращается объект
-[`ChangedEntities<T>`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Common_ChangedEntities_1.htm),
-в котором лежит [список измененных сущностей](https://iiko.github.io/front.api.sdk/v7/html/F_Resto_Front_Api_Data_Common_ChangedEntities_1_Entities.htm)
-и [максимальная ревизия](https://iiko.github.io/front.api.sdk/v7/html/F_Resto_Front_Api_Data_Common_ChangedEntities_1_RevisionTo.htm) сущностей из списка.
-Сама измененная сущность
-[`ChangedEntity<T>`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Common_ChangedEntity_1.htm)
-— это `id` и объект, если этот объект не был удален безвозвратно.
+The principle of obtaining entities by revision has changed.
+Previously, you could only get delivery orders and only a list of objects.
+The fact is that in addition to deleted orders in the `Deleted` status, there are also irrevocably deleted orders, of which only `id` remains and only at the Main Terminal.
+Such permanently deleted orders are obtained by dividing the order by 2FR.
+Now, when retrieving entities from a known revision, an object
+[`ChangedEntities<T>`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Common_ChangedEntities_1.htm)  is returned,
+which includes [list of changed entities](https://syrve.github.io/front.api.sdk/v7/html/F_Resto_Front_Api_Data_Common_ChangedEntities_1_Entities.htm)
+and [maximum revision](https://syrve.github.io/front.api.sdk/v7/html/F_Resto_Front_Api_Data_Common_ChangedEntities_1_RevisionTo.htm) entities from the list.
+The changed entity itself
+[`ChangedEntity<T>`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Common_ChangedEntity_1.htm)
+— this is the `id` and the object if this object has not been permanently deleted.
 
-Получение измененных сущностей по известной ревизии:
+Retrieving changed entities by known revision:
 
-- [`GetChangedOrders`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetChangedOrders.htm)
-— получение измененных заказов;
-- [`GetChangedDeliveryOrders`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetChangedDeliveryOrders.htm)
-— получение измененных доставок;
-- [`GetChangedReserves`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetChangedReserves.htm)
-— получение измененных резервов / банкетов.
+- [`GetChangedOrders`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetChangedOrders.htm)
+— receiving modified orders;
+- [`GetChangedDeliveryOrders`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetChangedDeliveryOrders.htm)
+— receiving modified deliveries;
+- [`GetChangedReserves`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetChangedReserves.htm)
+— receiving modified reservations/banquets.

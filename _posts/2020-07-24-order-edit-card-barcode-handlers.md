@@ -1,24 +1,24 @@
 ---
-title: Добавлена обработка карт и штрихкодов на экране редактирования заказа
+title: Added processing of cards and barcodes on the order editing screen
 layout: default
 ---
 
-Начиная с V7Preview4 плагин может обрабатывать события прокатки карты или сканирования штрихкода на экране редактирования заказа.
-Это может быть использовано, например, для интеграции с внешней системой лояльности.
+Starting with V7Preview4, the plugin can handle card rolling or barcode scanning events on the order editing screen.
+This can be used, for example, for integration with an external loyalty system.
 
-В `PluginContext.Notifications` добавлены два уведомления:
+Added two notifications to `PluginContext.Notifications`:
 
-* [`OrderEditCardSlided`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_OrderEditCardSlided.htm) — прокатка карты
-* [`OrderEditBarcodeScanned`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_OrderEditBarcodeScanned.htm) — сканирование штрихкода
+* [`OrderEditCardSlided`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_OrderEditCardSlided.htm) — rolling card
+* [`OrderEditBarcodeScanned`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_OrderEditBarcodeScanned.htm) — barcode scanning
 
-Данные уведомления срабатывают лишь непосредственно на экране редактирования заказа (без открытых всплывающих окон) и только при прокатке карты или сканировании штрихкода, которые не были распознаны встроенными обработчиками.
-Назначение скидки по зарегистрированной в iikoRms дисконтной карте, добавление в заказ товара по штрихкоду фасовки и прочие подобные операции работают как раньше, но если прокатанная карта или отсканированный штрихкод приложению iikoFront неизвестны, то наступает очередь плагина.
-Зарегистрированный плагином обработчик получит штрихкод или [данные о карте](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_View_CardInputDialogResult.htm) и должен будет сообщить результат — считать ли уведомление обработанным.
-Если плагин говорит, что событие обработано, на этом процесс завершается, обработчики других плагинов вызываться не будут.
-Если плагин не знает, что это за штрихкод или карта, ему следует вернуть `false`, чтобы были вызваны обработчики других плагинов.
-Если событие в итоге так и останется необработанным, пользователь получит стандартное сообщение о том, что прокатанная карта или отсканированный штрихкод системе неизвестны.
+These notifications are triggered only directly on the order editing screen (without open pop-ups) and only when swiping a card or scanning a barcode that was not recognized by the built-in processors.
+Assigning a discount using a discount card registered in Syrve Office, adding a product to an order using a packaging barcode, and other similar operations work as before, but if the rolled card or scanned barcode is unknown to the Syrve POS application, then it’s the plugin’s turn.
+The handler registered by the plugin will receive a barcode or [card details](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_View_CardInputDialogResult.htm) and will have to report the result - whether the notification is considered processed.
+If the plugin says that the event has been processed, the process ends and handlers for other plugins will not be called.
+If a plugin doesn't know what a barcode or card it is, it should return `false` so that other plugins' handlers are called.
+If the event ultimately remains unprocessed, the user will receive a standard message stating that the swiped card or scanned barcode is unknown to the system.
 
-На время обработки уведомления на экране показывается прогрессбар.
-Помимо штрихкода или данных о карте, плагин получит текущий заказ, локальную версию [`IOperationService`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_IOperationService.htm) для редактирования текущего заказа, а также [`IViewManager`](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) с возможностью показывать диалоговые окна и [менять текст](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ChangeProgressBarMessage.htm) на прогрессбаре.
+While the notification is being processed, a progress bar is shown on the screen.
+In addition to the barcode or card data, the plugin will receive the current order, local version [`IOperationService`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_IOperationService.htm) to edit the current order, as well as [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm) with the ability to show dialog boxes and [change text](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ChangeProgressBarMessage.htm) on the progressbar.
 
-В SamplePlugin добавлены примеры использования: `OrderEditScreen.AddProductByBarcode` и `OrderEditScreen.AddDiscountByCard`.
+Examples of use have been added to SamplePlugin: `OrderEditScreen.AddProductByBarcode` and `OrderEditScreen.AddDiscountByCard`.

@@ -1,12 +1,12 @@
 ---
-title: Печать на произвольном принтере
+title: Printing to a custom printer
 layout: default
 ---
 
-В API V8Preview7 был добавлен новый метод [`GetPrintingDeviceInfos`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPrintingDeviceInfos.htm), который возвращает список из объектов с интерфейсом [`PrintingDeviceInfo`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_IPrintingDeviceInfo.htm).
+A new method has been added to the V8Preview7 API [`GetPrintingDeviceInfos`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPrintingDeviceInfos.htm), which returns a list of objects with an interface [`PrintingDeviceInfo`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Device_IPrintingDeviceInfo.htm).
 
-Данный интерфейс хранит два поля: [`Id`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Common_IEntity_Id.htm) - уникальный Id устройства для печати и  [`FriendlyName`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_IPrintingDeviceInfo_FriendlyName.htm) - заданное в iikoOffice в Администирование => Настройка оборудования. [`FriendlyName`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_IPrintingDeviceInfo_FriendlyName.htm) создан для удобства разработчика плагинов, чтобы было легко определить с каким из устройств для печати ведется работа.
+This interface stores two fields: [`Id`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Common_IEntity_Id.htm) - unique device ID for printing and [`FriendlyName`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_IPrintingDeviceInfo_FriendlyName.htm) - set in Syrve Office in Administration => Equipment Settings. [`FriendlyName`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Device_IPrintingDeviceInfo_FriendlyName.htm) created for the convenience of the plugin developer, so that it is easy to determine which printing device is being worked with.
 
-Список устройств, возвращаемых [`GetPrintingDeviceInfos`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPrintingDeviceInfos.htm) в себе может иметь не только принтеры, но фискальные регистраторы, имеющие возможность печати. В данном списке могут быть устройства не только из текущей группы ресторана, но также и из других, и те, которые не были определены для какой-либо определенной группы.
+List of devices returned [`GetPrintingDeviceInfos`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_GetPrintingDeviceInfos.htm), it may contain not only printers, but also fiscal recorders with printing capabilities. This list may include devices not only from the current restaurant group, but also from others, and those that have not been defined for any specific group.
 
-Печать документа на любом из этих принтеров возможна с помощью метода [`Print `](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_Print.htm).
+Printing a document on any of these printers is possible using the method [`Print `](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_Print.htm).

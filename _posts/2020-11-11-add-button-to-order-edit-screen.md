@@ -1,24 +1,24 @@
 ---
-title: Появилась возможность показать кнопку на экране редактирования заказа
+title: It is now possible to show a button on the order editing screen
 layout: default
 ---
 
-Начиная с V7Preview5 у плагина будет возможность добавить собственную кнопку в нижнюю панель экрана редактирования заказа (кроме доставок). 
+Starting with V7Preview5, the plugin will have the ability to add its own button to the bottom panel of the order editing screen (except for deliveries).
 
-Добавлен метод [`AddButtonToOrderEditScreen`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToOrderEditScreen.htm) со следующими параметрами:
+Added method [`AddButtonToOrderEditScreen`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToOrderEditScreen.htm) with the following parameters:
 
-* `caption` — текст кнопки,
-* `iconGeometry` — иконка в формате [Path Markup](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/graphics-multimedia/path-markup-syntax?view=netframeworkdesktop-4.8) (можно без иконки),
-* `callback` — обработчик нажатия на кнопку, в котором можно показывать диалоговые окна и вносить изменения в заказ.
+* `caption` — button text,
+* `iconGeometry` — icon in the format [Path Markup](https://docs.microsoft.com/en-us/dotnet/desktop/wpf/graphics-multimedia/path-markup-syntax?view=netframeworkdesktop-4.8) (possible without an icon),
+* `callback` — a button click handler in which you can show dialog boxes and make changes to the order.
 
-Ограничения текущей версии:
+Limitations of the current version:
 
-* Метод необходимо вызвать заранее, до навигации на экран редактирования заказа, например, при запуске плагина. Однажды добавленная кнопка будет показываться при любом посещении экрана редактирования в течение сеанса работы, пока плагин не удалит кнопку, вызвав `Dispose` на возвращённом из метода объекте. Если на момент добавления или удаления кнопки уже открыт экран редактирования заказа, то изменение применится не сразу, а при следующем переходе на этот экран. Таким образом, кнопку пока можно добавить лишь разом на все заказы. В будущих версиях изменения будут применяться на лету, в том числе, к текущему экрану, что позволит показывать кнопку с учётом текущего состояния конкретного заказа.
-* В зависимости от настроек в нижней панели экрана редактирования заказа может отображаться разное количество штатных кнопок, но от плагинов пока показывается только одна кнопка, даже если место позволяло бы показать больше. Если плагинных кнопок несколько, будет показана общая кнопка «Дополнения», по нажатию на которую откроется диалог выбора конкретной плагинной кнопки. В следующих версиях это будет исправлено — кнопки будут занимать всё свободное пространство, а диалог выбора понадобится, только если и тогда останутся непоместившиеся кнопки.
-* Пока кнопку можно добавить лишь на экран редактирования заказа в ресторане и фастфуде. Экран редактирования доставочных заказов отличается тем, что не сохраняет изменения, пока пользователь не завершит редактирование нажатием «Сохранить», соответственно, плагин не видит промежуточное несохранённое состояние и не может вносить в него изменения. Плагинная кнопка без возможности менять доставочный заказ не имеет смысла, поэтому её пока и нет на экране доставки. 
+* The method must be called in advance, before navigating to the order editing screen, for example, when launching the plugin. Once added, the button will appear whenever the edit screen is visited during the session until the plugin removes the button by calling `Dispose` on the object returned from the method. If at the time of adding or deleting a button the order editing screen is already open, the change will not be applied immediately, but the next time you go to this screen. Thus, for now the button can only be added to all orders at once. In future versions, changes will be applied on the fly, including to the current screen, which will allow the button to be shown taking into account the current state of a particular order.
+* Depending on the settings, a different number of standard buttons may be displayed in the bottom panel of the order editing screen, but only one button from plugins is currently shown, even if there was space to show more. If there are several plug-in buttons, the general “Add-ons” button will be shown; clicking on it will open a dialog for selecting a specific plug-in button. This will be fixed in future versions - the buttons will take up all the free space, and the selection dialog will be needed only if there are still buttons that do not fit.
+* For now, the button can only be added to the order editing screen in restaurants and fast food. The delivery order editing screen is different in that it does not save changes until the user completes editing by clicking “Save”; accordingly, the plugin does not see the intermediate unsaved state and cannot make changes to it. A plugin button without the ability to change the delivery order does not make sense, which is why it is not yet on the delivery screen.
 
-Кроме того, кнопки уже можно добавлять на следующие экраны:
+In addition, buttons can already be added to the following screens:
 
-* [`AddButtonToPluginsMenu`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToPluginsMenu.htm) — меню «Дополнения» [главного экрана](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Screens_IAdditionalOperationsScreen.htm)
-* [`AddButtonToClosedOrderScreen`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToClosedOrderScreen.htm) — [экран закрытого заказа](https://iiko.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Screens_IClosedOrderScreen.htm), здесь теперь тоже поддерживаются иконки
-* [`AddButtonToProductsReturnScreen`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToProductsReturnScreen.htm) — экран возврата продуктов из заказа, закрытого в одной из прошлых кассовых смен
+* [`AddButtonToPluginsMenu`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToPluginsMenu.htm) — "Add-ons" menu [home screen](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Screens_IAdditionalOperationsScreen.htm)
+* [`AddButtonToClosedOrderScreen`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToClosedOrderScreen.htm) — [closed order screen](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Screens_IClosedOrderScreen.htm), icons are now supported here too
+* [`AddButtonToProductsReturnScreen`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_AddButtonToProductsReturnScreen.htm) — screen for returning products from an order closed in one of the previous checkout shifts.

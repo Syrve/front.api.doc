@@ -9,5 +9,5 @@ a new argument `Nullable<Guid> orderId` has been added.
 
 This method is implemented in the plugin code and called from SyrvePOS when an attempt is made to return an order that was paid by the plugin type in a cash register shift that is currently closed.
 When returning goods separately from orders, the specified argument is `null`.
-You can read more about returning orders from closed cash register shifts in the article ["Возврат товара"](https://en.syrve.help/articles/#!syrve-pos-8-5/product-return).
+You can read more about returning orders from closed cash register shifts in the article ["Purchase returns"](https://en.syrve.help/articles/#!syrve-pos-8-5/product-return).
 You can read more about the `ReturnPaymentWithoutOrder` method in the article ["External payment types"](https://syrve.github.io/front.api.doc/v6/ru/PaymentProcessor.html), in the "Refund Methods" section.

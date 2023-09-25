@@ -1,46 +1,46 @@
 ---
-title: Окно для работы с группой элементов и их количеством
+title: Window for working with a group of elements and their quantity
 layout: default
 ---
 
-В версии API V7Preview6 было добавлено новое окно для удобства работы с количеством какой-то группы элементов
-[`IViewManager.ShowQuantityChangerPopup`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowQuantityChangerPopup.htm).
+In API version V7Preview6, a new window was added to make it easier to work with the quantity of a group of elements
+[`IViewManager.ShowQuantityChangerPopup`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_UI_IViewManager_ShowQuantityChangerPopup.htm).
 
 ![quantity-changer-popup-1](../../../img/viewmanager/quantity-changer-popup-1.PNG)
 
-Метод принимает
+The method accepts
 
-- `string title` — название окна,
-- `string text` — текст с описанием,
-- `int minimalQuantity` — общее минимально возможное количество для группы,
-- `int maximalQuantity` — общее максимально возможное количество для группы,
-- `IReadOnlyCollection<(string name, int quantity, int minimalQuantity, int maximalQuantity)> items` — сам список элементов.
+- `string title` — window title,
+- `string text` — text with description,
+- `int minimalQuantity` — total minimum possible number for the group,
+- `int maximalQuantity` — total maximum possible number for the group,
+- `IReadOnlyCollection<(string name, int quantity, int minimalQuantity, int maximalQuantity)> items` — the list of elements itself.
 
-Каждый элемент — это
+Each element is
 
-- `string name` — его название,
-- `int quantity` — текущее количество элемента,
-- `int minimalQuantity` — минимально возможное количество элемента,
-- `int maximalQuantity` — максимально возможное количество элемента.
+- `string name` — his name,
+- `int quantity` — current item quantity,
+- `int minimalQuantity` — minimum possible number of element,
+- `int maximalQuantity` — maximum possible number of element.
 
-В результате метод возвращает список `IReadOnlyCollection<int>`, в котором содержится количество каждого элемента в порядке, соответствующем порядку в принимаемом аргументе `items`.
+As a result, the method returns a list `IReadOnlyCollection<int>`, which contains the number of each element in the order corresponding to the order in the received argument `items`.
 
-Кнопки `+` и `-` позволяют увеличить или уменьшить количество элемента на единицу.
-Центральная область элемента с его названием также кликабельна и позволяет открыть цифровой попап для расширенного редактирования количества выбранного элемента.
-Справа от названия указано текущее количество элемента.
+The `+` and `-` buttons allow you to increase or decrease the number of elements by one.
+The central area of ​​the element with its name is also clickable and allows you to open a digital popup for advanced editing of the quantity of the selected element.
+To the right of the name is the current quantity of the element.
 
 ![quantity-changer-popup-3](../../../img/viewmanager/quantity-changer-popup-3.PNG)
 
-В случае, когда минимально возможное количество каждого элемента равно нулю,
-максимально возможное количество каждого элемента равно максимально возможному количеству для группы,
-текущее количество одного из элементов равно максимально возможному количеству для группы,
-а текущее количество остальных элементов равно нулю,
-клик по центральной области остальных элементов не открывает цифровой попап,
-а полностью переносит количество ранее выбранного элемента в текущий элемент.
+In the case where the minimum possible quantity of each element is zero,
+the maximum possible quantity of each element is equal to the maximum possible quantity for the group,
+the current quantity of one of the elements is equal to the maximum possible quantity for the group,
+and the current number of remaining elements is zero,
+clicking on the central area of ​​the remaining elements does not open the digital popup,
+a completely transfers the quantity of the previously selected element to the current element.
 
 ![quantity-changer-popup-2](../../../img/viewmanager/quantity-changer-popup-2.PNG)
 
-##### Пример
+##### Example
 
 ```cs
 private static void ShowListWithQuantitiesPopup(IViewManager viewManager)

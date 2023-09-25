@@ -111,7 +111,7 @@ private void StornoProducts()
 
 private IEnumerable<PastOrderItem> GetPastOrderItems(IReadOnlyList<IProduct> activeProducts)
 {
-    var product = activeProducts.First(p => p.Name.Contains("Чай"));
+    var product = activeProducts.First(p => p.Name.Contains("Tea"));
     yield return new PastOrderItem
     {
         IsMainDish = true,
@@ -123,7 +123,7 @@ private IEnumerable<PastOrderItem> GetPastOrderItems(IReadOnlyList<IProduct> act
         SumWithoutDiscounts = 0, // not used in StornoPastOrderItems
     };
 
-    product = activeProducts.First(p => p.Name.Contains("Сливки"));
+    product = activeProducts.First(p => p.Name.Contains("Cream"));
     yield return new PastOrderItem
     {
         IsMainDish = false,
@@ -135,7 +135,7 @@ private IEnumerable<PastOrderItem> GetPastOrderItems(IReadOnlyList<IProduct> act
         SumWithoutDiscounts = 0, // not used in StornoPastOrderItems
     };
 
-    product = activeProducts.First(p => p.Name.Contains("Пюре"));
+    product = activeProducts.First(p => p.Name.Contains("Puree"));
     yield return new PastOrderItem
     {
         IsMainDish = true,
@@ -147,7 +147,7 @@ private IEnumerable<PastOrderItem> GetPastOrderItems(IReadOnlyList<IProduct> act
         SumWithoutDiscounts = 0, // not used in StornoPastOrderItems
     };
 
-    product = activeProducts.First(p => p.Name.Contains("Бутылка"));
+    product = activeProducts.First(p => p.Name.Contains("Bottle"));
     yield return new PastOrderItem
     {
         IsMainDish = true,

@@ -1,20 +1,20 @@
 ---
-title: Добавлена возможность отправить доставку в путь (без оплаты)
+title: Added the ability to send delivery on the way (without payment)
 layout: default
 ---
 
-Начиная с V7Preview3 появляется возможность подготовить доставку к отправке, напечатать накладную, назначить курьера и отправить его в путь.
+Starting with V7Preview3, you can prepare your shipment for shipment, print a delivery note, assign a courier, and send it on its way.
 
-### Нововведения
+### Innovations
 
-- Настройка времени оплаты доставки [PluginContext.Operations.GetHostDeliverySettings().DeliveryPaymentTimeOption](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_IDeliverySettings_DeliveryPaymentTimeOption.htm) — перед отправкой или перед закрытием. Пока оплата доставок через API не поддерживается, поэтому работать будет только отправка без оплаты.
-- Настройка времени печати доставочной накладной — вручную или автоматически, а если автоматически, то в какой именно момент: [PluginContext.Operations.GetHostDeliverySettings().DeliveryBillPrintTimeOption](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_IDeliverySettings_DeliveryBillPrintTimeOption.htm).
-- Подготовка доставки к отправке (перевод в статус «Ожидает»): [PluginContext.Operations.PrepareDeliveryForSending(credentials, delivery)](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_PrepareDeliveryForSending.htm). Здесь будут проверены ограничения графика работы и картографии, а также добавлены автодобавляемые блюда и услуги. Можно указать необязательный флаг throwOnChanges, чтобы операция прервалась в случае изменения состава или стоимости заказа, это позволит плагину отреагировать на изменения и проверить, хочет ли он отправить доставку с этими изменениями. По умолчанию флаг выключен, плагин согласен на любые автоизменения.
-- Печать доставочной накладной: [PluginContext.Operations.PrintDeliveryBill(credentials, delivery)](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_PrintDeliveryBill.htm). Здесь же напечатаются доставочные стикеры, если в настройках указано печатать их вместе с накладной.
-- Отправка доставки в путь: [PluginContext.Operations.SendDelivery(credentials, delivery)](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_SendDelivery.htm).
-- Если настроена автоматическая печать доставочной накладной в начале приготовления или при отправке, она будет напечатана при вызове из плагина методов [PrintOrderItems](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_PrintOrderItems.htm) и [SendDelivery](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_SendDelivery.htm) соответственно.
+- Setting up delivery payment time [PluginContext.Operations.GetHostDeliverySettings().DeliveryPaymentTimeOption](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_IDeliverySettings_DeliveryPaymentTimeOption.htm) — before shipping or before closing. Payment for deliveries via the API is not yet supported, so only sending without payment will work.
+- Setting the time for printing the delivery note - manually or automatically, and if automatically, at what point: [PluginContext.Operations.GetHostDeliverySettings().DeliveryBillPrintTimeOption](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Organization_IDeliverySettings_DeliveryBillPrintTimeOption.htm).
+- Preparing delivery for dispatch (transfer to “Pending” status): [PluginContext.Operations.PrepareDeliveryForSending(credentials, delivery)](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_PrepareDeliveryForSending.htm). Here, work schedule and mapping restrictions will be checked, and auto-added dishes and services will be added. You can specify the optional throwOnChanges flag to cause the operation to abort if the contents or value of the order changes, this will allow the plugin to react to the changes and check if it wants to send the delivery with those changes. By default, the flag is disabled; the plugin agrees to any auto changes.
+- Printing a delivery note: [PluginContext.Operations.PrintDeliveryBill(credentials, delivery)](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_PrintDeliveryBill.htm). Delivery stickers will also be printed here if the settings indicate printing them along with the invoice.
+- Sending the delivery on its way: [PluginContext.Operations.SendDelivery(credentials, delivery)](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_SendDelivery.htm).
+- If the delivery note is configured to automatically print at the start of preparation or upon dispatch, it will be printed when calling methods from the plugin [PrintOrderItems](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_PrintOrderItems.htm) and [SendDelivery](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_SendDelivery.htm) respectively.
 
-### Пример использования
+### Usage example
 
 ```cs
 private void CreateAndSendDelivery()

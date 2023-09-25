@@ -1,18 +1,18 @@
 ﻿---
-title: Порядок модификаторов блюда
+title: Order of dish modifiers
 layout: default
 ---
 
-Начиная с версии API V7Preview6 появится возможность располагать простые и групповые модификаторы блюда в том же порядке, как это сделано в BackOffice.
+Starting with API version V7Preview6, it will be possible to arrange simple and group dish modifiers in the same order as is done in Syrve Office.
 
-Поле MenuIndex добавлено для типов [`ISimpleModifierBase`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Assortment_ISimpleModifierBase_MenuIndex.htm) и [`IGroupModifier`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Assortment_IGroupModifier_MenuIndex.htm).
+MenuIndex field added for types [`ISimpleModifierBase`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Assortment_ISimpleModifierBase_MenuIndex.htm) and [`IGroupModifier`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Assortment_IGroupModifier_MenuIndex.htm).
 
-Получить модификаторы блюда можно с помощью следующих методов:
-- [`IOperationService.GetSimpleModifier`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetSimpleModifiers.htm)
-- [`IOperationService.GetGroupModifiers`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetGroupModifiers.htm)
+You can get dish modifiers using the following methods:
+- [`IOperationService.GetSimpleModifier`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetSimpleModifiers.htm)
+- [`IOperationService.GetGroupModifiers`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetGroupModifiers.htm)
 
-Если модификаторы блюда настроены с помощью схемы модификаторов (поле [`IProduct.Template`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Assortment_IProduct_Template.htm) не `null`), то следует использовать следующие методы:
-- [`IOperationService.GetCommonSimpleModifiers`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetCommonSimpleModifiers.htm)
-- [`IOperationService.GetCommonGroupModifiers`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetCommonGroupModifiers.htm)
-- [`IOperationService.GetSplittableSimpleModifiers`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetSplittableSimpleModifiers.htm)
-- [`IOperationService.GetSplittableGroupModifiers`](https://iiko.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetSplittableGroupModifiers.htm)
+If dish modifiers are configured using the modifier scheme (field [`IProduct.Template`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_Data_Assortment_IProduct_Template.htm) is not `null`), then the following methods should be used:
+- [`IOperationService.GetCommonSimpleModifiers`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetCommonSimpleModifiers.htm)
+- [`IOperationService.GetCommonGroupModifiers`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetCommonGroupModifiers.htm)
+- [`IOperationService.GetSplittableSimpleModifiers`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetSplittableSimpleModifiers.htm)
+- [`IOperationService.GetSplittableGroupModifiers`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_GetSplittableGroupModifiers.htm)

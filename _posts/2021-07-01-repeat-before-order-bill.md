@@ -1,14 +1,14 @@
 ---
-title: BeforeOrderBill и повторный пречек
+title: BeforeOrderBill and repeated bill
 layout: default
 ---
 
-В версии API V7Preview7 уведомление об операции пречека заказа
-[`BeforeOrderBill`](https://iiko.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_BeforeOrderBill.htm)
-будет генерироваться и при повторном пречеке.
+In API version V7Preview7, notification about the order pre-check operation
+[`BeforeOrderBill`](https://syrve.github.io/front.api.sdk/v7/html/P_Resto_Front_Api_INotificationService_BeforeOrderBill.htm)
+will be generated when you check again.
 
-Если нужно оставить старое поведение и игнорировать повторные пречеки,
-то в случае перевода плагина на указанную или более новую версию API нужно будет отфильтровывать заказы по статусу в обработчике уведомления:
+If you need to leave the old behavior and ignore repeated bills,
+then if the plugin is translated to the specified or newer version of the API, you will need to filter orders by status in the notification handler:
 
 ```cs
 PluginContext.Notifications.BeforeOrderBill.Subscribe(x =>
@@ -16,6 +16,6 @@ PluginContext.Notifications.BeforeOrderBill.Subscribe(x =>
     if (x.order.Status != OrderStatus.New)
         return;
 
-    // Обработка оригинального пречека
+    // Processing the original bill
 });
 ```

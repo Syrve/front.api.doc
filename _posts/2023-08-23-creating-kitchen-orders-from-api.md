@@ -1,15 +1,15 @@
 ---
-title: Создание кухонных заказов из API
+title: Creating kitchen orders from the API
 layout: default
 ---
 
-В API V8Preview7 был добавлен метод [`CreateKitchenOrder`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CreateKitchenOrder.htm), который позволяет создать кухонный заказ через API.
+A method has been added to the V8Preview7 API [`CreateKitchenOrder`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CreateKitchenOrder.htm), that allows you to create a kitchen order via the API.
 
-Данный кухонный заказ не будет содержать "официантской части", так что все фискальные операции должны быть проведены через внешние системы.
+This kitchen order will not contain a "waiter part", so all fiscal transactions must be carried out through external systems.
 
-[`CreateKitchenOrder`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CreateKitchenOrder.htm) позволяет создавать пустой кухонный заказ. Это может быть полезно для случаев, когда нужно перенести внешние данные между точками ([`AddOrUpdateKitchenOrderExternalData`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AddOrUpdateKitchenOrderExternalData.htm), [`TryGetKitchenOrderExternalDataByKey`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_TryGetKitchenOrderExternalDataByKey.htm)).
+[`CreateKitchenOrder`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CreateKitchenOrder.htm) allows you to create an empty kitchen order. This can be useful for cases where you need to transfer external data between points ([`AddOrUpdateKitchenOrderExternalData`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AddOrUpdateKitchenOrderExternalData.htm), [`TryGetKitchenOrderExternalDataByKey`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_TryGetKitchenOrderExternalDataByKey.htm)).
 
-В кухонные заказы, созданные через API, нельзя добавлять блюда. Однако такой кухонный заказ можно очистить от всех блюд. Для этого был добавлен метод [`DeleteKitchenOrderItems`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_DeleteKitchenOrderItems.htm). Данный метод работает только для заказов, созданных через API.
+You cannot add dishes to kitchen orders created via the API. However, such a kitchen order can be cleared of all dishes. A method has been added for this purpose [`DeleteKitchenOrderItems`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_DeleteKitchenOrderItems.htm). This method only works for orders created via the API.
 
-Также, чтобы можно было проще отличить: стандартный ли это кухонный заказ или созданный через [`CreateKitchenOrder`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CreateKitchenOrder.htm) в [`IKitchenOrder`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Kitchen_IKitchenOrder.htm) было добавлено поле [`IsExternal`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Kitchen_IKitchenOrder_IsExternal.htm).
+Also, to make it easier to distinguish whether this is a standard kitchen order or created through [`CreateKitchenOrder`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_CreateKitchenOrder.htm) in [`IKitchenOrder`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Kitchen_IKitchenOrder.htm) field has been added [`IsExternal`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Kitchen_IKitchenOrder_IsExternal.htm).
 

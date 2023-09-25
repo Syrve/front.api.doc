@@ -12,7 +12,7 @@ You can pass any of the strings specified in the list as the report identifier `
 + `"Z_REPORT"` — Z-report;
 + `"SALES_BY_TYPE_WITH_TAX_SERVER_REPORT"` — 011 Total revenue by type with taxes;
 + `"SERVER_HOURLY_REPORT"` — 012 Total revenue per hour;
-+ `"SALES_BY_WAITER_SERVER_REPORT"` — 013 ОTotal revenue by waiters;
++ `"SALES_BY_WAITER_SERVER_REPORT"` — 013 Total revenue by waiters;
 + `"ORDERS_SUMMARY_REPORT"` — 015 Brief report on open orders and sales by venue;
 + `"SALES_BY_PAYMENT_TYPE_SERVER_REPORT"` — 016 Receipts by payment type;
 + `"DISH_EXPENSE_SERVER_REPORT"` — 021 Total food consumption;

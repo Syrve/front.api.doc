@@ -1,23 +1,23 @@
 ---
-title: Аутентификация пользователя без PIN-кода
+title: User authentication without PIN code
 layout: default
 ---
 
-В API V8Preview7 теперь можно подтверждать действия пользователям без ПИН-кода. Но для этого понадобится специальная лицензия.
+In the V8Preview7 API, you can now confirm actions for users without a PIN. But this will require a special license.
 
-Каждый экземпляр плагина должен иметь свой уникальный `ClientId` типа `Guid`.
-При старте плагин должен захватить слот лицензии с модулем `21057201`,
-вызвав метод [`ILicensingService.AcquireSlot`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_ILicensingService_AcquireSlot.htm)
-и передав в него свой `ClientId`.
-Результат выполнения метода должен запоминаться плагином и диспоузиться при завершении работы плагина.
-Более подробно такая схема лицензирования описана в статье [*"Лицензирование"*]({{ site.baseurl }}/v6/ru/Licensing.html), раздел *"Плата за внешнее подключение к плагину"*.
+Each plugin instance must have its own unique `ClientId` of type `Guid`.
+At startup, the plugin should grab the license slot with the module `21057201`,
+calling the method [`ILicensingService.AcquireSlot`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_ILicensingService_AcquireSlot.htm)
+and passing on your `ClientId`.
+The result of the method execution should be remembered by the plugin and displayed when the plugin terminates.
+This licensing scheme is described in more detail in the article [*"Licensing"*]({{ site.baseurl }}/v6/en/Licensing.html), chapter *"Fee for external connection to the plugin"*.
 
-Далее для аутентификации без ПИН-кода нужно вызвать метод
-[`IOperationService.AuthenticateByUser`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AuthenticateByUser.htm),
-передав в него пользователя [`IUser`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Security_IUser.htm)
-и `ClientId` данного экземпляра плагина, использовавшегося для захвата лицензии с модулем `21057201`.
-Данный метод возвратит объект [`ICredentials`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Security_ICredentials.htm),
-с которым можно продолжать работу как и раньше
-(аналогично методу [`IOperationService.AuthenticateByPin`](https://iiko.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AuthenticateByPin.htm)).
+Next, to authenticate without a PIN code, you need to call the method
+[`IOperationService.AuthenticateByUser`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AuthenticateByUser.htm),
+passing the user into it [`IUser`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Security_IUser.htm)
+and `ClientId` of the given plugin instance used to capture the license with module `21057201`.
+This method will return an object [`ICredentials`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Security_ICredentials.htm),
+with which you can continue working as before
+(similar to method [`IOperationService.AuthenticateByPin`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_AuthenticateByPin.htm)).
 
-Таким образом клиенту нужно выдавать столько слотов на модуль `21057201`, сколько у него экземпляров плагинов (плагины могут быть разные), которые используют аутентификацию пользователем без ПИН-кода.
+Thus, the client needs to issue as many slots for the module `21057201` as there are instances of plugins (plugins can be different) that use user authentication without a PIN code.
