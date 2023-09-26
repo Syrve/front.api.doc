@@ -7,7 +7,7 @@ layout: default
 
 Interim release released [V8Preview6](https://www.nuget.org/packages/Resto.Front.Api.V8Preview6/8.5.5017-alpha).
 
-Now intermediate releases will be published before the release of the next version of SyrveRMS (in this case, before the release of version 8.5), and the removal of the outdated Preview version will occur one version later.
+Now intermediate releases will be published before the release of the next version of Syrve Office (in this case, before the release of version 8.5), and the removal of the outdated Preview version will occur one version later.
 Thus, the lifespan of one Preview version increases by 3 months.
  
 V8Preview6 version will be supported into 8.5, 8.6 and 8.7.

@@ -45,4 +45,4 @@ PluginContext.Operations.PayOrder(credentials, order, true);
 
 Documentation that may be useful:
 
-- [Payment actions]({{ site.baseurl }}/v6/ru/Payments).
+- [Payment actions]({{ site.baseurl }}/v6/en/Payments).
