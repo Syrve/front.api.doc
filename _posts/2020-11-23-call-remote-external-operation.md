@@ -5,7 +5,7 @@ layout: default
 
 Since V7Preview5 using the method [`CallExternalOperation`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_CallExternalOperation__2.htm) a plugin can call an operation implemented by another plugin on a different terminal.
 
-Previously, interaction between plugins was only available within one terminal ([details]({{ site.baseurl }}{% post_url 2018-08-03-external operations%})).
+Previously, interaction between plugins was only available within one terminal.
 The `CallExternalOperation` method now has an optional argument `terminal`, which allows you to specify on which terminal the operation should be performed.
 If you leave this argument `null`, the operation will be performed on the local terminal.
 In any case, the terminal on which the operation is supposed to be performed must have a plugin that has registered this external operation with [`RegisterExternalOperation`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_IOperationService_RegisterExternalOperation__2.htm).
