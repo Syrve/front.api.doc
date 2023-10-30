@@ -1,0 +1,12 @@
+---
+title: Loading organization details from an external service
+layout: default
+---
+
+Starting with V8Preview5, you can make it easier to fill out fields when editing organization data. The user will only need to enter the TIN, and then the plugin will perform a search in the external system and Syrve POS will fill in the remaining company details.
+
+A new method has been added to the API for this purpose [`RegisterExternalCompanyInfoSearchProvider`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_RegisterExternalCompanyInfoSearchProvider.htm), with which you can register a method in Syrve POS that performs the function of an organization search provider by TIN. It is assumed that in the callback method `getCompanyInfoCallback` the plugin developers will call a third-party company search service by TIN. That. The waiter, being in the "Organization details" window, will be able to automatically obtain information about a new or update the data of an existing organization.
+
+A class has been added to transfer information about the organization from the plugin to Syrve POS [`ExternalCompanyInfo`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Brd_ExternalCompanyInfo.htm). The arguments to `RegisterExternalCompanyInfoSearchProvider` pass the callback method `Func<string, ExternalCompanyInfo> getCompanyInfoCallback`, which takes as input a string with the TIN of the searched organization and returns information about the organization in a dto of type `ExternalCompanyInfo`.
+
+The organization data returned by the `getCompanyInfoCallback` method will be displayed in the "Organization Details" window. For an organization that already exists in Syrve POS, the `getCompanyInfoCallback` method will be called in the "Organization details" window using the "Update" button, taking as input the value from the "TIN" field. For a new organization added to iikoFront, the `getCompanyInfoCallback` method will be called after clicking the "External Search" button in the "Organization Details" window, when the "Search" button is clicked in the "Find and add a new organization" dialog box that opens. In this case, the argument of the callback method will be the value entered in the search string.
