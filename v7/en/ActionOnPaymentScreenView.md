@@ -1,5 +1,5 @@
 ---
-title: Cashbox screen
+title: Checkout Screen
 layout: default
 order: 6
 ---
@@ -9,7 +9,7 @@ On the cash screen, it is possible to add buttons that can do operations using t
 
 ## How does it look in Syrve POS?
 
-For example, the *«SamplePlugin: Show OK popup»* button that is added by the SamplePlugin plugin from the SDK looks like this.
+For example, the *«SamplePlugin: Show OK popup»* button that is added by the SamplePlugin plugin from the SDK looks like this:
 
 ![ButtonOnPaymentScreenView](../../img/actionOnPaymentScreenView/buttonOnPaymentScreen.png) 
 
@@ -23,7 +23,7 @@ For example, two buttons were added by using the SamplePlugin SDK: *«SamplePlug
 
 ![ButtonsOnPaymentScreenView](../../img/actionOnPaymentScreenView/buttonsOnPaymentScreen.png)
 
-It may happen that there is not enough space for the buttons. Then in place of the buttons that don't fit, the *«ADDITIONAL»* button will be placed.
+It may happen that there is not enough space to add the buttons. Then in place of the buttons that doesn't fit, the *«ADDITIONAL»* button will be placed.
 
 ![AdditionalButtonOnPaymentScreen](../../img/actionOnPaymentScreenView/additionalButtonOnPaymentScreen.png) 
 
