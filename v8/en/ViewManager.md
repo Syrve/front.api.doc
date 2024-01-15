@@ -18,7 +18,7 @@ For the input type of fractional numbers [`Decimal`](https://syrve.github.io/fro
 
 With the new properties, it is possible to set appropriate limits for fractional numbers.
 
-When selecting `String` or `Decimal`, the user will be offered to enter integers or fractions. [`ExtendedInputDialogSettings.TabTitleNumericString`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_TabTitleNumericString.htm) is used as explanatory text for fractional numbers.
+When selecting `String` or `Decimal`, the user will be prompted to enter integers or fractions. [`ExtendedInputDialogSettings.TabTitleNumericString`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_UI_ExtendedInputDialogSettings_TabTitleNumericString.htm) is used as explanatory text for fractional numbers.
 
 ![ext_number](../../img/viewmanager/ext_decimal.png)
 

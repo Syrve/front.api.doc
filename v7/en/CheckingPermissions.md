@@ -13,7 +13,7 @@ For example, the plugin adds the *«SamplePlugin: Show OK popup»* button to the
 
 ![ButtonOnPaymentScreenView](../../img/actionOnPaymentScreenView/buttonOnPaymentScreen.png)
 
-Let the button be clickable only by users with specific permissions. There are several ways to do this. To begin with, let's register the button:
+Let the button be clickable only by users with specific permissions. There are several ways to do this. To begin with, is needed to register the button:
 
 ```cs
 // Registering the action on the cash screen

@@ -11,7 +11,7 @@ The closed order screen (current till shift) and the product return screen can h
 
 ### 1. Closed order screen under the current till shift
 
-This is how the *«SamplePlugin: Show OK popup»*, button added by the SDK SamplePlugin looks like.
+This is how the *«SamplePlugin: Show OK popup»*, button that added by the SDK SamplePlugin looks like.
 
 ![ButtonOnClosedOrder](../../img/actionOnClosedOrderView/buttonOnClosedOrder.png) 
 
