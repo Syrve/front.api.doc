@@ -1,7 +1,7 @@
 ---
 title: Change log
 layout: default
-order: 5
+order: 3
 ---
 <table>
 {% for p in site.posts %}

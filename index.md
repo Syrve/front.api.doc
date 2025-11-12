@@ -1,7 +1,7 @@
 ---
 title: Main
 layout: default
-order: 1
+order: 2
 ---
 This site presents the API documentation of Syrve POS application (Syrve POS - software for POS terminals, a part of Syrve Office product).
 

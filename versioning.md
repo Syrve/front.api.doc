@@ -1,7 +1,7 @@
 ---
 title: Version Control
 layout: default
-order: 4
+order: 8
 ---
 Keeping several versions of the API makes it possible to improve the service without detriment to the backward compatibility. On the one hand, new requirements that demand changes appear all the time, on the other hand, any change in the program interface may [impair](https://docs.microsoft.com/en-us/archive/blogs/ericlippert/every-public-change-is-a-breaking-change) the operation of existing plugins. To tackle this issue, the API has several versions: at some point, a version is no longer developed, the interface is frozen, and the development continues within the next version. Whatever changes are introduced at a later time, a plugin developed for a frozen version will be functioning properly while this version is supported.
 
@@ -270,5 +270,5 @@ The program compatibility forbids any changes in the public interface: data stru
 As a general rule, behavior changes of released API versions are not allowed. If a function works in certain conditions, it will continue working, otherwise, it won’t. API destructive use cases, when certain consequences cause more damage than the backward compatibility malfunction, might be an exception to that rule. For example, if API vulnerabilities make some plugin errors to cause data damage or Syrve POS crashes, the API will have a corresponding protection established. This will not be considered a behavior change as properly functioning plugins will not make any difference.
 
 ### Term of Support
-The term of support of any API version means a period of time during which Syrve Office updates that support this API version are released. Syrve RMS products have no calendar limits on the use of any API version. All API versions that are supported by a particular Syrve RMS build are supported permanently.  Therefore, if an Syrve RMS user does not update the system, he or she may continue using the plugins as long as possible. However, in practice, a user has to update Syrve RMS to comply with changes in law, to use new functions, or to have some bugs fixed, which means that a plugin developer has to release updates compatible with new API versions in good time.
+The term of support of any API version means a period of time during which Syrve Office updates that support this API version are released. Syrve Office products have no calendar limits on the use of any API version. All API versions that are supported by a particular Syrve Office build are supported permanently.  Therefore, if an Syrve Office user does not update the system, he or she may continue using the plugins as long as possible. However, in practice, a user has to update Syrve RMS to comply with changes in law, to use new functions, or to have some bugs fixed, which means that a plugin developer has to release updates compatible with new API versions in good time.
 

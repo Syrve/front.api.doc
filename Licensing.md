@@ -1,7 +1,7 @@
 ---
 title: Licensing
 layout: default
-order: 6
+order: 5
 ---
 Plugin licensing is compulsory. Before you start developing a plugin, get the developer license, which allows you to start an Syrve POS test instance for the development, debugging, and testing. Users that want to install a ready-made plugin need to purchase a corresponding license. This approach protects plugin developers from unauthorized use of their plugins and allows Syrve to control certain functions.
 
