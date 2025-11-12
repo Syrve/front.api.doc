@@ -13,7 +13,7 @@ available in notification arguments, for example, add some external data
 ([`AddOrderExternalData`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_Editors_IEditSession_AddOrderExternalData.htm).
 It also allowed interaction with the user through
 [`IViewManager`](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_UI_IViewManager.htm),
-show different windows in iikoFront if the payment was not performed in the background.
+show different windows in Syrve POS if the payment was not performed in the background.
 
 Now, in addition to everything else, we have added the ability to cancel the payment process by generating an `OperationCanceledException` exception in the corresponding subscriber.
 This may be required in cases where additional conditions are checked,

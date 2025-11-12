@@ -8,7 +8,7 @@ In API V7 we added a notification about deleting unprinted dishes
 and also forwarded the current user responsible for the operation being performed to some events.
 
 Removal of unprinted dishes can be interrupted by throwing `OperationCanceledException` in the handler.
-A notification is generated both when you try to delete a dish from the iikoFront UI, and when you try to delete it from the API.
+A notification is generated both when you try to delete a dish from the Syrve POS UI, and when you try to delete it from the API.
 
 Notifications and methods that began to accept the input of the current
 [user](https://syrve.github.io/front.api.sdk/v7/html/T_Resto_Front_Api_Data_Security_IUser.htm),

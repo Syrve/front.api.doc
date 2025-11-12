@@ -7,4 +7,4 @@ In API V7Preview7, a field has been added to the order [`Comment`](https://syrve
 
 Method signature changed [`AddOrderExternalData`](https://syrve.github.io/front.api.sdk/v7/html/M_Resto_Front_Api_Editors_IEditSession_AddOrderExternalData.htm) — flag added `isPublic`.
 
-Data recorded using the `AddOrderExternalData` method with the `isPublic` flag set to `true` will become available in iikoRMS for uploading to the OLAP sales report. If, when calling the `AddOrderExternalData` method, you pass the `isPublic` flag equal to `false`, then such data, as before, is saved only in Syrve POS and will not be accessible externally.
+Data recorded using the `AddOrderExternalData` method with the `isPublic` flag set to `true` will become available in Syrve Office for uploading to the OLAP sales report. If, when calling the `AddOrderExternalData` method, you pass the `isPublic` flag equal to `false`, then such data, as before, is saved only in Syrve POS and will not be accessible externally.

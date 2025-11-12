@@ -26,7 +26,7 @@ To understand that we are on a screen that supports working with the UI, we need
 
 If the screen that came to the event is one of the screens listed above, you can call a new method
 [`TryExecuteUiOperation`](https://syrve.github.io/front.api.sdk/v8/html/M_Resto_Front_Api_IOperationService_TryExecuteUiOperation.htm),
-to which you need to pass a link to the callback, which iikoFront will call as soon as such an opportunity arises.
+to which you need to pass a link to the callback, which Syrve POS will call as soon as such an opportunity arises.
 If there is no action, this will happen immediately, and if other operations are being performed at this moment, the callback will be called immediately upon their completion.
 In any case, the `TryExecuteUiOperation` method will return control after calling the callback.
 If the callback throws an exception, it will be thrown out of `TryExecuteUiOperation`.
