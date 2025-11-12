@@ -76,6 +76,9 @@
             }
         }
     </style>
+    {% if page.tags %}
+      {% include collecttags.html %}
+    {% endif %}
 </head>
 <body>
     <header>
@@ -120,12 +123,20 @@
         {% endfor %}
         <br>
         <b>Code reference</b><br>
-        &nbsp;<a href="https://syrve.github.io/front.api.sdk/v6/">V6 (obsolete)</a><br>
-        &nbsp;<a href="https://syrve.github.io/front.api.sdk/v7/">V7 (current)</a><br>
-        &nbsp;<a href="https://syrve.github.io/front.api.sdk/v8/">V8 (preview)</a><br>
+		&nbsp;<a href="https://syrve.github.io/front.api.sdk/v7/">V7 (obsolete)</a><br>
+        &nbsp;<a href="https://syrve.github.io/front.api.sdk/v8/">V8 (current)</a><br>
+		&nbsp;<a href="https://syrve.github.io/front.api.sdk/v9/">V9 (preview)</a><br>
     </aside>
     <article>
         <h1 style="text-align:center">{% if page.title %}{{ page.title }}{% endif %}</h1>
+          {% if page.tags %}
+          <span>[
+          {% for tag in page.tags %}
+             {% capture tag_name %}{{ tag }}{% endcapture %}
+             <a href="{{ site.baseurl }}/tag/{{ tag_name }}"><code class="highligher-rouge"><nobr>{{ tag_name }}</nobr></code>&nbsp;</a>
+          {% endfor %}
+          ]</span>
+          {% endif %}
         {{ content }}
     </article>
     <footer>
@@ -137,7 +148,7 @@
                 Last change: {{ site.time | date_to_long_string }} | <a href="https://github.com/syrve/front.api.doc/">View source</a>
             </div>
             <div style="margin: 0 auto">
-                Syrve, 2023
+                Syrve, 2025
             </div>
         </div>
     </footer>
