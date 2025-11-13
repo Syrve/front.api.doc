@@ -1,5 +1,5 @@
 ---
-title: Additional currency support in IPaymentItem
+title: Multi currency support in IPaymentItem
 layout: default
 tags: v9preview1 v9
 ---
