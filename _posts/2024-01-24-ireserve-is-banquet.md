@@ -4,4 +4,4 @@ layout: default
 tags: v8
 ---
 
-In API v8, the [`IReserve`](https://iiko.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Brd_IReserve.htm) interface has been updated with the [`IsBanquet`](https://iiko.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Brd_IReserve_IsBanquet.htm) property.
+In API v8, the [`IReserve`](https://syrve.github.io/front.api.sdk/v8/html/T_Resto_Front_Api_Data_Brd_IReserve.htm) interface has been updated with the [`IsBanquet`](https://syrve.github.io/front.api.sdk/v8/html/P_Resto_Front_Api_Data_Brd_IReserve_IsBanquet.htm) property.
